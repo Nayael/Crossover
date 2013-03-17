@@ -21,6 +21,7 @@ package com.nayael.crossover
 		public var hero:Hero;
 		
 		// Game States
+		public static const INTRO:String     = "game_intro_state";
 		public static const MAIN_MENU:String = "game_main_menu_state";
 		public static const GRID:String 	 = "game_grid_state";
 		public static const ARENA:String     = "game_arena_state";
@@ -39,13 +40,14 @@ package com.nayael.crossover
 			E.stage = stage;
 			
 			fsm = new StateMachine();
+			fsm.addState( INTRO    , new StateIntro(this)   , [MAIN_MENU]);
 			fsm.addState( MAIN_MENU, new StateMainMenu(this), [GRID]);
 			fsm.addState( GRID     , new StateGrid(this)    , [MAIN_MENU, ARENA]);
 			fsm.addState( ARENA    , new StateArena(this)   , [GAME_OVER, PAUSE]);
 			fsm.addState( PAUSE    , new StatePause(this)   , [ARENA]);
 			fsm.addState( GAME_OVER, new StateGameOver(this), [MAIN_MENU]);
 			
-			fsm.state = MAIN_MENU;
+			fsm.state = INTRO;
 		}
 	}
 }

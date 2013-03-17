@@ -7,13 +7,14 @@ package com.nayael.crossover.states
 	import com.nayael.crossover.utils.Text;
 	import flash.display.Sprite;
 	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	
-	public class StateMainMenu implements IState
+	public class StateIntro implements IState
 	{
 		private var _texts:Vector.<Text> = new Vector.<Text>();
 		private var _game:Main;
 		
-		public function StateMainMenu(game:Main) {
+		public function StateIntro(game:Main) {
 			var text:Text;
 			_game = game;
 			
@@ -25,6 +26,11 @@ package com.nayael.crossover.states
 			text = new Text('Against the World', 'PressStart2P', 28, 0xEE1100);
 			text.hCenter(E.stage);
 			text.y = (E.HEIGHT >> 1 >> 1) + 40;
+			_texts.push(text);
+			
+			text = new Text('Press Start', 'PressStart2P');
+			text.hCenter(E.stage);
+			text.y = (E.HEIGHT >> 1) + 100;
 			_texts.push(text);
 		}
 		
@@ -45,11 +51,15 @@ package com.nayael.crossover.states
 		}
 		
 		/**
-		 * Keydown listener.
+		 * Keydown listener. Used to go to the main menu
 		 * @param	e
 		 */
 		private function _onKeydown(e:KeyboardEvent):void {
-			
+			if (!e.keyCode == Keyboard.SPACE) {
+				return;
+			}
+			E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
+			_game.fsm.state = Main.MAIN_MENU;
 		}
 	}
 }
