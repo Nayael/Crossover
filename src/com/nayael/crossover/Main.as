@@ -28,13 +28,14 @@ package com.nayael.crossover
 		public static const MAIN_MENU:String = "game_main_menu_state";
 		public static const GRID:String 	 = "game_grid_state";
 		public static const ARENA:String     = "game_arena_state";
+		public static const RUNNING:String    = "game_running_state";
 		public static const PAUSE:String 	 = "game_pause_state";
 		public static const GAME_OVER:String = "game_over_state";
 		public var fsm:StateMachine;
 		
 		// HUD
 		//public static const UPDATE_HUD:String = "update_hud";		
-		//public var hud:HUD;
+		public var hud:HUD;
 		
 		public function Main():void {
 			if (stage) init();
@@ -57,7 +58,7 @@ package com.nayael.crossover
 			fsm.addState( MAIN_MENU, new StateMainMenu(this), [GRID]);
 			fsm.addState( GRID     , new StateGrid(this)    , [MAIN_MENU, ARENA]);
 			fsm.addState( ARENA    , new StateArena(this)   , [GAME_OVER, PAUSE]);
-			fsm.addState( PAUSE    , new StatePause(this)   , [ARENA]);
+			fsm.addState( PAUSE    , new StatePause(this)   , [ARENA, GRID]);
 			fsm.addState( GAME_OVER, new StateGameOver(this), [MAIN_MENU]);
 			
 			fsm.state = INTRO;
@@ -71,19 +72,29 @@ package com.nayael.crossover
 		
 		public function launchLevel(index:int):void {
 			trace('Entering level ' + index);
+			hud = new HUD();
 			fsm.state = ARENA;
 			
 			addEntity(hero);
 			begin();
 		}
 		
+		override protected function update():void {
+			if (fsm.current != ARENA && fsm.current != RUNNING) {
+				return;
+			}
+			
+			super.update();
+			updateHud();
+		}
+		
 		public function updateHud(e:Event = null):void {
-			/*if (fsm.current != ARENA) {
+			if (fsm.current != ARENA && fsm.current != RUNNING) {
 				return;
 			}
 			
 			// Updating hero's side HUD
-			if (hero.health) {
+			/*if (hero.health) {
 				hud.heroHP = hero.health.hp;
 				hud.heroAmmo = hero.weapon.ammo;
 			} else {
@@ -99,9 +110,9 @@ package com.nayael.crossover
 				} else {
 					hud.bossHP = 0;
 				}
-			}
+			}*/
 			
-			addChild(hud);*/
+			addChild(hud);
 		}
 	}
 }

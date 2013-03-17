@@ -35,6 +35,9 @@
       <path-element>C:\Users\Nicolas\Documents\Workspace\games\Crossover\src</path-element>
       <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
+    <library-path append="true">
+      <path-element>C:\Users\Nicolas\Documents\Workspace\games\Crossover\lib\Crossover.swc</path-element>
+    </library-path>
   </compiler>
   <file-specs>
     <path-element>C:\Users\Nicolas\Documents\Workspace\games\Crossover\src\com\nayael\crossover\Main.as</path-element>

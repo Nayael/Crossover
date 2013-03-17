@@ -21,6 +21,7 @@ package com.nayael.crossover.states
 		}
 		
 		public function exit():void {
+			_game.removeChild(_game.hud);
 			//SoundManager.instance.stopAllSound();
 		}
 		
@@ -35,8 +36,13 @@ package com.nayael.crossover.states
 			
 			switch (e.keyCode) {
 				case Keyboard.G:
-					_game.fsm.state = Main.GAME_OVER;
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+					_game.fsm.state = Main.GAME_OVER;
+					return;
+					break;
+				case Keyboard.ESCAPE:
+					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+					_game.fsm.state = Main.PAUSE;
 					return;
 					break;
 			}

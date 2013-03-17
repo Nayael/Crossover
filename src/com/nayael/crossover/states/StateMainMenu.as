@@ -74,13 +74,14 @@ package com.nayael.crossover.states
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 					_selectOption(_selected - 1);
 					E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
-					
 					break;
+					
 				case Keyboard.DOWN:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 					_selectOption(_selected + 1);
 					E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 					break;
+					
 				// Validate the selected option
 				case Keyboard.SPACE:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
