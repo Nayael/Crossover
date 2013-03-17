@@ -1,28 +1,33 @@
 package com.entity.engine
 {
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	
 	public class View
 	{
 		public var entity:Entity;
-		public var sprite:Sprite;
+		public var sprite:Sprite
 		public var scale:Number = 1;
 		public var alpha:Number = 1;		
 		
-		public function View(entity:Entity)
-		{
+		public function View(entity:Entity) {
 			this.entity = entity;
 			sprite = new Sprite;
 		}
 		
-		public function update():void
-		{
+		public function draw():void {
 			sprite.x = entity.body.x;
 			sprite.y = entity.body.y;
-			sprite.rotation = entity.body.angle * (180 / Math.PI);
 			sprite.alpha = alpha;
-			sprite.scaleX = sprite.scaleY = scale;
-		}
+			sprite.scaleX = sprite.scaleY = scale;	
+			
+			if (entity.physics.vX > 0) {
+				sprite.scaleX *= -1;
+			} else {
+				sprite.scaleX *= 1;
+			}			
+			
+		}	
 	
 	}
 
