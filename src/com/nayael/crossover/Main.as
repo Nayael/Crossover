@@ -1,6 +1,6 @@
 package com.nayael.crossover
 {
-	import engine.Game;
+	import com.entity.engine.Game;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
@@ -19,7 +19,6 @@ package com.nayael.crossover
 		
 		private function init(e:Event = null):void {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// entry point
 			
 		}
 	}

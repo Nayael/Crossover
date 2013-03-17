@@ -1,7 +1,7 @@
-package engine 
+package com.entity.engine 
 {
-	import engine.events.EntityEvent;
-	import engine.events.EntityEventType;
+	import com.entity.engine.events.EntityEvent;
+	import com.entity.engine.events.EntityEventType;
 	import flash.events.Event;
 	
 	public class Health 
@@ -14,12 +14,14 @@ package engine
 			this.entity = entity;
 		}
 		
-		public function damage(value:int):void
-		{
-			hp -= value;
-            if (hp == 0) {
-				entity.destroy();
-            }
-		}
+		public function damage(entity:Entity):void
+		{			
+			if (hp>0) {
+				entity.onHit();
+			}else {
+				entity.onDie();
+			}
+		}		
 	}
+
 }

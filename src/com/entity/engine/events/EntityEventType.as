@@ -1,18 +1,11 @@
-package engine.events 
+package com.entity.engine.events 
 {
-	/**
-	 * ...
-	 * @author YopSolo
-	 */
 	public class EntityEventType 
 	{
-		public static const DESTROYED:String = "destroyed";
-		public static const CREATED:String = "created";
+		public static const DESTROYED:String = "entity_destroyed";
+		public static const CREATED:String = "entity_created";
 		
-		public function EntityEventType() 
-		{
-			
-		}
+		public function EntityEventType() {	}
 		
 	}
 

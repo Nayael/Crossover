@@ -1,6 +1,6 @@
-package engine.events 
+package com.entity.engine.events
 {
-	import engine.Entity;
+	import com.entity.engine.Entity;
 	import flash.events.Event;
 	
 	public class EntityEvent extends Event 

@@ -1,4 +1,4 @@
-package engine
+package com.entity.engine
 {
 	import flash.display.Sprite;
 	
@@ -7,14 +7,15 @@ package engine
 		public var entity:Entity;
 		public var sprite:Sprite;
 		public var scale:Number = 1;
-		public var alpha:Number = 1;
+		public var alpha:Number = 1;		
 		
 		public function View(entity:Entity)
 		{
 			this.entity = entity;
+			sprite = new Sprite;
 		}
 		
-		public function draw():void
+		public function update():void
 		{
 			sprite.x = entity.body.x;
 			sprite.y = entity.body.y;
@@ -22,5 +23,7 @@ package engine
 			sprite.alpha = alpha;
 			sprite.scaleX = sprite.scaleY = scale;
 		}
+	
 	}
+
 }

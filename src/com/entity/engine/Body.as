@@ -1,4 +1,4 @@
-package engine
+package com.entity.engine
 {
 	
 	public class Body
@@ -6,8 +6,6 @@ package engine
 		public var entity:Entity;
 		public var x:Number = .0;
 		public var y:Number = .0;
-		public var scaleX:Number = .0;
-		public var scaleY:Number = .0;
 		public var angle:Number = .0;
 		public var radius:Number = 10.0;
 		

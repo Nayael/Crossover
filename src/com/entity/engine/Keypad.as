@@ -1,4 +1,4 @@
-package engine
+package com.entity.engine
 {
 	import flash.events.KeyboardEvent;
 	import flash.events.Event;
@@ -36,10 +36,18 @@ package engine
 			states.writeUnsignedInt( 0 );
 			states.writeUnsignedInt( 0 );
 			dispObj = displayObj;
-			dispObj.addEventListener( KeyboardEvent.KEY_DOWN, keyDownListener, false, 0, true );
-			dispObj.addEventListener( KeyboardEvent.KEY_UP, keyUpListener, false, 0, true );
-			dispObj.addEventListener( Event.ACTIVATE, activateListener, false, 0, true );
-			dispObj.addEventListener( Event.DEACTIVATE, deactivateListener, false, 0, true );
+			dispObj.addEventListener( KeyboardEvent.KEY_DOWN, keyDownListener );
+			dispObj.addEventListener( KeyboardEvent.KEY_UP, keyUpListener );
+			dispObj.addEventListener( Event.ACTIVATE, activateListener );
+			dispObj.addEventListener( Event.DEACTIVATE, deactivateListener );
+		}
+		
+		public function destroy():void
+		{
+			dispObj.removeEventListener( KeyboardEvent.KEY_DOWN, keyDownListener );
+			dispObj.removeEventListener( KeyboardEvent.KEY_UP, keyUpListener );
+			dispObj.removeEventListener( Event.ACTIVATE, activateListener );
+			dispObj.removeEventListener( Event.DEACTIVATE, deactivateListener );			
 		}
 		
 		private function keyDownListener( ev:KeyboardEvent ):void

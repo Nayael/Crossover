@@ -1,17 +1,13 @@
-package engine
+package com.entity.engine
 {
-	import debug.Console;
+	import com.entity.debug.Console;
 	import flash.display.Stage;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
-	/**
-	 * ...
-	 * @author YopSolo
-	 */
-	public class ET
+	public class E
 	{
 		public static var point0:Point = new Point;
 		public static var rect0:Rectangle = new Rectangle;
@@ -23,7 +19,7 @@ package engine
 		private static var _console:Console;
 		
 		
-		public function ET(){}
+		public function E(){}
 		
 		// -- MATH HELPER
 		// utiliser une approx de PI ?
@@ -67,22 +63,22 @@ package engine
 			
 			var result:* = valeurParDefautSiInconnu;
 			
-			if (ET.stage.loaderInfo.parameters[nom] != undefined)
+			if (E.stage.loaderInfo.parameters[nom] != undefined)
 			{
 				if (valeurParDefautSiInconnu is Number)
 				{
-					result = Number(ET.stage.loaderInfo.parameters[nom]);
+					result = Number(E.stage.loaderInfo.parameters[nom]);
 				}
 				else
 				{
-					result = ET.stage.loaderInfo.parameters[nom];
+					result = E.stage.loaderInfo.parameters[nom];
 				}
 			}
 			
 			return result;
 		}
 		
-		// addChild( setProps( new Sprite(), {x:200, y:200, alpha:0.5, name:"bob"}) );
+		// addChild( E.setProps( new Sprite(), {x:200, y:200, alpha:0.5, name:"bob"}) );
 		public static function setProps(o:Object, props:Object):*
 		{
 			for (var n:String in props)
@@ -113,5 +109,7 @@ package engine
 			}
 			return _console;
 		}
+	
 	}
+
 }

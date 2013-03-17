@@ -1,6 +1,6 @@
 // http://code.google.com/p/developmentarc-core/wiki/EventBroker
 
- package engine
+ package com.entity.engine
 {
 	import flash.events.Event;
 	

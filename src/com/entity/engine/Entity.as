@@ -1,6 +1,6 @@
-﻿package engine  
+﻿package com.entity.engine
 {
-	import engine.events.*;
+	import com.entity.engine.events.*;
 	
 	public class Entity implements IEntity
 	{
@@ -13,12 +13,17 @@
 		private var _targets:Vector.<Entity>;
 		private var _group:Vector.<Entity>;
 		
-		public function Entity() { }
+		public function Entity() { 
+			
+		}
 		
 		public function destroy():void
 		{
-			if (group) group.splice(group.indexOf(this), 1);
-			EventBroker.broadcast( new EntityEvent( EntityEventType.DESTROYED, this) );			
+			EventBroker.broadcast( new EntityEvent( EntityEventType.DESTROYED, this) );
+			if (group) {
+				var idx:int = group.indexOf(this);
+				if (idx>-1) group.splice(idx, 1);				
+			}
 		}
 		
 		public function update():void
@@ -28,17 +33,7 @@
 		
 		public function draw():void
 		{
-			if (view) view.draw();
-		}
-		
-		/**
-		 * Hurts the entity
-		 * (Passer par cette méthode permet d'agir sur la santé de l'entité directement depuis l'entité elle-même, et pas autre part)
-		 * @param	damage
-		 */
-		public function hurt(damage:int):void 
-		{
-			_health.damage(damage);
+			if (view) view.update();
 		}
 		
 		public function get body():Body 
@@ -69,6 +64,17 @@
 		public function set health(value:Health):void 
 		{
 			_health = value;
+		}
+		
+		// simplification, car pour le coup le composant health n'est plus optionnel.
+		public function onHit():void
+		{
+			// --
+		}
+		
+		public function onDie():void
+		{
+			// --
 		}
 		
 		public function get weapon():Weapon 

@@ -1,4 +1,4 @@
-package engine 
+package com.entity.engine 
 {
 	public class Physics 
 	{
@@ -21,24 +21,16 @@ package engine
 			vY *= drag;
 			
 			// monde torique, toutes les entités y sont soumises
-			if (entity.body.x > ET.WIDTH) {
-				entity.body.x = ET.WIDTH;
-			}
-			if (entity.body.x < 0) {
-				entity.body.x = 0;
-			}
-			if (entity.body.y > ET.HEIGHT) {
-				entity.body.y = ET.HEIGHT;
-			}
-			if (entity.body.y < 0) {
-				entity.body.y = 0;
-			}
+			if (entity.body.x > 850) entity.body.x -= 900;
+			if (entity.body.x < -50) entity.body.x += 900;
+			if (entity.body.y > 650) entity.body.y -= 700;
+			if (entity.body.y < -50) entity.body.y += 700;			
 		}
 		
 		public function impulse( pow:Number ):void
 		{
             vX += Math.sin(-entity.body.angle) * pow;
-            vY += Math.cos(-entity.body.angle) * pow;
+            vY += Math.cos(-entity.body.angle) * pow;			
 		}
 		
 	}
