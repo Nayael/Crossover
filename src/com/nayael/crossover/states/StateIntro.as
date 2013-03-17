@@ -55,7 +55,7 @@ package com.nayael.crossover.states
 		 * @param	e
 		 */
 		private function _onKeydown(e:KeyboardEvent):void {
-			if (!e.keyCode == Keyboard.SPACE) {
+			if (e.keyCode != Keyboard.SPACE) {
 				return;
 			}
 			E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);

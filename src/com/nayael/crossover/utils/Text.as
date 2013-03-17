@@ -11,13 +11,15 @@ package com.nayael.crossover.utils
 	 * A label text field
 	 * @author Nayael
 	 */
-	public class Text extends TextField{
+	public class Text extends TextField {
 		
 	////////////////////////
 	// PROPERTIES
 	//
 		[Embed(source="../../../../../lib/fonts/PressStart2P.ttf", fontName="PressStart2P", fontFamily="Press Start 2P", mimeType='application/x-font-truetype', advancedAntiAliasing="true", embedAsCFF="false")]
 		private var pressStartFont:Class;
+		
+		public var textFormat:TextFormat;
 		
 	////////////////////////
 	// CONSTRUCTOR
@@ -35,7 +37,7 @@ package com.nayael.crossover.utils
 			super();
 			
 			this.text = initText;
-			var textFormat:TextFormat = new TextFormat(font, size, color, bold, italic);
+			textFormat = new TextFormat(font, size, color, bold, italic);
 			
 			textFormat.align = TextFormatAlign.LEFT;
 			this.embedFonts = true;
@@ -64,9 +66,9 @@ package com.nayael.crossover.utils
 		 */
 		public function hCenter(pParent:*):void {
 			if (pParent is Stage) {
-				this.x = pParent.stageWidth / 2 - this.width / 2;
+				this.x = (pParent.stageWidth >> 1) - (this.width >> 1);
 			} else {
-				this.x = pParent.width / 2 - this.width / 2;
+				this.x = (pParent.width >> 1) - (this.width >> 1);
 			}
 		}
 		
@@ -76,10 +78,17 @@ package com.nayael.crossover.utils
 		 */
 		public function vCenter(pParent:*):void {
 			if (pParent is Stage) {
-				this.y = pParent.stageHeight / 2 - this.height / 2;
+				this.y = (pParent.stageHeight >> 1) - (this.height >> 1);
 			} else {
-				this.y = pParent.height / 2 - this.height / 2;
+				this.y = (pParent.height >> 1) - (this.height >> 1);
 			}
+		}
+		
+		/**
+		 * Refreshes the text format
+		 */
+		public function refresh():void {
+			this.setTextFormat(this.textFormat);
 		}
 		
 		/**
@@ -87,6 +96,31 @@ package com.nayael.crossover.utils
 		 */
 		public function remove():void {
 			this.parent.removeChild(this);
+		}
+		
+		public function set color(value:Object):void {
+			textFormat.color = value;
+			refresh();
+		}
+		
+		public function set size(value:int):void {
+			textFormat.size = value;
+			refresh();
+		}
+		
+		public function set bold(value:Boolean):void {
+			textFormat.bold = value;
+			refresh();
+		}
+		
+		public function set italic(value:Boolean):void {
+			textFormat.italic = value;
+			refresh();
+		}
+		
+		public function set font(value:String):void {
+			textFormat.font = value;
+			refresh();
 		}
 	}
 }

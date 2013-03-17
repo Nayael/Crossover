@@ -13,6 +13,7 @@ package com.nayael.crossover.states
 		}
 		
 		public function enter():void {
+			_game.startGame();
 			//SoundManager.instance.playBGM( SoundManager.BGM3 );
 		}
 		

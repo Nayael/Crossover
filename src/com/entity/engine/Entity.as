@@ -17,8 +17,7 @@
 			
 		}
 		
-		public function destroy():void
-		{
+		public function destroy():void {
 			EventBroker.broadcast( new EntityEvent( EntityEventType.DESTROYED, this) );
 			if (group) {
 				var idx:int = group.indexOf(this);
@@ -26,94 +25,78 @@
 			}
 		}
 		
-		public function update():void
-		{
-			if (physics) physics.update();
+		public function update():void {
+			if (physics)
+				physics.update();
 		}
 		
-		public function draw():void
-		{
-			if (view) view.update();
+		public function draw():void {
+			if (view)
+				view.draw();
 		}
 		
-		public function get body():Body 
-		{
+		public function get body():Body {
 			return _body;
 		}
 		
-		public function set body(value:Body):void 
-		{
+		public function set body(value:Body):void {
 			_body = value;
 		}
 		
-		public function get physics():Physics 
-		{
+		public function get physics():Physics {
 			return _physics;
 		}
 		
-		public function set physics(value:Physics):void 
-		{
+		public function set physics(value:Physics):void {
 			_physics = value;
 		}
 		
-		public function get health():Health 
-		{
+		public function get health():Health {
 			return _health;
 		}
 		
-		public function set health(value:Health):void 
-		{
+		public function set health(value:Health):void {
 			_health = value;
 		}
 		
 		// simplification, car pour le coup le composant health n'est plus optionnel.
-		public function onHit():void
-		{
+		public function onHit():void {
 			// --
 		}
 		
-		public function onDie():void
-		{
+		public function onDie():void {
 			// --
 		}
 		
-		public function get weapon():Weapon 
-		{
+		public function get weapon():Weapon  {
 			return _weapon;
 		}
 		
-		public function set weapon(value:Weapon):void 
-		{
+		public function set weapon(value:Weapon):void  {
 			_weapon = value;
 		}
 		
-		public function get view():View 
-		{
+		public function get view():View  {
 			return _view;
 		}
 		
-		public function set view(value:View):void 
-		{
+		public function set view(value:View):void  {
 			_view = value;
 		}		
 
-		public function get targets():Vector.<Entity> 
-		{
+		public function get targets():Vector.<Entity>  {
 			return _targets;
 		}
 		
-		public function set targets(value:Vector.<Entity>):void 
-		{
+		public function set targets(value:Vector.<Entity>):void  {
 			_targets = value;
 		}
 		
-		public function get group():Vector.<Entity> 
-		{
+		public function get group():Vector.<Entity>  {
 			return _group;
 		}
 		
-		public function set group(value:Vector.<Entity>):void 
-		{
+		public function set group(value:Vector.<Entity>):void  {
 			_group = value;
 		}
 		

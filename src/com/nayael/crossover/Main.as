@@ -8,6 +8,7 @@ package com.nayael.crossover
 	import com.nayael.crossover.states.*;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	
 	/**
 	 * Main game class for the Crossover game
@@ -48,6 +49,10 @@ package com.nayael.crossover
 			fsm.addState( GAME_OVER, new StateGameOver(this), [MAIN_MENU]);
 			
 			fsm.state = INTRO;
+		}
+		
+		public function startGame():void {
+			trace('New game');
 		}
 	}
 }
