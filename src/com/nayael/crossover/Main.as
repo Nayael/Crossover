@@ -94,16 +94,16 @@ package com.nayael.crossover
 			}
 			
 			// Updating hero's side HUD
-			/*if (hero.health) {
+			if (hero.health) {
 				hud.heroHP = hero.health.hp;
-				hud.heroAmmo = hero.weapon.ammo;
+				//hud.heroAmmo = hero.weapon.ammo;
 			} else {
 				hud.heroHP = 0;
 			}
 			
 			// If we are inside an arena with a boss
 			// Updating enemy's side HUD
-			if (fsm.current == ARENA) {
+			/*if (fsm.current == ARENA) {
 				if (boss.health) {
 					hud.bossHP = boss.health.hp;
 					hud.bossAmmo = boss.weapon.ammo;
