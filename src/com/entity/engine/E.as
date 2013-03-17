@@ -1,6 +1,5 @@
 package com.entity.engine
 {
-	import com.entity.debug.Console;
 	import flash.display.Stage;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -16,7 +15,6 @@ package com.entity.engine
 		public static var stage:Stage;
 		public static var WIDTH:int;
 		public static var HEIGHT:int;
-		private static var _console:Console;
 		
 		
 		public function E(){}
@@ -100,14 +98,6 @@ package com.entity.engine
 				a[i] = a[p];
 				a[p] = tmp;
 			}
-		}
-		
-		static public function get console():Console 
-		{
-			if (_console == null) {
-				_console = new Console();
-			}
-			return _console;
 		}
 	
 	}

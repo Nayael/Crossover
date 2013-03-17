@@ -32,7 +32,7 @@ package com.entity.engine.fsm
 			}	
 			// deja dans l'etat désiré ou n'est pas dans le toState
 			if ( current == value || states[current].toState.indexOf(value) == -1 ) {
-				E.console.addMessage( 'NOPE !', '| current ', current , '| allowed ' , states[current].toState, ' | requested ', value );
+				trace( 'NOPE !', '| current ', current , '| allowed ' , states[current].toState, ' | requested ', value );
 				return;
 			}
 			

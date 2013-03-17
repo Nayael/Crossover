@@ -14,7 +14,7 @@ package com.entity.engine
 		// constructeur et init
 		public function Game():void
 		{
-			E.console.addMessage( "engine/game/construct" );
+			trace( "engine/game/construct" );
 			if (stage)
 				init();
 			else
@@ -23,7 +23,7 @@ package com.entity.engine
 		
 		private function init(e:Event = null):void
 		{
-			E.console.addMessage( "engine/game/init" );
+			trace( "engine/game/init" );
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			E.stage = this.stage;
@@ -39,13 +39,13 @@ package com.entity.engine
 		protected function begin():void
 		{
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			E.console.addMessage( "engine/game/begin" );
+			trace( "engine/game/begin" );
 			// [override me] :D
 		}
 		
 		protected function end():void
 		{
-			E.console.addMessage( "engine/game/end" );
+			trace( "engine/game/end" );
 			for each (var entity:Entity in entities)
 			{
 				if (entity.view)
@@ -72,7 +72,7 @@ package com.entity.engine
 		// -- gestion de toutes les entites
 		protected function addEntity(entity:Entity):Entity
 		{
-			E.console.addMessage( "engine/game/addEntity", entity );
+			trace( "engine/game/addEntity", entity );
 			entities.push(entity); 
 			if (entity.view)
 				addChild(entity.view.sprite);
@@ -82,13 +82,13 @@ package com.entity.engine
 		
 		protected function onEntityCreated(e:EntityEvent): void
 		{
-			E.console.addMessage( "engine/game/onEntityCreated", e.entity );
+			trace( "engine/game/onEntityCreated", e.entity );
 			addEntity( e.entity );
 		}
 		
 		protected function onEntityDestroyed(e:EntityEvent):void
 		{
-			E.console.addMessage( "engine/game/onEntityDestroyed", e.entity );
+			trace( "engine/game/onEntityDestroyed", e.entity );
 			
 			if (e.entity && e.entity.view) {
 				if (e.entity.view.sprite.stage) {
