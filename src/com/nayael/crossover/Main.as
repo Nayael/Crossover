@@ -2,6 +2,8 @@ package com.nayael.crossover
 {
 	import com.entity.engine.E;
 	import com.entity.engine.Entity;
+	import com.entity.engine.EventBroker;
+	import com.entity.engine.events.EntityEventType;
 	import com.entity.engine.fsm.StateMachine;
 	import com.entity.engine.Game;
 	import com.nayael.crossover.hero.Hero;
@@ -30,6 +32,10 @@ package com.nayael.crossover
 		public static const GAME_OVER:String = "game_over_state";
 		public var fsm:StateMachine;
 		
+		// HUD
+		//public static const UPDATE_HUD:String = "update_hud";		
+		//public var hud:HUD;
+		
 		public function Main():void {
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
@@ -38,7 +44,13 @@ package com.nayael.crossover
 		private function init(e:Event = null):void {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
-			E.stage = stage;
+			E.stage = this.stage;
+			E.WIDTH = this.stage.stageWidth;
+			E.HEIGHT = this.stage.stageHeight;
+			E.original_framerate = this.stage.frameRate;
+			
+			EventBroker.subscribe( EntityEventType.DESTROYED, onEntityDestroyed );
+			EventBroker.subscribe( EntityEventType.CREATED, onEntityCreated );
 			
 			fsm = new StateMachine();
 			fsm.addState( INTRO    , new StateIntro(this)   , [MAIN_MENU]);
@@ -51,8 +63,45 @@ package com.nayael.crossover
 			fsm.state = INTRO;
 		}
 		
-		public function startGame():void {
+		public function startNewGame():void {
 			trace('New game');
+			hero = new Hero();
+			players.push(hero);
+		}
+		
+		public function launchLevel(index:int):void {
+			trace('Entering level ' + index);
+			fsm.state = ARENA;
+			
+			addEntity(hero);
+			begin();
+		}
+		
+		public function updateHud(e:Event = null):void {
+			/*if (fsm.current != ARENA) {
+				return;
+			}
+			
+			// Updating hero's side HUD
+			if (hero.health) {
+				hud.heroHP = hero.health.hp;
+				hud.heroAmmo = hero.weapon.ammo;
+			} else {
+				hud.heroHP = 0;
+			}
+			
+			// If we are inside an arena with a boss
+			// Updating enemy's side HUD
+			if (fsm.current == ARENA) {
+				if (boss.health) {
+					hud.bossHP = boss.health.hp;
+					hud.bossAmmo = boss.weapon.ammo;
+				} else {
+					hud.bossHP = 0;
+				}
+			}
+			
+			addChild(hud);*/
 		}
 	}
 }

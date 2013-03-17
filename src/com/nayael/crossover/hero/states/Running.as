@@ -12,16 +12,16 @@ package com.nayael.crossover.hero.states
 		
 		public function Running(entity:Entity) {
 			this.entity = entity;
-			animation = new MegaboyRun;			
-			animation.hitbox_mc.visible = false;
+			//animation = new MegaboyRun();			
+			//animation.hitbox_mc.visible = false;
 		}
 		
 		public function enter():void {
-			entity.view.sprite.addChild( animation );
+			//entity.view.sprite.addChild( animation );
 		}
 		
 		public function exit():void {
-			entity.view.sprite.removeChild( animation );
+			//entity.view.sprite.removeChild( animation );
 		}
 	
 	}

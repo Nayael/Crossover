@@ -12,8 +12,7 @@ package com.entity.engine
 		public var entities:Vector.<Entity> = new Vector.<Entity>();
 		
 		// constructeur et init
-		public function Game():void
-		{
+		public function Game():void {
 			trace( "engine/game/construct" );
 			if (stage)
 				init();
@@ -21,8 +20,7 @@ package com.entity.engine
 				addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
-		private function init(e:Event = null):void
-		{
+		private function init(e:Event = null):void {
 			trace( "engine/game/init" );
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
@@ -36,18 +34,13 @@ package com.entity.engine
 		}	
 		
 		// -- debut/fin
-		protected function begin():void
-		{
+		protected function begin():void {
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			trace( "engine/game/begin" );
 			// [override me] :D
 		}
 		
-		protected function end():void
-		{
-			trace( "engine/game/end" );
-			for each (var entity:Entity in entities)
-			{
+		protected function end():void {
+			for each (var entity:Entity in entities) {
 				if (entity.view)
 					removeChild(entity.view.sprite);
 				entity.destroy();
@@ -56,22 +49,19 @@ package com.entity.engine
 		}
 		
 		// -- boucle d'affichage		
-		protected function onEnterFrame(event:Event):void
-		{
+		protected function onEnterFrame(event:Event):void {
 			update();
 		}				
 		
-		protected function update():void
-		{
-			for each (var entity:Entity in entities){
+		protected function update():void {
+			for each (var entity:Entity in entities) {
 				entity.update();
 				entity.draw();
 			}
 		}
 		
 		// -- gestion de toutes les entites
-		protected function addEntity(entity:Entity):Entity
-		{
+		protected function addEntity(entity:Entity):Entity {
 			trace( "engine/game/addEntity", entity );
 			entities.push(entity); 
 			if (entity.view)
@@ -80,14 +70,12 @@ package com.entity.engine
 			return entity;
 		} 
 		
-		protected function onEntityCreated(e:EntityEvent): void
-		{
+		protected function onEntityCreated(e:EntityEvent): void {
 			trace( "engine/game/onEntityCreated", e.entity );
 			addEntity( e.entity );
 		}
 		
-		protected function onEntityDestroyed(e:EntityEvent):void
-		{
+		protected function onEntityDestroyed(e:EntityEvent):void {
 			trace( "engine/game/onEntityDestroyed", e.entity );
 			
 			if (e.entity && e.entity.view) {

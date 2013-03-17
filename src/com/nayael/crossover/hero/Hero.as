@@ -22,31 +22,29 @@ package com.nayael.crossover.hero
 		private var keypad:Keypad;
 		
 		public function Hero() {
-			//body = new Body(this);
-			//body.x = ET.WIDTH >> 1;
-			//body.y = ET.HEIGHT >> 1;
-			//body.radius = 20;
-			//
-			//physics = new Physics(this);
-			//physics.vX = 0;
-			//physics.vY = 0;
-			//
-			//view = new View(this);
-			//view.scale = 2;
-			//view.draw();
-			//
-			//health = new Health(this);
-			//health.hp = 100;
-			//
-			//
-			//_fsm = new StateMachine();			
-			//_fsm.addState( STAND, new Stand(this) , [RUN] );
-			//_fsm.addState( RUN, new Running(this), [STAND] );			
-			//
-			//_fsm.state = STAND;
-			//
-			// controle clavier
-			//keypad = new Keypad(ET.stage);
+			body = new Body(this);
+			body.x = E.WIDTH >> 1;
+			body.y = E.HEIGHT >> 1;
+			body.radius = 20;
+			
+			physics = new Physics(this);
+			physics.vX = 0;
+			physics.vY = 0;
+			
+			view = new View(this);
+			view.scale = 2;
+			view.draw();
+			
+			health = new Health(this);
+			health.hp = 100;
+			
+			_fsm = new StateMachine();			
+			_fsm.addState( STAND, new Stand(this)  , [RUN]);
+			_fsm.addState( RUN  , new Running(this), [STAND]);			
+			
+			_fsm.state = STAND;
+			
+			keypad = new Keypad(E.stage);
 		}
 		
 		override public function update():void {
