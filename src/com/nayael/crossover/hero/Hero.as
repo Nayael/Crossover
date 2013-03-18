@@ -5,6 +5,7 @@ package com.nayael.crossover.hero
 	import com.entity.engine.fsm.*;
 	import com.nayael.crossover.hero.states.*;
 	import flash.display.*;
+	import flash.events.Event;
 	import flash.ui.*;
 	
 	/**
@@ -77,6 +78,15 @@ package com.nayael.crossover.hero
 		
 		public function set state(value:String):void {
 			_fsm.state = value;
+		}
+		
+		//override public function onHit():void {
+			//this.state = BLINKING;
+		//}
+		
+		override public function onDie():void {
+			destroy();
+			EventBroker.broadcast( new Event(HeroEventType.HERO_DEAD) );
 		}	
 		
 		override public function destroy():void {

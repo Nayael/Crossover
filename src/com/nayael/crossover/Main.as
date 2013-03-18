@@ -7,6 +7,7 @@ package com.nayael.crossover
 	import com.entity.engine.fsm.StateMachine;
 	import com.entity.engine.Game;
 	import com.nayael.crossover.hero.Hero;
+	import com.nayael.crossover.hero.HeroEventType;
 	import com.nayael.crossover.states.*;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -68,6 +69,7 @@ package com.nayael.crossover
 			trace('New game');
 			hero = new Hero();
 			players.push(hero);
+			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
 		}
 		
 		public function launchLevel(index:int):void {
@@ -86,6 +88,13 @@ package com.nayael.crossover
 			
 			super.update();
 			updateHud();
+		}
+		
+		/**
+		 * When the hero is dead : Game Over
+		 */
+		private function onHeroDead(e:Event = null):void {
+			fsm.state = GAME_OVER;
 		}
 		
 		public function updateHud(e:Event = null):void {

@@ -37,7 +37,8 @@ package com.nayael.crossover.states
 			switch (e.keyCode) {
 				case Keyboard.G:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-					_game.fsm.state = Main.GAME_OVER;
+					_game.hero.health.hp = 0;
+					_game.hero.health.damage(_game.hero);
 					return;
 					break;
 				case Keyboard.ESCAPE:
