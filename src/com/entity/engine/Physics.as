@@ -3,7 +3,7 @@ package com.entity.engine
 	public class Physics 
 	{
         public var entity:Entity;
-        public var drag:Number = 1.; // frottement null
+        public var drag:Number = 1.;	// Friction	
         public var vX:Number = .0;
         public var vY:Number = .0;
 		
@@ -20,19 +20,23 @@ package com.entity.engine
 			vX *= drag;
 			vY *= drag;
 			
-			// monde torique, toutes les entités y sont soumises
-			if (entity.body.x > 850) entity.body.x -= 900;
-			if (entity.body.x < -50) entity.body.x += 900;
-			if (entity.body.y > 650) entity.body.y -= 700;
-			if (entity.body.y < -50) entity.body.y += 700;			
+			if (entity.body.x > E.WIDTH - (entity.view.sprite.width >> 1)) {
+				entity.body.x = E.WIDTH - (entity.view.sprite.width >> 1);
+			}
+			if (entity.body.x < (entity.view.sprite.width >> 1)) {
+				entity.body.x = (entity.view.sprite.width >> 1);
+			}
+			if (entity.body.y > E.HEIGHT + (entity.view.sprite.height >> 1)) {
+				entity.body.y = E.HEIGHT + (entity.view.sprite.height >> 1);
+			}
+			if (entity.body.y < (entity.view.sprite.height >> 1)) {
+				entity.body.y = (entity.view.sprite.height >> 1);
+			}
 		}
 		
-		public function impulse( pow:Number ):void
-		{
+		public function impulse( pow:Number ):void {
             vX += Math.sin(-entity.body.angle) * pow;
             vY += Math.cos(-entity.body.angle) * pow;			
 		}
-		
 	}
-
 }

@@ -21,9 +21,9 @@ package com.entity.engine
 			sprite.alpha = alpha;
 			sprite.scaleX = sprite.scaleY = scale;	
 			
-			if (entity.physics.vX > 0) {
+			if (entity.physics.vX < 0) {
 				sprite.scaleX *= -1;
-			} else {
+			} else if (entity.physics.vX > 0) {
 				sprite.scaleX *= 1;
 			}			
 			
