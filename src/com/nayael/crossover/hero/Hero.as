@@ -18,9 +18,10 @@ package com.nayael.crossover.hero
 		static public const RUN:String   = "hero_run";
 		static public const JUMP:String  = "hero_jump";
 		static public const FIRE:String  = "hero_fire";
-		private var _fsm:StateMachine;
 		
-		private var keypad:Keypad;
+		private var _fsm:StateMachine;
+		private var _keypad:Keypad;
+		private var _hSpeed:int = 8;
 		
 		public function Hero() {
 			body = new Body(this);
@@ -43,33 +44,29 @@ package com.nayael.crossover.hero
 			_fsm.addState( STAND, new Stand(this)  , [RUN]);
 			_fsm.addState( RUN  , new Running(this), [STAND]);			
 			
-			_fsm.state = STAND;
+			state = STAND;
 			
-			keypad = new Keypad(E.stage);
+			_keypad = new Keypad(E.stage);
 		}
 		
 		override public function update():void {
-			//physics.vX = 0;
-			//if ( !keypad.isDown(Keyboard.LEFT) || !keypad.isDown(Keyboard.RIGHT))
-			//{
-				//if (keypad.isDown(Keyboard.LEFT))
-				//{
-					//physics.vX = -8;
-					//_fsm.state = RUN;
-				//}
-				//if (keypad.isDown(Keyboard.RIGHT))
-				//{
-					//physics.vX = 8;
-					//_fsm.state = RUN;					
-				//}
-				//
-			//}
-			//if (physics.vX == 0)
-			//{
-				//_fsm.state = STAND;
-			//}
-			//
-			//super.update();
+			physics.vX = 0;
+			
+			if (_keypad.isDown(Keyboard.LEFT)) {
+				physics.vX = -_hSpeed;
+				state = RUN;
+			}
+			if (_keypad.isDown(Keyboard.RIGHT)) {
+				physics.vX = _hSpeed;
+				state = RUN;
+			}
+			
+			// If he is not moving, set state as STAND
+			if (physics.vX == 0) {
+				state = STAND;
+			}
+			
+			super.update();
 		}
 		
 		public function get state():String {
@@ -77,7 +74,9 @@ package com.nayael.crossover.hero
 		}
 		
 		public function set state(value:String):void {
-			_fsm.state = value;
+			if (_fsm.state != value) {
+				_fsm.state = value;
+			}
 		}
 		
 		//override public function onHit():void {
@@ -90,8 +89,8 @@ package com.nayael.crossover.hero
 		}	
 		
 		override public function destroy():void {
-			keypad.destroy();
-			keypad = null;
+			_keypad.destroy();
+			_keypad = null;
 			
 			super.destroy();
 			

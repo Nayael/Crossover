@@ -38,7 +38,6 @@ package com.nayael.crossover.states
 				case Keyboard.G:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 					_game.hero.health.hp = 0;
-					_game.hero.health.damage(_game.hero);
 					return;
 					break;
 				case Keyboard.ESCAPE:

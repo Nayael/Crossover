@@ -65,6 +65,9 @@ package com.nayael.crossover
 			fsm.state = INTRO;
 		}
 		
+		/**
+		 * Starts a new game
+		 */
 		public function startNewGame():void {
 			trace('New game');
 			hero = new Hero();
@@ -72,6 +75,10 @@ package com.nayael.crossover
 			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
 		}
 		
+		/**
+		 * When the player enters the level
+		 * @param	index
+		 */
 		public function launchLevel(index:int):void {
 			trace('Entering level ' + index);
 			hud = new HUD();
