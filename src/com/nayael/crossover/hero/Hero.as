@@ -14,10 +14,11 @@ package com.nayael.crossover.hero
 	 */
 	public class Hero extends Entity
 	{
-		static public const STAND:String = "hero_stand";
-		static public const RUN:String   = "hero_run";
-		static public const JUMP:String  = "hero_jump";
-		static public const FIRE:String  = "hero_fire";
+		static public const STAND:String  = "hero_stand";
+		static public const RUN:String    = "hero_run";
+		static public const JUMP:String   = "hero_jump";
+		static public const FIRE:String   = "hero_fire";
+		static public const SHIELD:String = "hero_shield";
 		
 		private var _fsm:StateMachine;
 		private var _keypad:Keypad;
