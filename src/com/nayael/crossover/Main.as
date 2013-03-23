@@ -6,6 +6,8 @@ package com.nayael.crossover
 	import com.entity.engine.events.EntityEventType;
 	import com.entity.engine.fsm.StateMachine;
 	import com.entity.engine.Game;
+	import com.nayael.crossover.arenas.Arena;
+	import com.nayael.crossover.arenas.SonicArena;
 	import com.nayael.crossover.characters.hero.Hero;
 	import com.nayael.crossover.characters.hero.HeroEventType;
 	import com.nayael.crossover.states.*;
@@ -78,7 +80,6 @@ package com.nayael.crossover
 		 * @param	index
 		 */
 		public function launchLevel(index:int):void {
-			trace('Entering level ' + index);
 			hud = new HUD();
 			fsm.state = ARENA;
 			

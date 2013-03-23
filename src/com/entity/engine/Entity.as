@@ -99,6 +99,6 @@
 		public function set group(value:Vector.<Entity>):void  {
 			_group = value;
 		}
-		
+
 	}
 }

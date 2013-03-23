@@ -10,6 +10,7 @@ package com.entity.engine
 	public class Game extends Sprite
 	{
 		public var entities:Vector.<Entity> = new Vector.<Entity>();
+		public var map:Vector.<Vector.<int>>;	// The game's tilemap
 		
 		// constructeur et init
 		public function Game():void {
