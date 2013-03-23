@@ -49,8 +49,15 @@ package com.entity.engine
 				i:int = 0,
 				j:int = 0;
 			for each (var row:Vector.<int> in _tilemap) {
+				i = 0;
 				for each (var value:int in row) {
-					tile = Utils.clone(sourceMC) as MovieClip;
+					if (value != 0) {
+						tile = Utils.clone(sourceMC) as MovieClip;
+						tile.gotoAndStop(value);
+						tile.x = i * TS;
+						tile.y = j * TS;
+						game.addChild(tile);
+					}
 					i++;
 				}
 				j++;
