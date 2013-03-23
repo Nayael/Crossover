@@ -1,5 +1,6 @@
 package com.entity.engine
 {
+	import flash.display.MovieClip;
 	
 	public class Body
 	{
@@ -7,7 +8,7 @@ package com.entity.engine
 		public var x:Number = .0;
 		public var y:Number = .0;
 		public var angle:Number = .0;
-		public var radius:Number = 10.0;
+		public var hitbox:MovieClip;
 		
 		private var _left:Boolean;
 		private var _right:Boolean;
@@ -16,14 +17,20 @@ package com.entity.engine
 			this.entity = entity;
 		}
 		
-		public function collide(otherEntity:Entity):Boolean {
-			var dx:Number;
-			var dy:Number;
-			
-			dx = x - otherEntity.body.x;
-			dy = y - otherEntity.body.y;
-			
-			return Math.sqrt((dx * dx) + (dy * dy)) <= (radius + otherEntity.body.radius);
+		public function collide(target:Entity):Boolean {
+			if (!hitbox) {
+				return false;
+			}
+			var leftThis:Number     = hitbox.x,
+				rightThis:Number    = hitbox.x + hitbox.width,
+				topThis:Number      = hitbox.y,
+				bottomThis:Number   = hitbox.y + hitbox.height,
+				leftTarget:Number   = target.body.hitbox.x,
+				rightTarget:Number  = target.body.hitbox.x + target.body.hitbox.width,
+				topTarget:Number    = target.body.hitbox.y,
+				bottomTarget:Number = target.body.hitbox.y + target.body.hitbox.height;
+				
+			return !(leftThis > rightTarget || leftTarget > rightThis || topThis > bottomTarget || topTarget > bottomThis);
 		}
 		
 		public function get left():Boolean {

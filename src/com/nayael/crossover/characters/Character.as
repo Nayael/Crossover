@@ -61,6 +61,9 @@ package com.nayael.crossover.characters
 			// If the entity has a hitbox, we make it invisible
 			if ((view.sprite.getChildAt(0) as MovieClip).hitbox != undefined) {
 				(view.sprite.getChildAt(0) as MovieClip).hitbox.visible = false;
+				body.hitbox = (view.sprite.getChildAt(0) as MovieClip).hitbox;
+			} else {
+				body.hitbox = null;
 			}
 		}
 	}

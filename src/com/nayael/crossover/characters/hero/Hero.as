@@ -29,7 +29,6 @@ package com.nayael.crossover.characters.hero
 			body = new Body(this);
 			body.x = E.WIDTH >> 1;
 			body.y = E.HEIGHT >> 1;
-			body.radius = 20;
 			
 			physics = new Physics(this);
 			physics.vX = 0;
