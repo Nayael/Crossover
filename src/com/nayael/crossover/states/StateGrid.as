@@ -4,6 +4,7 @@ package com.nayael.crossover.states
 	import com.entity.engine.fsm.IState;
 	import com.entity.engine.SoundManager;
 	import com.nayael.crossover.Main;
+	import com.nayael.crossover.ui.BossGrid;
 	import com.nayael.crossover.utils.Text;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
@@ -12,6 +13,7 @@ package com.nayael.crossover.states
 	{
 		private var _text:Text;
 		private var _game:Main;
+		private var _grid:BossGrid;
 		
 		public function StateGrid(game:Main) {
 			_game = game;
@@ -24,10 +26,14 @@ package com.nayael.crossover.states
 			_game.addChild(_text);
 			//SoundManager.instance.playBGM( SoundManager.BGM3 );
 			
+			_grid = new BossGrid();
+			_game.addChild(_grid);
+			
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 		}
 		
 		public function exit():void {
+			_game.removeChild(_grid);
 			_text.remove();
 			//SoundManager.instance.stopAllSound();
 		}
