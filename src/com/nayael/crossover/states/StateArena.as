@@ -18,6 +18,7 @@ package com.nayael.crossover.states
 		}
 		
 		public function enter():void {
+			_game.arena.draw(_game);
 			//SoundManager.instance.playBGM( SoundManager.BGM3 );
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 		}
@@ -28,11 +29,8 @@ package com.nayael.crossover.states
 		}
 		
 		private function _onKeyDown(e:KeyboardEvent):void {
-			if (e.keyCode != Keyboard.SPACE
-			 && e.keyCode != Keyboard.ESCAPE
-			 && e.keyCode != Keyboard.G
-			 && e.keyCode != Keyboard.RIGHT
-			 && e.keyCode != Keyboard.LEFT) {
+			if (e.keyCode != Keyboard.ESCAPE
+			 && e.keyCode != Keyboard.G) {
 				return;
 			}
 			

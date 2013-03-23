@@ -3,6 +3,7 @@ package com.nayael.crossover.states
 	import com.entity.engine.E;
 	import com.entity.engine.fsm.IState;
 	import com.entity.engine.SoundManager;
+	import com.nayael.crossover.arenas.Arena;
 	import com.nayael.crossover.Main;
 	import com.nayael.crossover.ui.BossGrid;
 	import com.nayael.crossover.utils.Text;
@@ -50,7 +51,7 @@ package com.nayael.crossover.states
 			switch (e.keyCode) {
 				case Keyboard.SPACE:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-					_game.launchLevel(1);
+					_game.launchLevel( _grid.getArena() );
 					return;
 					break;
 			}

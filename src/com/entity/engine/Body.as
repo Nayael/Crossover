@@ -17,6 +17,11 @@ package com.entity.engine
 			this.entity = entity;
 		}
 		
+		/**
+		 * Tests if the entity collides with another entity
+		 * @param	target	The entity to test for collision with
+		 * @return True if there is a collision, False otherwise
+		 */
 		public function collide(target:Entity):Boolean {
 			if (!hitbox) {
 				return false;

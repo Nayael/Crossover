@@ -1,7 +1,7 @@
 package com.nayael.crossover.characters.boss 
 {
+	import com.entity.engine.utils.errors.AbstractClassError;
 	import com.nayael.crossover.characters.Character;
-	import com.nayael.crossover.errors.AbstractClassError;
 	
 	/**
 	 * Abstract class for boss enemies in the game

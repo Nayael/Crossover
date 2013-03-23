@@ -2,7 +2,7 @@ package com.nayael.crossover.characters
 {
 	import com.entity.engine.Entity;
 	import com.entity.engine.fsm.StateMachine;
-	import com.nayael.crossover.errors.AbstractClassError;
+	import com.entity.engine.utils.errors.AbstractClassError;
 	import flash.display.MovieClip;
 	
 	/**

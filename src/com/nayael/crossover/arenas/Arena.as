@@ -1,25 +1,22 @@
 package com.nayael.crossover.arenas 
 {
-	import com.nayael.crossover.errors.AbstractClassError;
+	import com.entity.engine.Map;
 	
 	/**
 	 * Abstract class for representing arenas
 	 * @author Nayael
 	 */
-	public class Arena
+	public class Arena extends Map
 	{
 	////////////////////////
 	// PROPERTIES
 	//
-		protected var _map:Vector.<Vector.<int>>;	// The game's tilemap
-	
+		private static const TILE_SIZE:int = 40;
 	////////////////////////
 	// CONSTRUCTOR
 	//
-		public function Arena() {
-			if (Object(this).constructor === Arena) {
-				throw new AbstractClassError(this);
-			}
+		public function Arena(tilemap:Array) {
+			super(TILE_SIZE, tilemap);
 		}
 	
 	////////////////////////
@@ -30,8 +27,6 @@ package com.nayael.crossover.arenas
 	////////////////////////
 	// GETTERS & SETTERS
 	//
-		public function get map():Vector.<Vector.<int>> {
-			return _map;
-		}
+		
 	}
 }

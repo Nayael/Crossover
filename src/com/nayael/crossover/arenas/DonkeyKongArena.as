@@ -16,7 +16,8 @@ package com.nayael.crossover.arenas
 	// CONSTRUCTOR
 	//
 		public function DonkeyKongArena() {
-			_map = Map.build([
+			this.sourceMC = new DonkeyKongArenaTiles();
+			super([
 				[7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8],
 				[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
 				[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],

@@ -16,6 +16,7 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
+    <class path="..\..\..\..\..\..\Program Files (x86)\Adobe Gaming SDK 1.0\Utilities\Hi-ReS-Stats\src" />
   </classpaths>
   <!-- Build options -->
   <build>

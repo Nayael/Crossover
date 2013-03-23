@@ -2,10 +2,12 @@ package com.nayael.crossover.ui
 {
 	import classes.BossSlot;
 	import com.entity.engine.E;
+	import com.nayael.crossover.arenas.*;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
+	import flash.utils.getDefinitionByName;
 	
 	/**
 	 * The boss grid
@@ -108,6 +110,12 @@ package com.nayael.crossover.ui
 			_slots[_selected].onLeave();
 			_selected = index;
 			_slots[_selected].onEnter();
+		}
+		
+		public function getArena():Arena {
+			var arenas:Array = [SonicArena, LinkArena, DonkeyKongArena],
+				arenaClass:Class = getDefinitionByName('com.nayael.crossover.arenas.' + _slots[_selected].bossName + 'Arena') as Class;
+			return new arenaClass();
 		}
 	
 	////////////////////////

@@ -16,7 +16,8 @@ package com.nayael.crossover.arenas
 	// CONSTRUCTOR
 	//
 		public function LinkArena() {
-			_map = Map.build([
+			this.sourceMC = new LinkArenaTiles();
+			super([
 				[7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8],
 				[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
 				[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],

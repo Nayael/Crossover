@@ -1,4 +1,4 @@
-package com.nayael.crossover.errors 
+package com.entity.engine.utils.errors 
 {
 	import flash.utils.getQualifiedClassName;
 

@@ -12,6 +12,7 @@ package com.nayael.crossover
 	import com.nayael.crossover.characters.hero.HeroEventType;
 	import com.nayael.crossover.states.*;
 	import flash.events.Event;
+	import net.hires.debug.Stats;
 	
 	/**
 	 * Main game class for the Crossover game
@@ -20,6 +21,7 @@ package com.nayael.crossover
 	[SWF(width="800",height="600",frameRate="30",backgroundColor="0x0")]
 	public class Main extends Game 
 	{
+		private var _arena:Arena;
         public var enemies:Vector.<Entity> = new Vector.<Entity>();
         public var players:Vector.<Entity> = new Vector.<Entity>();
 		public var hero:Hero;
@@ -29,7 +31,7 @@ package com.nayael.crossover
 		public static const MAIN_MENU:String = "game_main_menu_state";
 		public static const GRID:String 	 = "game_grid_state";
 		public static const ARENA:String     = "game_arena_state";
-		public static const RUNNING:String    = "game_running_state";
+		public static const RUNNING:String   = "game_running_state";
 		public static const PAUSE:String 	 = "game_pause_state";
 		public static const GAME_OVER:String = "game_over_state";
 		public var fsm:StateMachine;
@@ -45,6 +47,8 @@ package com.nayael.crossover
 		
 		private function init(e:Event = null):void {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
+			
+			stage.addChild(new Stats());
 			
 			E.stage = this.stage;
 			E.WIDTH = this.stage.stageWidth;
@@ -69,7 +73,6 @@ package com.nayael.crossover
 		 * Starts a new game
 		 */
 		public function startNewGame():void {
-			trace('New game');
 			hero = new Hero();
 			players.push(hero);
 			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
@@ -77,9 +80,11 @@ package com.nayael.crossover
 		
 		/**
 		 * When the player enters the level
-		 * @param	index
+		 * @param	arena
 		 */
-		public function launchLevel(index:int):void {
+		public function launchLevel(arena:Arena):void {
+			this._arena = arena;
+			
 			hud = new HUD();
 			fsm.state = ARENA;
 			
@@ -128,6 +133,10 @@ package com.nayael.crossover
 			}*/
 			
 			addChild(hud);
+		}
+		
+		public function get arena():Arena {
+			return _arena;
 		}
 	}
 }
