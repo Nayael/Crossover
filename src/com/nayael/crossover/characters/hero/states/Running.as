@@ -1,4 +1,4 @@
-package com.nayael.crossover.hero.states
+package com.nayael.crossover.characters.hero.states
 {
 	import com.entity.engine.Entity;
 	import com.entity.engine.fsm.IState;

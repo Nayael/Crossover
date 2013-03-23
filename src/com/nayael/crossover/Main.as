@@ -6,12 +6,10 @@ package com.nayael.crossover
 	import com.entity.engine.events.EntityEventType;
 	import com.entity.engine.fsm.StateMachine;
 	import com.entity.engine.Game;
-	import com.nayael.crossover.hero.Hero;
-	import com.nayael.crossover.hero.HeroEventType;
+	import com.nayael.crossover.characters.hero.Hero;
+	import com.nayael.crossover.characters.hero.HeroEventType;
 	import com.nayael.crossover.states.*;
-	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.KeyboardEvent;
 	
 	/**
 	 * Main game class for the Crossover game

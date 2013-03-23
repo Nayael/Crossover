@@ -1,4 +1,4 @@
-package com.nayael.crossover.hero 
+package com.nayael.crossover.characters.hero 
 {
 	/**
 	 * Hero related events

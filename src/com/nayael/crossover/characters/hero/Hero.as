@@ -1,9 +1,10 @@
-package com.nayael.crossover.hero
+package com.nayael.crossover.characters.hero
 {
 	import com.entity.engine.*;
 	import com.entity.engine.events.*;
 	import com.entity.engine.fsm.*;
-	import com.nayael.crossover.hero.states.*;
+	import com.nayael.crossover.characters.Character;
+	import com.nayael.crossover.characters.hero.states.*;
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.ui.*;
@@ -12,7 +13,7 @@ package com.nayael.crossover.hero
 	 * The hero class
 	 * @author Nayael
 	 */
-	public class Hero extends Entity
+	public class Hero extends Character
 	{
 		static public const STAND:String  = "hero_stand";
 		static public const RUN:String    = "hero_run";
@@ -22,9 +23,10 @@ package com.nayael.crossover.hero
 		
 		private var _fsm:StateMachine;
 		private var _keypad:Keypad;
-		private var _hSpeed:int = 8;
 		
 		public function Hero() {
+			_hSpeed = 8;
+			
 			body = new Body(this);
 			body.x = E.WIDTH >> 1;
 			body.y = E.HEIGHT >> 1;
@@ -54,11 +56,11 @@ package com.nayael.crossover.hero
 			physics.vX = 0;
 			
 			if (_keypad.isDown(Keyboard.LEFT)) {
-				physics.vX = -_hSpeed;
+				turnLeft();
 				state = RUN;
 			}
 			if (_keypad.isDown(Keyboard.RIGHT)) {
-				physics.vX = _hSpeed;
+				turnRight();
 				state = RUN;
 			}
 			
