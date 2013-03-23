@@ -1,6 +1,7 @@
 package com.nayael.crossover.characters 
 {
 	import com.entity.engine.Entity;
+	import com.nayael.crossover.errors.AbstractClassError;
 	
 	/**
 	 * Abstract character class
@@ -18,7 +19,7 @@ package com.nayael.crossover.characters
 	//
 		public function Character() {
 			if (Object(this).constructor === Character) {
-				throw new Error('Character is an abstract class');
+				throw new AbstractClassError(this);
 			}
 		}
 	

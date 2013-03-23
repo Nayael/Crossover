@@ -50,6 +50,7 @@ package com.nayael.crossover.characters.hero
 			state = STAND;
 			
 			_keypad = new Keypad(E.stage);
+			var character:Character = new Character();
 		}
 		
 		override public function update():void {
