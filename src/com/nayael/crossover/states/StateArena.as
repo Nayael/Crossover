@@ -6,6 +6,8 @@ package com.nayael.crossover.states
 	import com.nayael.crossover.Main;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	
 	public class StateArena implements IState
 	{
@@ -35,11 +37,22 @@ package com.nayael.crossover.states
 			}
 			
 			switch (e.keyCode) {
+				// DEATH DEBUG
 				case Keyboard.G:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-					_game.hero.health.hp = 0;
+					
+					var debugDeath:uint = setInterval(function():void {
+						if (!_game.hero.health) {
+							clearInterval(debugDeath);
+							return;
+						}
+						_game.hero.health.hp -= 2;
+					}, 100);
+					
 					return;
 					break;
+				
+				// PAUSE GAME
 				case Keyboard.ESCAPE:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 					_game.fsm.state = Main.PAUSE;

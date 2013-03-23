@@ -13,7 +13,6 @@ package com.nayael.crossover.characters.hero.states
 		public function Running(entity:Entity) {
 			this.entity = entity;
 			animation = new MegaboyRun();
-			//animation.hitbox_mc.visible = false;
 		}
 		
 		public function enter():void {

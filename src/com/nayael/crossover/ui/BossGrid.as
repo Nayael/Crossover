@@ -28,7 +28,7 @@ package com.nayael.crossover.ui
 				new BossSlot('Link'),
 				new BossSlot('DonkeyKong'),
 				new BossSlot(),
-				new BossSlot(),
+				new BossSlot(),	// The slot in the middle shall remain empty
 				new BossSlot(),
 				new BossSlot(),
 				new BossSlot(),

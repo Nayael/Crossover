@@ -20,6 +20,7 @@ package com.entity.engine
 			vX *= drag;
 			vY *= drag;
 			
+			// First, we restrain the entity inside the scene
 			if (entity.body.x > E.WIDTH - (entity.view.sprite.width >> 1)) {
 				entity.body.x = E.WIDTH - (entity.view.sprite.width >> 1);
 			}
@@ -32,6 +33,8 @@ package com.entity.engine
 			if (entity.body.y < (entity.view.sprite.height >> 1)) {
 				entity.body.y = (entity.view.sprite.height >> 1);
 			}
+			
+			
 		}
 		
 		public function impulse(pow:Number):void {

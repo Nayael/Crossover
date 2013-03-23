@@ -13,7 +13,7 @@ package com.nayael.crossover.characters.hero
 	 * The hero class
 	 * @author Nayael
 	 */
-	public class Hero extends Character
+	public final class Hero extends Character
 	{
 		static public const STAND:String  = "hero_stand";
 		static public const RUN:String    = "hero_run";
@@ -21,7 +21,6 @@ package com.nayael.crossover.characters.hero
 		static public const FIRE:String   = "hero_fire";
 		static public const SHIELD:String = "hero_shield";
 		
-		private var _fsm:StateMachine;
 		private var _keypad:Keypad;
 		
 		public function Hero() {
@@ -70,16 +69,6 @@ package com.nayael.crossover.characters.hero
 			}
 			
 			super.update();
-		}
-		
-		public function get state():String {
-			return _fsm.state;
-		}
-		
-		public function set state(value:String):void {
-			if (_fsm.state != value) {
-				_fsm.state = value;
-			}
 		}
 		
 		//override public function onHit():void {

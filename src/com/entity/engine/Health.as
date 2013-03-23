@@ -7,6 +7,8 @@ package com.entity.engine
 	public class Health 
 	{
 		public var entity:Entity;
+		public var maxHp:int = 100;
+		public var minHp:int = 0;
 		private var _hp:int;
 		
 		public function Health(entity:Entity) {
@@ -22,8 +24,11 @@ package com.entity.engine
 		}
 		
 		public function set hp(value:int):void {
+			if (value > maxHp) {
+				return;
+			}
 			_hp = value;
-			if (_hp > 0) {
+			if (_hp > minHp) {
 				entity.onHit();
 			} else {
 				entity.onDie();

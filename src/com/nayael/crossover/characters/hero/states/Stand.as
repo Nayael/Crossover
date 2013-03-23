@@ -12,7 +12,6 @@ package com.nayael.crossover.characters.hero.states
 		public function Stand(entity:Entity) {
 			this.entity = entity;
 			animation = new MegaboyStand();
-			//animation.hitbox_mc.visible = false;
 		}
 		
 		public function enter():void {
