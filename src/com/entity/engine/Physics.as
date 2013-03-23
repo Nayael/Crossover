@@ -15,7 +15,7 @@ package com.entity.engine
 		public function update():void
 		{
 			entity.body.x += vX;
-			entity.body.y += vY;			
+			entity.body.y += vY;
 			
 			vX *= drag;
 			vY *= drag;
@@ -34,9 +34,9 @@ package com.entity.engine
 			}
 		}
 		
-		public function impulse( pow:Number ):void {
+		public function impulse(pow:Number):void {
             vX += Math.sin(-entity.body.angle) * pow;
-            vY += Math.cos(-entity.body.angle) * pow;			
+            vY += Math.cos(-entity.body.angle) * pow;
 		}
 	}
 }
