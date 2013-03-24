@@ -17,6 +17,7 @@ package com.entity.engine
 		
 		public var TS:int;	// The tile size
 		public var sourceMC:MovieClip;
+		public var obstacles:Vector.<int>;
 	
 	////////////////////////
 	// CONSTRUCTOR

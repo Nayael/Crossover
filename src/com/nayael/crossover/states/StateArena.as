@@ -18,7 +18,7 @@ package com.nayael.crossover.states
 		}
 		
 		public function enter():void {
-			_game.arena.draw(_game);
+			_game.map.draw(_game);
 			//SoundManager.instance.playBGM( SoundManager.BGM3 );
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 		}

@@ -9,6 +9,7 @@
 		private var _health:Health;
 		private var _weapon:Weapon;
 		private var _view:View;
+		protected var _game:Game;
 		
 		private var _targets:Vector.<Entity>;
 		private var _group:Vector.<Entity>;
@@ -21,18 +22,22 @@
 			EventBroker.broadcast( new EntityEvent( EntityEventType.DESTROYED, this) );
 			if (group) {
 				var idx:int = group.indexOf(this);
-				if (idx>-1) group.splice(idx, 1);				
+				if (idx > -1) {
+					group.splice(idx, 1);
+				}
 			}
 		}
 		
 		public function update():void {
-			if (physics)
-				physics.update();
+			if (physics) {
+				physics.update(_game.map);
+			}
 		}
 		
 		public function draw():void {
-			if (view)
+			if (view) {
 				view.draw();
+			}
 		}
 		
 		public function get body():Body {
@@ -98,6 +103,10 @@
 		
 		public function set group(value:Vector.<Entity>):void  {
 			_group = value;
+		}
+		
+		public function set game(value:Game):void {
+			_game = value;
 		}
 
 	}

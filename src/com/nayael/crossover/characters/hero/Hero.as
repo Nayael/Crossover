@@ -32,7 +32,7 @@ package com.nayael.crossover.characters.hero
 			
 			physics = new Physics(this);
 			physics.vX = 0;
-			physics.vY = 0;
+			physics.vY = 8;
 			
 			view = new View(this);
 			view.scale = 2;

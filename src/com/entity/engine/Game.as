@@ -9,8 +9,8 @@ package com.entity.engine
 	
 	public class Game extends Sprite
 	{
+		protected var _map:Map;
 		public var entities:Vector.<Entity> = new Vector.<Entity>();
-		public var map:Vector.<Vector.<int>>;	// The game's tilemap
 		
 		// constructeur et init
 		public function Game():void {
@@ -64,12 +64,13 @@ package com.entity.engine
 		// -- gestion de toutes les entites
 		protected function addEntity(entity:Entity):Entity {
 			trace( "engine/game/addEntity", entity );
-			entities.push(entity); 
-			if (entity.view)
+			entities.push(entity);
+			if (entity.view) {
 				addChild(entity.view.sprite);
-				
+			}
+			entity.game = this;
 			return entity;
-		} 
+		}
 		
 		protected function onEntityCreated(e:EntityEvent): void {
 			trace( "engine/game/onEntityCreated", e.entity );
@@ -89,7 +90,9 @@ package com.entity.engine
 				entities.splice( idx , 1);
 			}			 
 		}
-	
+		
+		public function get map():Map {
+			return _map;
+		}
 	}
-
 }

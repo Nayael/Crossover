@@ -16,6 +16,7 @@ package com.nayael.crossover.arenas
 	// CONSTRUCTOR
 	//
 		public function Arena(tilemap:Array) {
+			obstacles = Vector.<int>([1, 2, 3, 4, 5, 6, 7, 8]);
 			super(TILE_SIZE, tilemap);
 		}
 	

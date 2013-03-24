@@ -6,6 +6,7 @@ package com.nayael.crossover
 	import com.entity.engine.events.EntityEventType;
 	import com.entity.engine.fsm.StateMachine;
 	import com.entity.engine.Game;
+	import com.entity.engine.Map;
 	import com.nayael.crossover.arenas.Arena;
 	import com.nayael.crossover.arenas.SonicArena;
 	import com.nayael.crossover.characters.hero.Hero;
@@ -21,7 +22,7 @@ package com.nayael.crossover
 	[SWF(width="800",height="600",frameRate="30",backgroundColor="0x0")]
 	public class Main extends Game 
 	{
-		private var _arena:Arena;
+		//private var _arena:Arena;
         public var enemies:Vector.<Entity> = new Vector.<Entity>();
         public var players:Vector.<Entity> = new Vector.<Entity>();
 		public var hero:Hero;
@@ -83,7 +84,7 @@ package com.nayael.crossover
 		 * @param	arena
 		 */
 		public function launchLevel(arena:Arena):void {
-			this._arena = arena;
+			_map = arena;
 			
 			hud = new HUD();
 			fsm.state = ARENA;
@@ -135,8 +136,8 @@ package com.nayael.crossover
 			addChild(hud);
 		}
 		
-		public function get arena():Arena {
-			return _arena;
+		override public function get map():Map {
+			return _map as Arena;
 		}
 	}
 }
