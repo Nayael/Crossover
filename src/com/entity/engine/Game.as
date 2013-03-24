@@ -6,11 +6,16 @@ package com.entity.engine
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.utils.getTimer;
 	
 	public class Game extends Sprite
 	{
+		private var _t:int;
+		
 		protected var _map:Map;
+		
 		public var entities:Vector.<Entity> = new Vector.<Entity>();
+		static protected var _dt:Number;
 		
 		// constructeur et init
 		public function Game():void {
@@ -36,6 +41,7 @@ package com.entity.engine
 		
 		// -- debut/fin
 		protected function begin():void {
+			_t = getTimer();
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			// [override me] :D
 		}
@@ -51,6 +57,9 @@ package com.entity.engine
 		
 		// -- boucle d'affichage		
 		protected function onEnterFrame(event:Event):void {
+			var t:int = getTimer();
+			_dt = (t - _t) * 0.001;
+			_t = t;
 			update();
 		}				
 		
@@ -93,6 +102,10 @@ package com.entity.engine
 		
 		public function get map():Map {
 			return _map;
+		}
+		
+		static public function get dt():Number {
+			return _dt;
 		}
 	}
 }

@@ -18,13 +18,16 @@ package com.nayael.crossover.states
 		}
 		
 		public function enter():void {
-			_game.map.draw(_game);
+			for (var i:int = 0; i < _game.numChildren; i++) {
+				if (!_game.getChildAt(i).visible) {
+					_game.getChildAt(i).visible = true;
+				}
+			}
 			//SoundManager.instance.playBGM( SoundManager.BGM3 );
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 		}
 		
 		public function exit():void {
-			_game.removeChild(_game.hud);
 			//SoundManager.instance.stopAllSound();
 		}
 		

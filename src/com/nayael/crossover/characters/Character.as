@@ -15,6 +15,8 @@ package com.nayael.crossover.characters
 	// PROPERTIES
 	//
 		protected var _hSpeed:int = 8;
+		protected var _vHeight:int = 25;
+		protected var _vSpeed:int = 2;
 		protected var _fsm:StateMachine;
 	
 	////////////////////////
@@ -43,6 +45,19 @@ package com.nayael.crossover.characters
 		public function turnRight():void {
 			physics.vX = _hSpeed;
 			body.right = true;
+		}
+		
+		public function startJump():void {
+			physics.vY = -_vHeight;
+		}
+		
+		/**
+		 * Makes the character jump
+		 */
+		public function jump():void {
+			if (physics.vY < _vHeight) {
+				physics.vY += _vSpeed;
+			}
 		}
 	
 	////////////////////////

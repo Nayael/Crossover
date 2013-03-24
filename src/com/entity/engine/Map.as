@@ -1,6 +1,7 @@
 package com.entity.engine 
 {
 	import com.entity.engine.utils.Utils;
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	
 	/**
@@ -57,7 +58,27 @@ package com.entity.engine
 						tile.gotoAndStop(value);
 						tile.x = i * TS;
 						tile.y = j * TS;
+						tile.name = 'tile' + i + 'y' + j;
 						game.addChild(tile);
+					}
+					i++;
+				}
+				j++;
+			}
+		}
+		
+		public function destroy(game:Game):void {
+			var tile:DisplayObject,
+				i:int = 0,
+				j:int = 0;
+			for each (var row:Vector.<int> in _tilemap) {
+				i = 0;
+				for each (var value:int in row) {
+					if (value != 0) {
+						tile = game.getChildByName('tile' + i + 'y' + j);
+						if (tile && tile.stage) {
+							game.removeChild(tile);
+						}
 					}
 					i++;
 				}

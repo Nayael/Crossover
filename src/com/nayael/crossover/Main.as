@@ -74,6 +74,7 @@ package com.nayael.crossover
 		 * Starts a new game
 		 */
 		public function startNewGame():void {
+			trace('new game');
 			hero = new Hero();
 			players.push(hero);
 			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
@@ -84,13 +85,24 @@ package com.nayael.crossover
 		 * @param	arena
 		 */
 		public function launchLevel(arena:Arena):void {
-			_map = arena;
+			hero = new Hero();
+			players.push(hero);
+			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
 			
+			_map = arena;
 			hud = new HUD();
+			map.draw(this);
 			fsm.state = ARENA;
 			
 			addEntity(hero);
 			begin();
+		}
+		
+		public function exitLevel():void {
+			map.destroy(this);
+			removeChild(hud);
+			players.length = 0;
+			end();
 		}
 		
 		override protected function update():void {
@@ -106,6 +118,7 @@ package com.nayael.crossover
 		 * When the hero is dead : Game Over
 		 */
 		private function onHeroDead(e:Event = null):void {
+			players.splice(players.indexOf(hero), 1);
 			fsm.state = GAME_OVER;
 		}
 		

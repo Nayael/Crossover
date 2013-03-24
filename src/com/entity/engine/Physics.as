@@ -3,7 +3,7 @@ package com.entity.engine
 	public class Physics 
 	{
         public var entity:Entity;
-        public var drag:Number = 1.;	// Friction	
+        public var drag:Number = 1.;	// Friction
         public var vX:Number = .0;		// X-axis speed
         public var vY:Number = .0;		// Y-axis speed
 		
@@ -31,6 +31,7 @@ package com.entity.engine
 			}
 			if (entity.body.hitbox && !_yCollision(map)) {
 				entity.body.y += vY;
+				entity.body.onFloor = false;
 			}
 			
 			vX *= drag;
@@ -57,7 +58,7 @@ package com.entity.engine
 				// If one of the tiles is an obstacle
 				if (map.obstacles.indexOf(map.tilemap[i][x]) != -1) {
 					newX = x * map.TS + (entity.body.left ? map.TS : 0);
-					entity.body.x = newX - hitboxEdge;
+					entity.body.x = newX - hitboxEdge - 1;
 					return true;
 				}
 			}
@@ -77,6 +78,9 @@ package com.entity.engine
 				// If one of the tiles is an obstacle
 				if (map.obstacles.indexOf(map.tilemap[y][j]) != -1) {
 					entity.body.y = y * map.TS + ((map.TS - hitboxY) * (vY < 0 ? 1 : 0) );
+					if (vY > 0) {
+						entity.body.onFloor = true;
+					}
 					return true;
 				}
 			}

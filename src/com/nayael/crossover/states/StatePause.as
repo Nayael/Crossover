@@ -46,7 +46,6 @@ package com.nayael.crossover.states
 			}
 			_selectOption(0);
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
-			//_game.addChild( E.setProps(_pauseClip, {x:282, y:int(E.HEIGHT*1/3)} ) );
 		}
 		
 		public function exit():void {
@@ -54,7 +53,6 @@ package com.nayael.crossover.states
 				text.remove();
 			}
 			_cursor.remove();
-			//_game.removeChild( _pauseClip );
 		}
 		
 		/**
@@ -78,6 +76,9 @@ package com.nayael.crossover.states
 				// Validate the selected option
 				case Keyboard.SPACE:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
+					if (_options[_selected][0] == Main.GRID) {
+						_game.exitLevel();
+					}
 					_game.fsm.state = _options[_selected][0];
 					break;
 			}

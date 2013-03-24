@@ -29,6 +29,7 @@ package com.nayael.crossover.characters.hero
 			body = new Body(this);
 			body.x = E.WIDTH >> 1;
 			body.y = E.HEIGHT >> 1;
+			body.angle = 90;
 			
 			physics = new Physics(this);
 			physics.vX = 0;
@@ -42,8 +43,9 @@ package com.nayael.crossover.characters.hero
 			health.hp = 100;
 			
 			_fsm = new StateMachine();			
-			_fsm.addState( STAND, new Stand(this)  , [RUN]);
-			_fsm.addState( RUN  , new Running(this), [STAND]);			
+			_fsm.addState( STAND, new Stand(this)  , [RUN, JUMP]);
+			_fsm.addState( RUN  , new Running(this), [STAND, JUMP]);
+			_fsm.addState( JUMP , new Jumping(this), [STAND]);
 			
 			state = STAND;
 			
@@ -55,15 +57,26 @@ package com.nayael.crossover.characters.hero
 			
 			if (_keypad.isDown(Keyboard.LEFT)) {
 				turnLeft();
-				state = RUN;
+				if (state != JUMP) {
+					state = RUN;
+				}
 			}
 			if (_keypad.isDown(Keyboard.RIGHT)) {
 				turnRight();
-				state = RUN;
+				if (state != JUMP) {
+					state = RUN;
+				}
+			}
+			if (_keypad.isDown(Keyboard.SPACE) && state != JUMP) {
+				state = JUMP;
+				startJump();
+			}
+			if (state == JUMP) {
+				jump();
 			}
 			
 			// If he is not moving, set state as STAND
-			if (physics.vX == 0) {
+			if (physics.vX == 0 && body.onFloor) {
 				state = STAND;
 			}
 			

@@ -29,6 +29,7 @@ package com.nayael.crossover.states
 		}
 		
 		public function enter():void {
+			_game.exitLevel();
 			for each (var text:Text in _texts) {
 				_game.addChild(text);
 			}
