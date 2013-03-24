@@ -26,10 +26,10 @@ package com.entity.engine
 				entity.body.y = entity.view.sprite.height;
 			}
 			
-			if (!_xCollision(map)) {	// If the body doesn't collide with an obstacle, move it
+			if (entity.body.hitbox && !_xCollision(map)) {	// If the body doesn't collide with an obstacle, move it
 				entity.body.x += vX;
 			}
-			if (!_yCollision(map)) {
+			if (entity.body.hitbox && !_yCollision(map)) {
 				entity.body.y += vY;
 			}
 			
@@ -46,15 +46,18 @@ package com.entity.engine
 				hitboxY:Number = entity.body.hitbox.y * entity.view.scale,
 				hitboxWidth:Number = entity.body.hitbox.width * entity.view.scale,
 				hitboxHeight:Number = entity.body.hitbox.height * entity.view.scale,
-				x:int = ( entity.body.x + vX + (entity.body.left ? hitboxX : (hitboxX + hitboxWidth) ) ) / map.TS,
+				hitboxEdge:Number = (hitboxX + hitboxWidth) * (entity.body.left ? -1 : 1 ),
+				x:int = ( entity.body.x + vX + hitboxEdge ) / map.TS,
 				yMin:int = ( (entity.body.y + hitboxY) / map.TS),
-				yMax:int = ( (entity.body.y + hitboxY + hitboxHeight) / map.TS);
-				
+				yMax:int = ( (entity.body.y + hitboxY + hitboxHeight) / map.TS),
+				newX:int;
+			
 			// Parsing the rows containing the entity
 			for (var i:int = yMin; i <= yMax; i++) {
 				// If one of the tiles is an obstacle
 				if (map.obstacles.indexOf(map.tilemap[i][x]) != -1) {
-					entity.body.x = x * map.TS + (map.TS * (entity.body.left ? 1 : -1) ) - hitboxX;
+					newX = x * map.TS + (entity.body.left ? map.TS : 0);
+					entity.body.x = newX - hitboxEdge;
 					return true;
 				}
 			}
