@@ -27,8 +27,8 @@ package com.nayael.crossover.characters.hero
 			_hSpeed = 8;
 			
 			body = new Body(this);
-			body.x = E.WIDTH >> 1;
-			body.y = E.HEIGHT >> 1;
+			body.x = (E.WIDTH >> 1) >> 1;
+			body.y = E.HEIGHT - 40;
 			body.angle = 90;
 			
 			physics = new Physics(this);
@@ -45,7 +45,7 @@ package com.nayael.crossover.characters.hero
 			_fsm = new StateMachine();			
 			_fsm.addState( STAND, new Stand(this)  , [RUN, JUMP]);
 			_fsm.addState( RUN  , new Running(this), [STAND, JUMP]);
-			_fsm.addState( JUMP , new Jumping(this), [STAND]);
+			_fsm.addState( JUMP , new Jumping(this), [STAND, RUN]);
 			
 			state = STAND;
 			
@@ -55,28 +55,33 @@ package com.nayael.crossover.characters.hero
 		override public function update():void {
 			physics.vX = 0;
 			
+			// RUNNING state
 			if (_keypad.isDown(Keyboard.LEFT)) {
 				turnLeft();
-				if (state != JUMP) {
+				if (state != JUMP || body.onFloor) {
 					state = RUN;
 				}
 			}
 			if (_keypad.isDown(Keyboard.RIGHT)) {
 				turnRight();
-				if (state != JUMP) {
+				if (state != JUMP || body.onFloor) {
 					state = RUN;
 				}
 			}
-			if (_keypad.isDown(Keyboard.SPACE) && state != JUMP) {
+			
+			// JUMP state
+			if (!body.onFloor && state != JUMP) {
 				state = JUMP;
+			}
+			if (_keypad.isDown(Keyboard.SPACE) && state != JUMP) {
 				startJump();
 			}
 			if (state == JUMP) {
 				jump();
 			}
 			
-			// If he is not moving, set state as STAND
-			if (physics.vX == 0 && body.onFloor) {
+			// STAND state
+			if (body.onFloor && physics.vX == 0) {
 				state = STAND;
 			}
 			

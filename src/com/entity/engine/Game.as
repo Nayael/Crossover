@@ -58,7 +58,7 @@ package com.entity.engine
 		// -- boucle d'affichage		
 		protected function onEnterFrame(event:Event):void {
 			var t:int = getTimer();
-			_dt = (t - _t) * 0.001;
+			_dt = (t - _t);
 			_t = t;
 			update();
 		}				
