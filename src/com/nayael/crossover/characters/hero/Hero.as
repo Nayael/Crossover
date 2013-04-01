@@ -23,6 +23,8 @@ package com.nayael.crossover.characters.hero
 		static public const RUN:String       = "hero_run";
 		static public const JUMP:String      = "hero_jump";
 		static public const FIRE:String      = "hero_fire";
+		static public const WALL:String      = "hero_wall";
+		static public const WALL_FIRE:String = "hero_wall_fire";
 		static public const JUMP_FIRE:String = "hero_jump_fire";
 		static public const RUN_FIRE:String  = "hero_run_fire";
 		static public const SHIELD:String    = "hero_shield";
@@ -51,13 +53,15 @@ package com.nayael.crossover.characters.hero
 			weapon = new BusterGun(this);
 			
 			_fsm = new StateMachine();			
-			_fsm.addState( STAND     , new Stand(this)   , [HURT, RUN, JUMP, FIRE, RUN_FIRE] );
+			_fsm.addState( STAND     , new Stand(this)   , [HURT, RUN, JUMP, FIRE, RUN_FIRE, WALL, WALL_FIRE] );
 			_fsm.addState( HURT      , new Hurt(this)    , [STAND, RUN, RUN_FIRE, JUMP, JUMP_FIRE] );
 			_fsm.addState( RUN       , new Running(this) , [STAND, HURT, JUMP, FIRE, RUN_FIRE] );
-			_fsm.addState( JUMP      , new Jumping(this) , [STAND, HURT, RUN, RUN_FIRE, JUMP_FIRE] );
+			_fsm.addState( JUMP      , new Jumping(this) , [STAND, HURT, RUN, RUN_FIRE, JUMP_FIRE, WALL, WALL_FIRE] );
 			_fsm.addState( FIRE      , new Fire(this)    , [STAND, HURT, RUN, RUN_FIRE, JUMP, JUMP_FIRE] );
-			_fsm.addState( JUMP_FIRE , new JumpFire(this), [STAND, HURT, RUN, RUN_FIRE, JUMP] );
+			_fsm.addState( JUMP_FIRE , new JumpFire(this), [STAND, HURT, RUN, RUN_FIRE, JUMP, WALL, WALL_FIRE] );
 			_fsm.addState( RUN_FIRE  , new RunFire(this) , [STAND, HURT, RUN, FIRE, JUMP, JUMP_FIRE] );
+			_fsm.addState( WALL      , new Wall(this)    , [STAND, JUMP, RUN, JUMP_FIRE, WALL_FIRE] );
+			_fsm.addState( WALL_FIRE , new WallFire(this), [STAND, JUMP, RUN, JUMP_FIRE, WALL] );
 			
 			state = STAND;
 			
@@ -77,20 +81,17 @@ package com.nayael.crossover.characters.hero
 			physics.vX = 0;
 			
 			// RUNNING state
-			if (_keypad.isDown(Keyboard.LEFT) && !( (physics as HeroPhysics).wallJumping && !body.left ) ) {
+			if (_keypad.isDown(Keyboard.LEFT) /*&& !( (physics as HeroPhysics).wallJumping && body.right )*/ ) {
 				turnLeft();
-				if (state != JUMP || body.onFloor) {
+				if (body.onFloor && !(physics as HeroPhysics).onWall ) {
 					state = RUN;
 				}
 			}
-			if (_keypad.isDown(Keyboard.RIGHT) && !( (physics as HeroPhysics).wallJumping && !body.right ) ) {
+			if (_keypad.isDown(Keyboard.RIGHT) /*&& !( (physics as HeroPhysics).wallJumping && body.left )*/ ) {
 				turnRight();
-				if (state != JUMP || body.onFloor) {
+				if (body.onFloor && !(physics as HeroPhysics).onWall ) {
 					state = RUN;
 				}
-			}
-			if (_keypad.isDown(Keyboard.E)) {
-				physics.vX -= 8;
 			}
 			
 			// STAND state
@@ -99,16 +100,16 @@ package com.nayael.crossover.characters.hero
 			}
 			
 			// JUMP state
-			if (!body.onFloor) {
+			if (!body.onFloor && !((physics as HeroPhysics).onWall && physics.vY > 0)) {
 				state = JUMP;
 			}
-			if (_keypad.isDown(Keyboard.SPACE) && (body.onFloor || (physics as HeroPhysics).onWall)) {
-				if (!body.onFloor && (physics as HeroPhysics).onWall) {
+			if (_keypad.isDown(Keyboard.SPACE) && (body.onFloor || state == WALL || state == WALL_FIRE)) {
+				if (state == WALL || state == WALL_FIRE) {
 					(physics as HeroPhysics).wallJumping = true;
 				}
 				startJump();
 			}
-			if (state == JUMP || state == JUMP_FIRE) {
+			if (state == JUMP || state == JUMP_FIRE || state == WALL || state == WALL_FIRE) {
 				jump();
 			}
 			
@@ -120,6 +121,8 @@ package com.nayael.crossover.characters.hero
 					state = JUMP_FIRE;
 				} else if (state == RUN) {
 					state = RUN_FIRE;
+				} else if (state == WALL) {
+					state = WALL_FIRE;
 				} else {
 					state = FIRE;
 				}
@@ -170,7 +173,6 @@ package com.nayael.crossover.characters.hero
 			if (physics.vY < _vHeight) {
 				physics.vY += _vSpeed;
 			}
-			physics.vX += (body.left ? -1 : 1);
 		}
 	}
 }
