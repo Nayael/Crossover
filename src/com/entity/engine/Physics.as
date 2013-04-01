@@ -46,7 +46,7 @@ package com.entity.engine
 		 * Looks for a collision for the hitbox on the X-Axis
 		 * @param	map
 		 */
-		private function _xCollision(map:Map):Boolean {
+		protected function _xCollision(map:Map):Boolean {
 			var hitboxX:Number = entity.body.hitbox.x * entity.view.scale,
 				hitboxY:Number = entity.body.hitbox.y * entity.view.scale,
 				hitboxWidth:Number = entity.body.hitbox.width * entity.view.scale,
@@ -69,7 +69,7 @@ package com.entity.engine
 			return false;
 		}
 		
-		private function _yCollision(map:Map):Boolean {
+		protected function _yCollision(map:Map):Boolean {
 			var hitboxX:Number = entity.body.hitbox.x * entity.view.scale,
 				hitboxY:Number = entity.body.hitbox.y * entity.view.scale,
 				hitboxWidth:Number = entity.body.hitbox.width * entity.view.scale,
@@ -84,6 +84,8 @@ package com.entity.engine
 					entity.body.y = y * map.TS + ((map.TS - hitboxY) * (vY < 0 ? 1 : 0) );
 					if (vY > 0) {
 						entity.body.onFloor = true;
+					} else {
+						vY = 0;
 					}
 					return true;
 				}

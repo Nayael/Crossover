@@ -17,7 +17,7 @@ package com.entity.engine
 		
 		public function damage(value:int):void {
 			hp -= value;
-		}		
+		}
 		
 		public function get hp():int {
 			return _hp;
@@ -27,10 +27,11 @@ package com.entity.engine
 			if (value > maxHp) {
 				return;
 			}
+			var baseHp:int = _hp;
 			_hp = value;
-			if (_hp > minHp) {
+			if (_hp > minHp && baseHp > _hp) {
 				entity.onHit();
-			} else {
+			} else if (_hp <= minHp) {
 				entity.onDie();
 			}
 		}
