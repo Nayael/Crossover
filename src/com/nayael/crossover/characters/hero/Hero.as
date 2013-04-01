@@ -5,9 +5,11 @@ package com.nayael.crossover.characters.hero
 	import com.entity.engine.fsm.*;
 	import com.nayael.crossover.characters.Character;
 	import com.nayael.crossover.characters.hero.states.*;
+	import com.nayael.crossover.weapons.BusterGun;
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.ui.*;
+	import flash.utils.clearTimeout;
 	
 	/**
 	 * The hero class
@@ -42,10 +44,13 @@ package com.nayael.crossover.characters.hero
 			health = new Health(this);
 			health.hp = 100;
 			
+			weapon = new BusterGun(this);
+			
 			_fsm = new StateMachine();			
-			_fsm.addState( STAND, new Stand(this)  , [RUN, JUMP]);
-			_fsm.addState( RUN  , new Running(this), [STAND, JUMP]);
-			_fsm.addState( JUMP , new Jumping(this), [STAND, RUN]);
+			_fsm.addState( STAND, new Stand(this)  , [RUN, JUMP, FIRE] );
+			_fsm.addState( RUN  , new Running(this), [STAND, JUMP, FIRE] );
+			_fsm.addState( JUMP , new Jumping(this), [STAND, RUN] );
+			_fsm.addState( FIRE , new Fire(this)   , [STAND, RUN, JUMP] );
 			
 			state = STAND;
 			
@@ -68,6 +73,9 @@ package com.nayael.crossover.characters.hero
 					state = RUN;
 				}
 			}
+			if (_keypad.isDown(Keyboard.E)) {
+				physics.vX -= 8;
+			}
 			
 			// JUMP state
 			if (!body.onFloor && state != JUMP) {
@@ -85,12 +93,21 @@ package com.nayael.crossover.characters.hero
 				state = STAND;
 			}
 			
+			// FIRE state
+			if (_keypad.isDown(Keyboard.ENTER)) {
+				state = FIRE;
+				weapon.fire();
+			} else if (_keypad.isUp(Keyboard.ENTER) && weapon.cooldown != 0) {
+				clearTimeout(weapon.cooldown);
+				weapon.cooldown = 0;
+			}
+			
 			super.update();
 		}
 		
-		//override public function onHit():void {
+		override public function onHit():void {
 			//this.state = BLINKING;
-		//}
+		}
 		
 		override public function onDie():void {
 			destroy();
@@ -108,8 +125,6 @@ package com.nayael.crossover.characters.hero
 			this.weapon = null;
 			this.health = null;
 			this.view = null;
-		}		
-	
+		}
 	}
-
 }

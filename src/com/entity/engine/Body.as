@@ -9,7 +9,7 @@ package com.entity.engine
 		public var y:Number = .0;
 		public var angle:Number = .0;
 		public var hitbox:MovieClip;
-		public var onFloor:Boolean = true;
+		public var onFloor:Boolean = false;
 		
 		private var _left:Boolean;
 		private var _right:Boolean;

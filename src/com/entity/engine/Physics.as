@@ -1,11 +1,15 @@
 package com.entity.engine 
 {
+	import com.nayael.crossover.characters.hero.Hero;
 	public class Physics 
 	{
         public var entity:Entity;
         public var drag:Number = 1.;	// Friction
+        public var mass:Number = 1.;
         public var vX:Number = .0;		// X-axis speed
         public var vY:Number = .0;		// Y-axis speed
+		public var useGravity:Boolean = true;
+		public var useMapCollisions:Boolean = true;	// Shall the entity collide with the map elements ?
 		
 		public function Physics(entity:Entity) {
 			this.entity = entity;
@@ -26,10 +30,10 @@ package com.entity.engine
 				entity.body.y = entity.view.sprite.height;
 			}
 			
-			if (entity.body.hitbox && !_xCollision(map)) {	// If the body doesn't collide with an obstacle, move it
+			if (!useMapCollisions || entity.body.hitbox && !_xCollision(map)) {	// If the body doesn't collide with an obstacle, move it
 				entity.body.x += vX;
 			}
-			if (entity.body.hitbox && !_yCollision(map)) {
+			if (entity.body.hitbox && useGravity && !_yCollision(map)) {
 				entity.body.y += vY;
 				entity.body.onFloor = false;
 			}
@@ -47,7 +51,7 @@ package com.entity.engine
 				hitboxY:Number = entity.body.hitbox.y * entity.view.scale,
 				hitboxWidth:Number = entity.body.hitbox.width * entity.view.scale,
 				hitboxHeight:Number = entity.body.hitbox.height * entity.view.scale,
-				hitboxEdge:Number = (hitboxX + hitboxWidth) * (entity.body.left ? -1 : 1 ),
+				hitboxEdge:Number = (hitboxX + hitboxWidth) * (vX < 0 ? -1 : 1 ),
 				x:int = ( entity.body.x + vX + hitboxEdge ) / map.TS,
 				yMin:int = ( (entity.body.y + hitboxY) / map.TS),
 				yMax:int = ( (entity.body.y + hitboxY + hitboxHeight) / map.TS),
@@ -57,7 +61,7 @@ package com.entity.engine
 			for (var i:int = yMin; i <= yMax; i++) {
 				// If one of the tiles is an obstacle
 				if (map.obstacles.indexOf(map.tilemap[i][x]) != -1) {
-					newX = x * map.TS + (entity.body.left ? map.TS : 0);
+					newX = x * map.TS + (vX < 0 ? map.TS : 0);
 					entity.body.x = newX - hitboxEdge - 1;
 					return true;
 				}
@@ -70,7 +74,7 @@ package com.entity.engine
 				hitboxY:Number = entity.body.hitbox.y * entity.view.scale,
 				hitboxWidth:Number = entity.body.hitbox.width * entity.view.scale,
 				hitboxHeight:Number = entity.body.hitbox.height * entity.view.scale,
-				y:int = ( entity.body.y + vY + (vY < 0 ? hitboxY : (hitboxY + hitboxHeight) ) ) / map.TS,
+				y:int = ( entity.body.y + vY + hitboxY + (vY < 0 ? 0 : hitboxHeight ) ) / map.TS,
 				xMin:int = ( (entity.body.x + hitboxX) / map.TS),
 				xMax:int = ( (entity.body.x + hitboxX + hitboxWidth) / map.TS);
 			// Parsing the columns containing the entity
