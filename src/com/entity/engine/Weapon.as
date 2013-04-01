@@ -6,6 +6,8 @@ package com.entity.engine
 	public class Weapon
 	{
         public var entity:Entity;
+		public var x:Number;	// The weapon can have a defined coordinate to throw bullet from that point
+		public var y:Number;	// The weapon can have a defined coordinate to throw bullet from that point
         public var ammo:int = 99;
 		public var cooldownTime:int = 300;
 		public var cooldown:uint = 0;
