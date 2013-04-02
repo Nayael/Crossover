@@ -15,6 +15,7 @@ package com.nayael.crossover.characters.hero.states
 		}
 		
 		public function enter():void {
+			animation.gotoAndPlay(1);
 			entity.view.sprite.addChild( animation );
 		}
 		
