@@ -8,7 +8,7 @@ package com.nayael.crossover
 	import com.entity.engine.Game;
 	import com.entity.engine.Map;
 	import com.nayael.crossover.arenas.Arena;
-	import com.nayael.crossover.arenas.SonicArena;
+	import com.nayael.crossover.characters.boss.Boss;
 	import com.nayael.crossover.characters.hero.Hero;
 	import com.nayael.crossover.characters.hero.HeroEventType;
 	import com.nayael.crossover.states.*;
@@ -26,6 +26,7 @@ package com.nayael.crossover
         public var enemies:Vector.<Entity> = new Vector.<Entity>();
         public var players:Vector.<Entity> = new Vector.<Entity>();
 		public var hero:Hero;
+		public var boss:Boss;
 		
 		// Game States
 		public static const INTRO:String     = "game_intro_state";
@@ -74,8 +75,8 @@ package com.nayael.crossover
 		 * Starts a new game
 		 */
 		public function startNewGame():void {
-			trace('new game');
 			hero = new Hero();
+			hero.group = players;
 			players.push(hero);
 			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
 		}
@@ -89,12 +90,17 @@ package com.nayael.crossover
 			players.push(hero);
 			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
 			
+			boss = arena.boss;
+			boss.group = enemies;
+			enemies.push(boss);
+			
 			_map = arena;
 			hud = new HUD();
 			map.draw(this);
 			fsm.state = ARENA;
 			
 			addEntity(hero);
+			addEntity(boss);
 			begin();
 		}
 		
@@ -137,14 +143,16 @@ package com.nayael.crossover
 			
 			// If we are inside an arena with a boss
 			// Updating enemy's side HUD
-			/*if (fsm.current == ARENA) {
-				if (boss.health) {
+			if (fsm.current == ARENA) {
+				hud.showBossHUD();
+				if (boss && boss.health) {
 					hud.bossHP = boss.health.hp;
-					hud.bossAmmo = boss.weapon.ammo;
 				} else {
 					hud.bossHP = 0;
 				}
-			}*/
+			} else {
+				hud.hideBossHUD();
+			}
 			
 			addChild(hud);
 		}

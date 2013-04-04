@@ -2,6 +2,7 @@ package com.nayael.crossover.characters.boss.states.sonic
 {
 	import com.entity.engine.Entity;
 	import com.entity.engine.fsm.IState;
+	import flash.display.MovieClip;
 	
 	/**
 	 * ...

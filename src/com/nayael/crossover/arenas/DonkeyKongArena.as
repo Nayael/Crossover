@@ -1,6 +1,7 @@
 package com.nayael.crossover.arenas 
 {
 	import com.entity.engine.Map;
+	import com.nayael.crossover.characters.boss.DonkeyKong;
 	/**
 	 * ...
 	 * @author Nayael
@@ -10,12 +11,12 @@ package com.nayael.crossover.arenas
 	////////////////////////
 	// PROPERTIES
 	//
-		
 	
 	////////////////////////
 	// CONSTRUCTOR
 	//
 		public function DonkeyKongArena() {
+			_boss = new DonkeyKong();
 			this.sourceMC = new DonkeyKongArenaTiles();
 			super([
 				[7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8],

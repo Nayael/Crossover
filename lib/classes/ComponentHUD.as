@@ -25,7 +25,13 @@ package classes
 	////////////////////////
 	// METHODS
 	//
+		public function hideBossHUD():void {
+			bossHP_MC.visible = false;
+		}
 		
+		public function showBossHUD():void {
+			bossHP_MC.visible = true;
+		}
 	
 	////////////////////////
 	// GETTERS & SETTERS

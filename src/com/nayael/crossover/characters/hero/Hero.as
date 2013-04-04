@@ -81,13 +81,13 @@ package com.nayael.crossover.characters.hero
 			physics.vX = 0;
 			
 			// RUNNING state
-			if (_keypad.isDown(Keyboard.LEFT) /*&& !( (physics as HeroPhysics).wallJumping && body.right )*/ ) {
+			if (_keypad.isDown(Keyboard.LEFT) || _keypad.isDown(Keyboard.Q)) {
 				turnLeft();
 				if (body.onFloor && !(physics as HeroPhysics).onWall ) {
 					state = RUN;
 				}
 			}
-			if (_keypad.isDown(Keyboard.RIGHT) /*&& !( (physics as HeroPhysics).wallJumping && body.left )*/ ) {
+			if (_keypad.isDown(Keyboard.RIGHT) || _keypad.isDown(Keyboard.D)) {
 				turnRight();
 				if (body.onFloor && !(physics as HeroPhysics).onWall ) {
 					state = RUN;
@@ -134,7 +134,9 @@ package com.nayael.crossover.characters.hero
 		}
 		
 		override public function onHit():void {
-			this.state = HURT;
+			if (this.state != HURT) {
+				this.state = HURT;
+			}
 		}
 		
 		override public function onDie():void {

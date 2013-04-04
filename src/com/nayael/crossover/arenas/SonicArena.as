@@ -1,6 +1,8 @@
 package com.nayael.crossover.arenas 
 {
 	import com.entity.engine.Map;
+	import com.nayael.crossover.characters.boss.Sonic;
+	
 	/**
 	 * ...
 	 * @author Nayael
@@ -10,12 +12,12 @@ package com.nayael.crossover.arenas
 	////////////////////////
 	// PROPERTIES
 	//
-		
 	
 	////////////////////////
 	// CONSTRUCTOR
 	//
 		public function SonicArena() {
+			_boss = new Sonic();
 			this.sourceMC = new SonicArenaTiles();
 			super([
 				[7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8],

@@ -1,6 +1,7 @@
 package com.nayael.crossover.arenas 
 {
 	import com.entity.engine.Map;
+	import com.nayael.crossover.characters.boss.Boss;
 	
 	/**
 	 * Abstract class for representing arenas
@@ -12,6 +13,8 @@ package com.nayael.crossover.arenas
 	// PROPERTIES
 	//
 		private static const TILE_SIZE:int = 40;
+		protected var _boss:Boss;
+
 	////////////////////////
 	// CONSTRUCTOR
 	//
@@ -28,6 +31,8 @@ package com.nayael.crossover.arenas
 	////////////////////////
 	// GETTERS & SETTERS
 	//
-		
+		public function get boss():Boss {
+			return _boss;
+		}
 	}
 }

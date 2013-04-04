@@ -1,6 +1,7 @@
 package com.nayael.crossover.arenas 
 {
 	import com.entity.engine.Map;
+	import com.nayael.crossover.characters.boss.Link;
 	/**
 	 * ...
 	 * @author Nayael
@@ -10,12 +11,12 @@ package com.nayael.crossover.arenas
 	////////////////////////
 	// PROPERTIES
 	//
-		
 	
 	////////////////////////
 	// CONSTRUCTOR
 	//
 		public function LinkArena() {
+			_boss = new Link();
 			this.sourceMC = new LinkArenaTiles();
 			super([
 				[7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8],
