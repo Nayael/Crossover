@@ -42,7 +42,9 @@ package com.nayael.crossover.arenas
 		
 		override public function destroy(game:Game):void {
 			super.destroy(game);
-			game.removeChild(game.getChildByName('background'));
+			if (game.getChildByName('background')) {
+				game.removeChild(game.getChildByName('background'));
+			}
 		}
 	
 	////////////////////////

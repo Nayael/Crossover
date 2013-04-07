@@ -1,11 +1,13 @@
 package com.nayael.crossover.characters.boss 
 {
 	import com.entity.engine.Entity;
+	import com.entity.engine.EventBroker;
 	import com.entity.engine.utils.errors.AbstractClassError;
 	import com.entity.engine.utils.errors.AbstractMethodError;
 	import com.entity.engine.Weapon;
 	import com.nayael.crossover.characters.Character;
 	import com.nayael.crossover.characters.hero.Hero;
+	import flash.events.Event;
 	import flash.events.TimerEvent;
 	
 	/**
@@ -14,6 +16,8 @@ package com.nayael.crossover.characters.boss
 	 */
 	public class Boss extends Character
 	{
+		protected var _invulnerabilityTime:int = 1000;
+		
 	////////////////////////
 	// PROPERTIES
 	//
@@ -65,7 +69,16 @@ package com.nayael.crossover.characters.boss
 			hero.disableControls();
 			dropWeapon();
 			destroy();
+			EventBroker.broadcast(new Event(BossEvent.BOSS_DEAD));
 			hero.state = Hero.WIN;
+		}
+		
+		override public function onHurt():void {
+			super.onHurt();
+			view.blink(150, 4);
+			health.setInvulnerable(_invulnerabilityTime, function():void {
+				view.stopBlink();
+			});
 		}
 		
 		/**

@@ -42,15 +42,6 @@ package com.entity.engine
 				}
 			}
 			
-			for each (target in group) {
-				if (body.collide(target) && (target != this.myParent)) {
-					target.onHit(strength, Object(myParent.weapon).constructor);
-					destroy();
-					return;
-				}
-				
-			}
-			
 			// We manually destroy the bullet if the ttl is over
 			if (ttl <= 0) {
 				destroy();

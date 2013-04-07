@@ -3,6 +3,8 @@ package com.entity.engine
 	import com.entity.engine.events.EntityEvent;
 	import com.entity.engine.events.EntityEventType;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	public class Health 
 	{
@@ -11,6 +13,7 @@ package com.entity.engine
 		public var minHp:int = 0;
 		public var vulnerable:Boolean = true;
 		private var _hp:int;
+		private var _vulnerabilityTimer:Timer;
 		
 		public function Health(entity:Entity) {
 			this.entity = entity;
@@ -26,6 +29,20 @@ package com.entity.engine
 				entity.onHurt();
 			} else if (_hp <= minHp) {
 				entity.onDie();
+			}
+		}
+		
+		public function setInvulnerable(delay:int, callback:Function = null):void {
+			vulnerable = false;
+			_vulnerabilityTimer = new Timer(delay, 1);
+			_vulnerabilityTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _setVulnerable);
+			_vulnerabilityTimer.start();
+			function _setVulnerable(e:TimerEvent):void {
+				_vulnerabilityTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _setVulnerable);
+				vulnerable = true;
+				if (callback != null) {
+					callback.call();
+				}
 			}
 		}
 		

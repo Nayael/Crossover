@@ -34,6 +34,7 @@ package com.nayael.crossover.characters.boss
 		
 		private var _chargeTimer:Timer;
 		private var _dashTimer:Timer;
+		private var _runTimer:Timer;
 		private var _strength:int = 10;
 	
 	////////////////////////
@@ -43,6 +44,7 @@ package com.nayael.crossover.characters.boss
 			_name = 'Sonic';
 			weakness = BarrelGun;
 			drop = Dasher;
+			_runTimer = new Timer(1, 1);
 			
 			_hSpeed = 13;
 			_vHeight = 30;
@@ -108,10 +110,14 @@ package com.nayael.crossover.characters.boss
 		override public function update():void {
 			// Turns around when he hits a wall
 			if (body.onWall) {
-				if (physics.vX < 0) {
+				if (physics.vX <= 0) {
 					moveRight();
 				} else {
 					moveLeft();
+				}
+				if (state == DASH) {
+					var reboundVY:int = (-10 + Math.random() * 15) | 0;
+					physics.vY = body.y < reboundVY ? physics.vY : reboundVY;
 				}
 				controls.left = controls.right = controls.jump = false;
 			}
@@ -139,7 +145,7 @@ package com.nayael.crossover.characters.boss
 			}
 			
 			// JUMP state
-			if (!body.onFloor && physics.vY != 0) {
+			if (!body.onFloor && (state != DASH || _dashTimer.running == false)) {
 				state = JUMP;
 			}
 			if (controls.jump) {
@@ -163,31 +169,63 @@ package com.nayael.crossover.characters.boss
 					controls.left = false;
 					controls.right = true;
 				}
-				if (body.collide(targets[0])) {
-					var hero:Hero = targets[0] as Hero;
-					hero.onHit(_strength, Dasher);
-					if (hero.physics) {
-						hero.physics.vX += Math.abs(physics.vX / 2) * (body.x > hero.body.x ? 1 : -1);
-						hero.physics.vY = - (10 + Math.random() * 20);
-					}
+			}
+			
+			if ((state == DASH || state == CHARGE || state == RUN) && body.collide(targets[0])) {
+				var hero:Hero = targets[0] as Hero,
+					heroHp:int = hero.health.hp;
+				hero.onHit(_strength, Dasher);
+				if (hero.physics && hero.health.hp != heroHp) {
+					hero.physics.vX += _strength * (body.right ? 1 : -1);
+					hero.physics.vY = - (5 + Math.random() * 10);
 				}
 			}
 			
 			super.update();
 		}
 		
+		/**
+		 * Sonic's AI
+		 */
 		override public function handleAI():void {
-			if (!AIactivated || state == JUMP || state == CHARGE || state == DASH) {
+			if (!AIactivated || state == JUMP || state == CHARGE || state == DASH || _runTimer.running) {
 				return;
 			}
 			var action:int = (Math.random() * 30) | 0;
+			trace(action);
 			switch (action) {
 				// Charge the dash
 				case 0:
 					_chargeDash();
 					break;
+				// Run
+				case 1:
+					_startRun();
+					break;
 				default:
 			}
+		}
+		
+		/**
+		 * Sonic runs
+		 */
+		private function _startRun():void {
+			_runTimer = new Timer(1000 + Math.random() * 4000, 1);
+			_runTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
+			controls.left = Math.random() >= 0.5 ? true : false;
+			controls.right = !controls.left;
+			_strength = 5;
+			_runTimer.start();
+		}
+		
+		/**
+		 * Stops the running
+		 * @param	e
+		 */
+		private function _stopRun(e:TimerEvent = null):void {
+			_runTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
+			_runTimer.reset();
+			controls.left = controls.right = false;
 		}
 		
 		/**
@@ -212,6 +250,7 @@ package com.nayael.crossover.characters.boss
 			_chargeTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _dash);
 			controls.dash = true;
 			_hSpeed = 30;
+			_strength = 15;
 			_dashTimer = new Timer((1500 + Math.random() * 4000 | 0), 1);
 			_dashTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopDash);
 			_dashTimer.start();

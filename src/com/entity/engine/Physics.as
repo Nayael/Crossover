@@ -52,7 +52,7 @@ package com.entity.engine
 				hitboxY:Number = entity.body.hitbox.y * entity.view.scale,
 				hitboxWidth:Number = entity.body.hitbox.width * entity.view.scale,
 				hitboxHeight:Number = entity.body.hitbox.height * entity.view.scale,
-				hitboxEdge:Number = (hitboxX + hitboxWidth) * (vX < 0 ? -1 : 1 ),
+				hitboxEdge:Number = (hitboxX + hitboxWidth) * (vX < 0 ? -1 : 1),
 				x:int = ( entity.body.x + vX + hitboxEdge ) / map.TS,
 				yMin:int = ( (entity.body.y + hitboxY) / map.TS),
 				yMax:int = ( (entity.body.y + hitboxY + hitboxHeight) / map.TS),
@@ -61,6 +61,9 @@ package com.entity.engine
 			// Parsing the rows containing the entity
 			for (var i:int = yMin; i <= yMax; i++) {
 				// If one of the tiles is an obstacle
+				if (x >= map.tilemap[i].length) {
+					x = map.tilemap[i].length - 1;
+				}
 				if (map.obstacles.indexOf(map.tilemap[i][x]) != -1) {
 					newX = x * map.TS + (vX < 0 ? map.TS : 0);
 					entity.body.x = newX - hitboxEdge - 1;

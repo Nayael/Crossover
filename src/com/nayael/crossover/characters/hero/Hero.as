@@ -33,6 +33,9 @@ package com.nayael.crossover.characters.hero
 		private var _keypad:Keypad;
 		private var _weapons:Vector.<Weapon>;
 		
+	////////////////////////
+	// CONSTRUCTOR
+	//
 		public function Hero() {
 			_hSpeed = 8;
 			
@@ -71,6 +74,8 @@ package com.nayael.crossover.characters.hero
 			
 			_keypad = new Keypad(E.stage);
 			EventBroker.subscribe(HeroEvent.HERO_HIT, onHit);
+			EventBroker.subscribe(EntityEventType.CREATED, onEntityCreated);
+			EventBroker.subscribe(EntityEventType.DESTROYED, onEntityDestroyed);
 		}
 		
 		override public function update():void {
@@ -196,6 +201,14 @@ package com.nayael.crossover.characters.hero
 				_keypad.destroy();
 				_keypad = null;
 			}
+		}
+		
+		public function onEntityCreated(e:EntityEvent):void {
+			
+		}
+		
+		public function onEntityDestroyed(e:EntityEvent):void {
+			
 		}
 	}
 }
