@@ -21,7 +21,7 @@ package com.nayael.crossover.characters.hero.states
 			entity.view.sprite.addChild( animation );
 			setTimeout(function():void {
 				EventBroker.broadcast(new LevelEvent(LevelEvent.FINISHED, true));
-			}, 5000);
+			}, 8000);
 		}
 		
 		public function exit():void {

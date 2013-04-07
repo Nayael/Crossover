@@ -7,13 +7,16 @@ package com.nayael.crossover
 	import com.entity.engine.fsm.StateMachine;
 	import com.entity.engine.Game;
 	import com.entity.engine.Map;
+	import com.entity.engine.SoundManager;
 	import com.nayael.crossover.arenas.Arena;
 	import com.nayael.crossover.characters.boss.Boss;
+	import com.nayael.crossover.characters.boss.BossEvent;
 	import com.nayael.crossover.characters.hero.Hero;
 	import com.nayael.crossover.characters.hero.HeroEvent;
 	import com.nayael.crossover.events.LevelEvent;
 	import com.nayael.crossover.states.*;
 	import flash.events.Event;
+	import flash.media.Sound;
 	import net.hires.debug.Stats;
 	
 	/**
@@ -43,6 +46,13 @@ package com.nayael.crossover
 		//public static const UPDATE_HUD:String = "update_hud";		
 		public var hud:HUD;
 		
+		
+		[Embed(source = "../../../../lib/audio/victory.mp3")]
+		private const VICTORY_CLASS:Class;
+		
+	////////////////////////
+	// CONSTRUCTOR
+	//
 		public function Main():void {
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
@@ -69,6 +79,9 @@ package com.nayael.crossover
 			fsm.addState( PAUSE    , new StatePause(this)   , [ARENA, GRID]);
 			fsm.addState( GAME_OVER, new StateGameOver(this), [MAIN_MENU]);
 			
+			SoundManager.instance.addRessource( new VICTORY_CLASS() as Sound, SoundManager.SPECIAL1 );
+			SoundManager.instance.setSFXVolume( .5 );
+			
 			fsm.state = INTRO;
 		}
 		
@@ -88,8 +101,11 @@ package com.nayael.crossover
 		 */
 		public function launchLevel(arena:Arena):void {
 			hero = new Hero();
+			hero.group = players;
 			players.push(hero);
 			EventBroker.subscribe( HeroEvent.HERO_DEAD, _onHeroDead );
+			EventBroker.subscribe( LevelEvent.FINISHED, _onFinishLevel );
+			EventBroker.subscribe( BossEvent.BOSS_DEAD, _onBossDead );
 			
 			boss = arena.boss;
 			boss.group = enemies;
@@ -105,7 +121,6 @@ package com.nayael.crossover
 			addEntity(hero);
 			addEntity(boss);
 			begin();
-			EventBroker.subscribe( LevelEvent.FINISHED, _onFinishLevel );
 		}
 		
 		override protected function update():void {
@@ -152,6 +167,11 @@ package com.nayael.crossover
 		private function _onHeroDead(e:Event = null):void {
 			players.splice(players.indexOf(hero), 1);
 			fsm.state = GAME_OVER;
+		}
+		
+		private function _onBossDead(e:Event):void {
+			SoundManager.instance.playSfx( SoundManager.SPECIAL1 );
+			EventBroker.unsubscribe(BossEvent.BOSS_DEAD, _onBossDead);
 		}
 		
 		private function _onFinishLevel(e:LevelEvent = null):void {

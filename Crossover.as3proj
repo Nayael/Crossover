@@ -52,6 +52,7 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="lib\Crossover.swc" />
+    <element path="lib\greensock.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

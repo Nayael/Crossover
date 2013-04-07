@@ -8,6 +8,7 @@ package com.nayael.crossover.characters.hero.states
 	{
 		private var entity:Entity;
 		private var animation:MovieClip;
+		private var _invulnerabilityTime:int = 1500;	// 2 seconds of invulnerability
 		
 		public function Hurt(entity:Entity) {
 			this.entity = entity;
@@ -15,13 +16,15 @@ package com.nayael.crossover.characters.hero.states
 		}
 		
 		public function enter():void {
-			entity.health.vulnerable = false;
 			entity.view.sprite.addChild( animation );
 			animation.gotoAndPlay(1);
+			entity.health.setInvulnerable(_invulnerabilityTime, function():void {
+				entity.view.stopBlink();
+			});
 		}
 		
 		public function exit():void {
-			entity.health.vulnerable = true;
+			entity.view.blink(200);
 			entity.view.sprite.removeChild( animation );
 		}
 	}
