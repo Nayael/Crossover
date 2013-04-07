@@ -9,6 +9,7 @@ package com.nayael.crossover.characters.boss
 	import com.entity.engine.View;
 	import com.entity.engine.Weapon;
 	import com.nayael.crossover.characters.boss.states.sonic.*;
+	import com.nayael.crossover.characters.hero.Hero;
 	import com.nayael.crossover.weapons.BarrelGun;
 	import com.nayael.crossover.weapons.Dasher;
 	import flash.events.Event;
@@ -28,16 +29,18 @@ package com.nayael.crossover.characters.boss
 		static public const HURT:String   = "sonic_hurt";
 		static public const RUN:String    = "sonic_run";
 		static public const JUMP:String   = "sonic_jump";
-		static public const CHARGE:String = "sonic_dash";
-		static public const DASH:String   = "sonic_charge";
+		static public const CHARGE:String = "sonic_charge";
+		static public const DASH:String   = "sonic_dash";
 		
-		private var chargeTimer:Timer;
-		private var dashTimer:Timer;
+		private var _chargeTimer:Timer;
+		private var _dashTimer:Timer;
+		private var _strength:int = 10;
 	
 	////////////////////////
 	// CONSTRUCTOR
 	//
 		public function Sonic() {
+			_name = 'Sonic';
 			weakness = BarrelGun;
 			drop = Dasher;
 			
@@ -66,7 +69,7 @@ package com.nayael.crossover.characters.boss
 			_fsm.addState( RUN   , new Running(this), [STAND, JUMP, CHARGE]);
 			_fsm.addState( JUMP  , new Jumping(this), [STAND, RUN]);
 			_fsm.addState( CHARGE, new Charge(this) , [STAND, RUN, DASH]);
-			_fsm.addState( DASH  , new Dash(this)   , [STAND, RUN, JUMP]);
+			_fsm.addState( DASH  , new Dash(this)   , [STAND, RUN, JUMP, CHARGE]);
 			
 			state = STAND;
 			body.left = true;
@@ -150,6 +153,7 @@ package com.nayael.crossover.characters.boss
 				state = CHARGE;
 			}
 			
+			// DASH state
 			if (controls.dash) {
 				state = DASH;
 				if (body.left) {
@@ -158,6 +162,14 @@ package com.nayael.crossover.characters.boss
 				} else {
 					controls.left = false;
 					controls.right = true;
+				}
+				if (body.collide(targets[0])) {
+					var hero:Hero = targets[0] as Hero;
+					hero.onHit(_strength, Dasher);
+					if (hero.physics) {
+						hero.physics.vX += Math.abs(physics.vX / 2) * (body.x > hero.body.x ? 1 : -1);
+						hero.physics.vY = - (10 + Math.random() * 20);
+					}
 				}
 			}
 			
@@ -187,9 +199,9 @@ package com.nayael.crossover.characters.boss
 			}
 			releaseControls();
 			controls.charge = true;
-			chargeTimer = new Timer(1000, 1);
-			chargeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _dash);
-			chargeTimer.start();
+			_chargeTimer = new Timer(1000, 1);
+			_chargeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _dash);
+			_chargeTimer.start();
 		}
 		
 		/**
@@ -197,12 +209,12 @@ package com.nayael.crossover.characters.boss
 		 * @param	e
 		 */
 		private function _dash(e:TimerEvent):void {
-			chargeTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _dash);
+			_chargeTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _dash);
 			controls.dash = true;
 			_hSpeed = 30;
-			dashTimer = new Timer((1500 + Math.random() * 4000 | 0), 1);
-			dashTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopDash);
-			dashTimer.start();
+			_dashTimer = new Timer((1500 + Math.random() * 4000 | 0), 1);
+			_dashTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopDash);
+			_dashTimer.start();
 		}
 		
 		/**
@@ -210,19 +222,19 @@ package com.nayael.crossover.characters.boss
 		 * @param	e
 		 */
 		private function _stopDash(e:TimerEvent = null):void {
-			if (dashTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) {
-				dashTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopDash);
+			if (_dashTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) {
+				_dashTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopDash);
 			}
 			_hSpeed = 13;
 			releaseControls();
 		}
 		
-		override public function onHit(damage:int, weapon:Weapon = null):void {
+		override public function onHit(damage:int, weapon:Class = null):void {
 			if (!weapon) {
 				return;
 			}
 			// If the weapon hitting is not the weakness, damage is poor
-			if (weapon is weakness) {
+			if (weapon == weakness) {
 				health.damage(4);
 			} else {
 				health.damage(damage);

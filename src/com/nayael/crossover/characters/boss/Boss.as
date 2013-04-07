@@ -17,6 +17,7 @@ package com.nayael.crossover.characters.boss
 	////////////////////////
 	// PROPERTIES
 	//
+		protected var _name:String;
 		protected var weakness:Class; 	// The class of the weapon which the boss is the most vulnerable to
 		protected var drop:Class;		// The class of the weapon to drop when the boss dies
 		protected var AIactivated:Boolean = true;
@@ -88,6 +89,8 @@ package com.nayael.crossover.characters.boss
 	////////////////////////
 	// GETTERS & SETTERS
 	//
-		
+		public function get name():String {
+			return _name;
+		}
 	}
 }

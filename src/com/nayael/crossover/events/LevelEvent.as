@@ -22,17 +22,16 @@ package com.nayael.crossover.events
 			this.win = win;
 		}
 		
+	////////////////////////
+	// METHODS
+	//
 		public override function clone ():Event {
 			return new LevelEvent ( type, bubbles, cancelable );
 		}
 		
-	////////////////////////
-	// METHODS
-	//
 		public override function toString ():String {
 			return '[LevelEvent type="'+ type +'" bubbles=' + bubbles + ' cancelable=' + cancelable + ']';
 		}
-	
 	
 	////////////////////////
 	// GETTERS & SETTERS

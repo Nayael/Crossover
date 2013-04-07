@@ -29,6 +29,7 @@ package com.entity.engine
 			if (!hitbox || !target.body.hitbox) {
 				return false;
 			}
+			
 			var hitboxPos:Point = entity.view.sprite.localToGlobal(new Point(hitbox.x, hitbox.y)),
 				targetHitboxPos:Point = target.view.sprite.localToGlobal(new Point(target.body.hitbox.x, target.body.hitbox.y));
 			var leftThis:Number     = hitboxPos.x,
@@ -39,8 +40,8 @@ package com.entity.engine
 				rightTarget:Number  = targetHitboxPos.x + target.body.hitbox.width,
 				topTarget:Number    = targetHitboxPos.y,
 				bottomTarget:Number = targetHitboxPos.y + target.body.hitbox.height;
-			trace(leftThis, rightThis, topThis, bottomThis);
-			trace(leftTarget, rightTarget, topTarget, bottomTarget);
+			//trace(leftThis, rightThis, topThis, bottomThis);
+			//trace(leftTarget, rightTarget, topTarget, bottomTarget);
 			return !(leftThis > rightTarget || leftTarget > rightThis || topThis > bottomTarget || topTarget > bottomThis);
 		}
 		

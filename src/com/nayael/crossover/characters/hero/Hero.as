@@ -70,6 +70,7 @@ package com.nayael.crossover.characters.hero
 			state = STAND;
 			
 			_keypad = new Keypad(E.stage);
+			EventBroker.subscribe(HeroEvent.HERO_HIT, onHit);
 		}
 		
 		override public function update():void {

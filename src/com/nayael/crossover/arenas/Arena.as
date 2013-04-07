@@ -1,7 +1,10 @@
 package com.nayael.crossover.arenas 
 {
+	import com.entity.engine.Game;
 	import com.entity.engine.Map;
 	import com.nayael.crossover.characters.boss.Boss;
+	import flash.display.Bitmap;
+	import flash.utils.getDefinitionByName;
 	
 	/**
 	 * Abstract class for representing arenas
@@ -26,7 +29,21 @@ package com.nayael.crossover.arenas
 	////////////////////////
 	// METHODS
 	//
+		override public function draw(game:Game):void {
+			var maps:Array = [SonicMap],
+				className:String = boss.name + 'Map',
+				bmpDataClass:Class = getDefinitionByName(className) as Class,
+				bmp:Bitmap = new Bitmap(new bmpDataClass());
+			
+			game.addChild(bmp);
+			bmp.name = 'background';
+			super.draw(game);
+		}
 		
+		override public function destroy(game:Game):void {
+			super.destroy(game);
+			game.removeChild(game.getChildByName('background'));
+		}
 	
 	////////////////////////
 	// GETTERS & SETTERS
