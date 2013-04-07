@@ -234,8 +234,11 @@ package com.nayael.crossover.characters.boss
 				return;
 			}
 			// If the weapon hitting is not the weakness, damage is poor
-			if (weapon == weakness) {
-				health.damage(4);
+			if (weapon != weakness) {
+				var hitProbability:Number = 0.2;	// The probability for the weak weapon to make damage to the boss in CHARGE or DASH state
+				if (state != CHARGE && state != DASH || Math.random() <= hitProbability) {
+					health.damage(1);
+				}
 			} else {
 				health.damage(damage);
 			}

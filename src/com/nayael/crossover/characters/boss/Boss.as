@@ -78,12 +78,8 @@ package com.nayael.crossover.characters.boss
 		
 		protected function releaseControls():void {
 			for (var name:String in controls) {
-				//trace(name);
 				controls[name] = false;
 			}
-			//for each (var item:* in controls) {
-				//item = false;
-			//}
 		}
 	
 	////////////////////////
