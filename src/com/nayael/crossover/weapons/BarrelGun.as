@@ -1,20 +1,24 @@
-package com.nayael.crossover.characters.hero 
+package com.nayael.crossover.weapons 
 {
+	import com.entity.engine.Entity;
+	import com.entity.engine.Weapon;
+	
 	/**
-	 * Hero related events
+	 * ...
 	 * @author Nayael
 	 */
-	public class HeroEventType
+	public class BarrelGun extends Weapon
 	{
 	////////////////////////
 	// PROPERTIES
 	//
-		static public const HERO_DEAD:String = 'hero_dead';
+		
 	
 	////////////////////////
 	// CONSTRUCTOR
 	//
-		public function HeroEventType() {
+		public function BarrelGun(entity:Entity) {
+			super(entity);
 			
 		}
 	

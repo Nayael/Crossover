@@ -10,12 +10,11 @@ package com.entity.engine
 	
 	public class Game extends Sprite
 	{
-		private var _t:int;
-		
+		static private var _dt:Number;
+		static private var _t:int;
 		protected var _map:Map;
 		
 		public var entities:Vector.<Entity> = new Vector.<Entity>();
-		static protected var _dt:Number;
 		
 		// constructeur et init
 		public function Game():void {
@@ -106,6 +105,10 @@ package com.entity.engine
 		
 		static public function get dt():Number {
 			return _dt;
+		}
+		
+		static public function get t():int {
+			return _t;
 		}
 	}
 }

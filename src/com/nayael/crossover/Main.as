@@ -10,7 +10,8 @@ package com.nayael.crossover
 	import com.nayael.crossover.arenas.Arena;
 	import com.nayael.crossover.characters.boss.Boss;
 	import com.nayael.crossover.characters.hero.Hero;
-	import com.nayael.crossover.characters.hero.HeroEventType;
+	import com.nayael.crossover.characters.hero.HeroEvent;
+	import com.nayael.crossover.events.LevelEvent;
 	import com.nayael.crossover.states.*;
 	import flash.events.Event;
 	import net.hires.debug.Stats;
@@ -64,7 +65,7 @@ package com.nayael.crossover
 			fsm.addState( INTRO    , new StateIntro(this)   , [MAIN_MENU]);
 			fsm.addState( MAIN_MENU, new StateMainMenu(this), [GRID]);
 			fsm.addState( GRID     , new StateGrid(this)    , [MAIN_MENU, ARENA]);
-			fsm.addState( ARENA    , new StateArena(this)   , [GAME_OVER, PAUSE]);
+			fsm.addState( ARENA    , new StateArena(this)   , [GAME_OVER, PAUSE, GRID]);
 			fsm.addState( PAUSE    , new StatePause(this)   , [ARENA, GRID]);
 			fsm.addState( GAME_OVER, new StateGameOver(this), [MAIN_MENU]);
 			
@@ -78,7 +79,7 @@ package com.nayael.crossover
 			hero = new Hero();
 			hero.group = players;
 			players.push(hero);
-			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
+			EventBroker.subscribe( HeroEvent.HERO_DEAD, _onHeroDead );
 		}
 		
 		/**
@@ -88,11 +89,13 @@ package com.nayael.crossover
 		public function launchLevel(arena:Arena):void {
 			hero = new Hero();
 			players.push(hero);
-			EventBroker.subscribe( HeroEventType.HERO_DEAD, onHeroDead );
+			EventBroker.subscribe( HeroEvent.HERO_DEAD, _onHeroDead );
 			
 			boss = arena.boss;
 			boss.group = enemies;
 			enemies.push(boss);
+			hero.targets = Vector.<Entity>([boss]);
+			boss.targets = Vector.<Entity>([hero]);
 			
 			_map = arena;
 			hud = new HUD();
@@ -102,13 +105,7 @@ package com.nayael.crossover
 			addEntity(hero);
 			addEntity(boss);
 			begin();
-		}
-		
-		public function exitLevel():void {
-			map.destroy(this);
-			removeChild(hud);
-			players.length = 0;
-			end();
+			EventBroker.subscribe( LevelEvent.FINISHED, _onFinishLevel );
 		}
 		
 		override protected function update():void {
@@ -118,14 +115,6 @@ package com.nayael.crossover
 			
 			super.update();
 			updateHud();
-		}
-		
-		/**
-		 * When the hero is dead : Game Over
-		 */
-		private function onHeroDead(e:Event = null):void {
-			players.splice(players.indexOf(hero), 1);
-			fsm.state = GAME_OVER;
 		}
 		
 		public function updateHud(e:Event = null):void {
@@ -155,6 +144,27 @@ package com.nayael.crossover
 			}
 			
 			addChild(hud);
+		}
+		
+		/**
+		 * When the hero is dead : Game Over
+		 */
+		private function _onHeroDead(e:Event = null):void {
+			players.splice(players.indexOf(hero), 1);
+			fsm.state = GAME_OVER;
+		}
+		
+		private function _onFinishLevel(e:LevelEvent = null):void {
+			map.destroy(this);
+			if (hud.parent == this) {
+				removeChild(hud);
+			}
+			players.length = 0;
+			enemies.length = 0;
+			end();
+			if (e.win) {
+				fsm.state = GRID;
+			}
 		}
 		
 		override public function get map():Map {

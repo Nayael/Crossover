@@ -34,7 +34,7 @@ package com.nayael.crossover.characters
 		/**
 		 * Makes the character turn left
 		 */
-		public function turnLeft():void {
+		public function moveLeft():void {
 			physics.vX = -_hSpeed;
 			body.left = true;
 		}
@@ -42,7 +42,7 @@ package com.nayael.crossover.characters
 		/**
 		 * Makes the character turn right
 		 */
-		public function turnRight():void {
+		public function moveRight():void {
 			physics.vX = _hSpeed;
 			body.right = true;
 		}

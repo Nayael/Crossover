@@ -13,7 +13,6 @@ package com.nayael.crossover.characters.hero
 	////////////////////////
 	// PROPERTIES
 	//
-		private var _onWall:Boolean = false;
 		public var wallJumping:Boolean = false;
 	
 	////////////////////////
@@ -27,22 +26,20 @@ package com.nayael.crossover.characters.hero
 	// METHODS
 	//
 		override protected function _xCollision(map:Map):Boolean {
-			var onWallBefore:Boolean = _onWall;
-			_onWall = super._xCollision(map);
-			if (!entity.body.onFloor && _onWall && vY > 0) {
+			var onWallBefore:Boolean = entity.body.onWall;
+			entity.body.onWall = super._xCollision(map);
+			if (!entity.body.onFloor && entity.body.onWall && vY > 0) {
 				(entity as Hero).state = Hero.WALL;
 				entity.body.left = !entity.body.left;
 			} else if (entity.body.onFloor) {
-				_onWall = false;
+				entity.body.onWall = false;
 			}
-			return _onWall;
+			return entity.body.onWall;
 		}
 	
 	////////////////////////
 	// GETTERS & SETTERS
 	//
-		public function get onWall():Boolean {
-			return _onWall;
-		}
+		
 	}
 }

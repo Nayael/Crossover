@@ -47,7 +47,7 @@ package com.nayael.crossover.states
 							clearInterval(debugDeath);
 							return;
 						}
-						_game.hero.health.hp -= 2;
+						_game.hero.health.damage(2);
 					}, 100);
 					
 					return;

@@ -26,6 +26,7 @@ package com.nayael.crossover.weapons
 		}
 		
 		override public function init(parent:Entity):void {
+			super.init(parent);
 			ttl = 25;
 		}
 	}

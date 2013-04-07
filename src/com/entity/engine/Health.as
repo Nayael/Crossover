@@ -9,6 +9,7 @@ package com.entity.engine
 		public var entity:Entity;
 		public var maxHp:int = 100;
 		public var minHp:int = 0;
+		public var vulnerable:Boolean = true;
 		private var _hp:int;
 		
 		public function Health(entity:Entity) {
@@ -16,7 +17,16 @@ package com.entity.engine
 		}
 		
 		public function damage(value:int):void {
+			if (!vulnerable || value > maxHp) {
+				return;
+			}
+			var baseHp:int = _hp;
 			hp -= value;
+			if (_hp > minHp && baseHp > _hp) {
+				entity.onHurt();
+			} else if (_hp <= minHp) {
+				entity.onDie();
+			}
 		}
 		
 		public function get hp():int {
@@ -24,16 +34,7 @@ package com.entity.engine
 		}
 		
 		public function set hp(value:int):void {
-			if (value > maxHp) {
-				return;
-			}
-			var baseHp:int = _hp;
 			_hp = value;
-			if (_hp > minHp && baseHp > _hp) {
-				entity.onHit();
-			} else if (_hp <= minHp) {
-				entity.onDie();
-			}
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.entity.engine
 {
 	import flash.display.MovieClip;
+	import flash.geom.Point;
 	
 	public class Body
 	{
@@ -10,6 +11,7 @@ package com.entity.engine
 		public var angle:Number = .0;
 		public var hitbox:MovieClip;
 		public var onFloor:Boolean = false;
+		public var onWall:Boolean = false;
 		
 		private var _left:Boolean;
 		private var _right:Boolean;
@@ -24,18 +26,21 @@ package com.entity.engine
 		 * @return True if there is a collision, False otherwise
 		 */
 		public function collide(target:Entity):Boolean {
-			if (!hitbox) {
+			if (!hitbox || !target.body.hitbox) {
 				return false;
 			}
-			var leftThis:Number     = hitbox.x,
-				rightThis:Number    = hitbox.x + hitbox.width,
-				topThis:Number      = hitbox.y,
-				bottomThis:Number   = hitbox.y + hitbox.height,
-				leftTarget:Number   = target.body.hitbox.x,
-				rightTarget:Number  = target.body.hitbox.x + target.body.hitbox.width,
-				topTarget:Number    = target.body.hitbox.y,
-				bottomTarget:Number = target.body.hitbox.y + target.body.hitbox.height;
-				
+			var hitboxPos:Point = entity.view.sprite.localToGlobal(new Point(hitbox.x, hitbox.y)),
+				targetHitboxPos:Point = target.view.sprite.localToGlobal(new Point(target.body.hitbox.x, target.body.hitbox.y));
+			var leftThis:Number     = hitboxPos.x,
+				rightThis:Number    = hitboxPos.x + hitbox.width,
+				topThis:Number      = hitboxPos.y,
+				bottomThis:Number   = hitboxPos.y + hitbox.height,
+				leftTarget:Number   = targetHitboxPos.x,
+				rightTarget:Number  = targetHitboxPos.x + target.body.hitbox.width,
+				topTarget:Number    = targetHitboxPos.y,
+				bottomTarget:Number = targetHitboxPos.y + target.body.hitbox.height;
+			trace(leftThis, rightThis, topThis, bottomThis);
+			trace(leftTarget, rightTarget, topTarget, bottomTarget);
 			return !(leftThis > rightTarget || leftTarget > rightThis || topThis > bottomTarget || topTarget > bottomThis);
 		}
 		

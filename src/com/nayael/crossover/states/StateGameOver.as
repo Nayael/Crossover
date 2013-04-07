@@ -1,8 +1,10 @@
 package com.nayael.crossover.states 
 {
 	import com.entity.engine.E;
+	import com.entity.engine.EventBroker;
 	import com.entity.engine.fsm.IState;
 	import com.entity.engine.SoundManager;
+	import com.nayael.crossover.events.LevelEvent;
 	import com.nayael.crossover.Main;
 	import com.nayael.crossover.utils.Text;
 	import flash.events.KeyboardEvent;
@@ -29,7 +31,7 @@ package com.nayael.crossover.states
 		}
 		
 		public function enter():void {
-			_game.exitLevel();
+			EventBroker.broadcast(new LevelEvent(LevelEvent.FINISHED));
 			for each (var text:Text in _texts) {
 				_game.addChild(text);
 			}

@@ -28,11 +28,11 @@ package com.nayael.crossover.weapons
 			this.y = (entity.view.sprite.getChildAt(0) as MovieClip).gun.y * entity.view.scale || null;
 			
 			var bullet:BusterBullet = bulletPool.length ? bulletPool.pop() : new BusterBullet();
+			bullet.targets = entity.targets;
+			bullet.group   = entity.group;
+			bullet.body.x  = entity.body.x + ( this.x || ( entity.view.sprite.width * 0.5 ) ) * (entity.body.left ? -1 : 1);
+			bullet.body.y  = entity.body.y + ( this.y || ( entity.view.sprite.height * 0.5 ) ) * (entity.view.sprite.scaleY < 0 ? -1 : 1);
 			bullet.init(entity);
-			bullet.targets    = entity.targets;
-			bullet.group      = entity.group;
-			bullet.body.x     = entity.body.x + ( this.x ? this.x : ( entity.view.sprite.width * 0.5 ) ) * (entity.body.left ? -1 : 1);
-			bullet.body.y     = entity.body.y + ( this.y ? this.y : ( entity.view.sprite.height * 0.5 ) ) * (entity.view.sprite.scaleY < 0 ? -1 : 1);
 			bullet.physics.vX = entity.body.left ? -25 : 25;
 			EventBroker.broadcast( new EntityEvent(EntityEventType.CREATED, bullet) );
 			

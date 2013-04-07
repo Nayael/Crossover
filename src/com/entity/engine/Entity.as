@@ -64,11 +64,25 @@
 			_health = value;
 		}
 		
-		// simplification, car pour le coup le composant health n'est plus optionnel.
-		public function onHit():void {
+		/**
+		 * The entity is hit by something
+		 * @param	damage
+		 * @param	weapon
+		 */
+		public function onHit(damage:int, weapon:Weapon = null):void {
+			_health.damage(damage);
+		}
+		
+		/**
+		 * The entity is hurt (took damage)
+		 */
+		public function onHurt():void {
 			// --
 		}
 		
+		/**
+		 * The entity dies
+		 */
 		public function onDie():void {
 			// --
 		}

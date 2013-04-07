@@ -1,8 +1,10 @@
 package com.nayael.crossover.states 
 {
 	import com.entity.engine.E;
+	import com.entity.engine.EventBroker;
 	import com.entity.engine.fsm.IState;
 	import com.entity.engine.SoundManager;
+	import com.nayael.crossover.events.LevelEvent;
 	import com.nayael.crossover.Main;
 	import com.nayael.crossover.utils.Text;
 	import flash.events.KeyboardEvent;
@@ -77,7 +79,7 @@ package com.nayael.crossover.states
 				case Keyboard.SPACE:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 					if (_options[_selected][0] == Main.GRID) {
-						_game.exitLevel();
+						EventBroker.broadcast(new LevelEvent(LevelEvent.FINISHED));
 					}
 					_game.fsm.state = _options[_selected][0];
 					break;

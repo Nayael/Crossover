@@ -25,7 +25,7 @@ package com.entity.engine
 		}
 		
 		public function init(parent:Entity):void {
-			this.myParent = parent;
+			myParent = parent;
 			ttl = 25;
 			physics.vX = 0;
 			physics.vY = 0;
@@ -36,16 +36,16 @@ package com.entity.engine
 			ttl--;
 			for each (var target:Entity in targets) {
 				if (body.collide(target) && (target != this.myParent)) {
+					target.onHit(strength, myParent.weapon);
 					destroy();
-					target.health.damage(strength);
 					return;
 				}
 			}
 			
 			for each (target in group) {
 				if (body.collide(target) && (target != this.myParent)) {
+					target.onHit(strength, myParent.weapon);
 					destroy();
-					target.health.damage(strength);
 					return;
 				}
 				
@@ -58,6 +58,8 @@ package com.entity.engine
 		}
 		
 		override public function destroy():void {
+			body.x = 0;
+			body.y = 0;
 			pool.push(this);
 			super.destroy();
 		}

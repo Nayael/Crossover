@@ -30,7 +30,8 @@ package com.entity.engine
 				entity.body.y = entity.view.sprite.height;
 			}
 			
-			if (!useMapCollisions || entity.body.hitbox && !_xCollision(map)) {	// If the body doesn't collide with an obstacle, move it
+			entity.body.onWall = false;
+			if (!useMapCollisions || entity.body.hitbox && !(entity.body.onWall = _xCollision(map))) {	// If the body doesn't collide with an obstacle, move it
 				entity.body.x += vX;
 			}
 			if (entity.body.hitbox && useGravity && !_yCollision(map)) {

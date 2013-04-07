@@ -40,6 +40,9 @@ package classes
 		 * Updates the hero's life bar
 		 */
 		public function set heroHP(value:Number):void {
+			if (value < 0) {
+				value = 0;
+			}
 			// First, we calculate the number of steps to display, plus the scale of the one on the top (steps have a fixed size by default)
 			var stepsNb:int = int(value * heroHP_MC.steps / 100),
 				scale:Number = (value * heroHP_MC.steps / 100) - stepsNb,
@@ -66,6 +69,9 @@ package classes
 		 * Updates the hero's life bar
 		 */
 		public function set bossHP(value:Number):void {
+			if (value < 0) {
+				value = 0;
+			}
 			// First, we calculate the number of steps to display, plus the scale of the one on the top (steps have a fixed size by default)
 			var stepsNb:int = int(value * bossHP_MC.steps / 100),
 				scale:Number = (value * bossHP_MC.steps / 100) - stepsNb,
