@@ -30,6 +30,9 @@ package com.nayael.crossover.characters.boss
 		static public const JUMP:String   = "sonic_jump";
 		static public const CHARGE:String = "sonic_dash";
 		static public const DASH:String   = "sonic_charge";
+		
+		private var chargeTimer:Timer;
+		private var dashTimer:Timer;
 	
 	////////////////////////
 	// CONSTRUCTOR
@@ -59,14 +62,18 @@ package com.nayael.crossover.characters.boss
 			health.hp = health.maxHp;
 			
 			_fsm = new StateMachine();
-			_fsm.addState( STAND , new Stand(this)  , [RUN, JUMP]);
-			_fsm.addState( RUN   , new Running(this), [STAND, JUMP]);
+			_fsm.addState( STAND , new Stand(this)  , [RUN, JUMP, CHARGE]);
+			_fsm.addState( RUN   , new Running(this), [STAND, JUMP, CHARGE]);
 			_fsm.addState( JUMP  , new Jumping(this), [STAND, RUN]);
-			_fsm.addState( CHARGE, new Charge(this) , [STAND, RUN]);
-			_fsm.addState( DASH  , new Dash(this)   , [STAND, RUN]);
+			_fsm.addState( CHARGE, new Charge(this) , [STAND, RUN, DASH]);
+			_fsm.addState( DASH  , new Dash(this)   , [STAND, RUN, JUMP]);
 			
 			state = STAND;
 			body.left = true;
+			
+			// Controls
+			controls.charge = false;
+			controls.dash = false;
 			
 			AIactivated = false;
 			view.sprite.addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
@@ -96,32 +103,34 @@ package com.nayael.crossover.characters.boss
 		}
 		
 		override public function update():void {
-			// STAND state
-			if (body.onFloor && physics.vX == 0) {
-				if (state == JUMP) {
-					controls.left = controls.right = controls.jump = false;
-				}
-				state = STAND;
-			}
-			
+			// Turns around when he hits a wall
 			if (body.onWall) {
-				controls.left = controls.right = controls.jump = false;
 				if (physics.vX < 0) {
 					moveRight();
 				} else {
 					moveLeft();
 				}
+				controls.left = controls.right = controls.jump = false;
+			}
+			
+			// STAND state
+			if (body.onFloor && physics.vX == 0) {
+				if (state == JUMP) {
+					releaseControls();
+				}
+				state = STAND;
 			}
 			
 			// RUNNING state
+			physics.vX = 0;
 			if (controls.left) {
 				moveLeft();
-				if (body.onFloor) {
+				if (body.onFloor && state != DASH) {
 					state = RUN;
 				}
 			} else if (controls.right) {
 				moveRight();
-				if (body.onFloor) {
+				if (body.onFloor && state != DASH) {
 					state = RUN;
 				}
 			}
@@ -137,17 +146,75 @@ package com.nayael.crossover.characters.boss
 				jump();
 			}
 			
+			if (controls.charge) {
+				state = CHARGE;
+			}
+			
+			if (controls.dash) {
+				state = DASH;
+				if (body.left) {
+					controls.left = true;
+					controls.right = false;
+				} else {
+					controls.left = false;
+					controls.right = true;
+				}
+			}
+			
 			super.update();
 		}
 		
 		override public function handleAI():void {
-			if (!AIactivated) {
+			if (!AIactivated || state == JUMP || state == CHARGE || state == DASH) {
 				return;
+			}
+			var action:int = (Math.random() * 30) | 0;
+			switch (action) {
+				// Charge the dash
+				case 0:
+					_chargeDash();
+					break;
+				default:
 			}
 		}
 		
-		public function chargeDash():void {
-			
+		/**
+		 * Sonic charges the dash
+		 */
+		private function _chargeDash():void {
+			if (state == CHARGE || state == DASH) {
+				return;
+			}
+			releaseControls();
+			controls.charge = true;
+			chargeTimer = new Timer(1000, 1);
+			chargeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _dash);
+			chargeTimer.start();
+		}
+		
+		/**
+		 * Sonic attacks
+		 * @param	e
+		 */
+		private function _dash(e:TimerEvent):void {
+			chargeTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _dash);
+			controls.dash = true;
+			_hSpeed = 30;
+			dashTimer = new Timer((1500 + Math.random() * 4000 | 0), 1);
+			dashTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopDash);
+			dashTimer.start();
+		}
+		
+		/**
+		 * Stops the dash
+		 * @param	e
+		 */
+		private function _stopDash(e:TimerEvent = null):void {
+			if (dashTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) {
+				dashTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopDash);
+			}
+			_hSpeed = 13;
+			releaseControls();
 		}
 		
 		override public function onHit(damage:int, weapon:Weapon = null):void {

@@ -74,6 +74,16 @@ package com.nayael.crossover.characters.boss
 			var hero:Hero = targets[0] as Hero;
 			hero.takeWeapon(drop);
 		}
+		
+		protected function releaseControls():void {
+			for (var name:String in controls) {
+				//trace(name);
+				controls[name] = false;
+			}
+			//for each (var item:* in controls) {
+				//item = false;
+			//}
+		}
 	
 	////////////////////////
 	// GETTERS & SETTERS

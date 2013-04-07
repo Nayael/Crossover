@@ -16,7 +16,6 @@ package com.nayael.crossover.characters.boss.states.sonic
 		}
 		
 		public function enter():void {
-			animation.gotoAndPlay(1);
 			entity.view.sprite.addChild( animation );
 		}
 		
