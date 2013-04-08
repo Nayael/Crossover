@@ -174,7 +174,7 @@ package com.nayael.crossover.characters.boss
 				}
 			}
 			
-			if ((state == DASH || state == CHARGE || state == RUN) && body.collide(targets[0])) {
+			if ((state == DASH || state == CHARGE) && body.collide(targets[0])) {
 				var hero:Hero = targets[0] as Hero,
 					heroHp:int = hero.health.hp;
 				hero.onHit(_strength, Dasher);
@@ -194,8 +194,7 @@ package com.nayael.crossover.characters.boss
 			if (!_AIactivated || state == JUMP || state == CHARGE || state == DASH || _runTimer.running) {
 				return;
 			}
-			_action = _action ? _action : ( (1 + Math.random() * 29) | 0 );
-			trace(_action);
+			_action = _action ? _action : ( (1 + Math.random() * 30) | 0 );
 			switch (_action) {
 				// Charge the dash
 				case 1:
@@ -281,7 +280,7 @@ package com.nayael.crossover.characters.boss
 				var hitProbability:Number = 0.2;	// The probability for the weak weapon to make damage to the boss in CHARGE or DASH state
 				if (state != CHARGE && state != DASH || Math.random() <= hitProbability) {
 					// The boss was hit by a weak weapon
-					health.damage(1);
+					health.damage(2);
 					physics.vX = 5 * (vX > 0 ? 1 : -1);
 					_stun(300, function ():void {
 						if (body.onFloor) {

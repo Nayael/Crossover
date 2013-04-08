@@ -151,6 +151,7 @@ package com.nayael.crossover.characters.hero
 			if (state != HURT && weapon is Dasher && weapon.cooldown != 0) {
 				state = DASH;
 				physics.vX += (weapon as Dasher).speed * (body.left ? -1 : 1);
+				_handleDash();
 			}
 			
 			super.update();
@@ -178,6 +179,15 @@ package com.nayael.crossover.characters.hero
 				weapon.endCooldown();
 				if (weapon is Dasher) {
 					(weapon as Dasher).stopDash();
+				}
+			}
+		}
+		
+		private function _handleDash():void {
+			for each (var target:Entity in targets) {
+				if (body.collide(target)) {
+					target.onHit((weapon as Dasher).strength, Object(weapon).constructor, physics.vX, physics.vY);
+					return;
 				}
 			}
 		}
@@ -231,7 +241,6 @@ package com.nayael.crossover.characters.hero
 			_weapons.push(weapon);
 			weapon = _weapons.shift();
 			_changingWeapon = true;
-			trace(weapon);
 		}
 		
 		/**
@@ -239,7 +248,6 @@ package com.nayael.crossover.characters.hero
 		 * @param	weapon The class of the weapon to add
 		 */
 		public function takeWeapon(weapon:Class):void {
-			trace('take weapon');
 			_weapons.push(new weapon(this));
 			// We save the new weapon
 			if (save.weapons.indexOf(weapon) == -1) {

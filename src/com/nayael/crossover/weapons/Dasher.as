@@ -13,16 +13,17 @@ package com.nayael.crossover.weapons
 	public class Dasher extends Weapon
 	{
 		public var speed:int = 13;
+		public var strength:int = 10;
 		public var dashTimer:Timer = new Timer(1500, 1);
 		
 		public function Dasher(entity:Hero) {
-			usesAmmo = false;
-			cooldownTime = 500;
 			super( entity );
+			cooldownTime = 500;
+			ammo = 25;
 		}
 		
 		override public function fire():Boolean {
-			if (cooldown != 0 || (entity as Hero).state == Hero.DASH) {
+			if (cooldown != 0 || ammo == 0 || (entity as Hero).state == Hero.DASH) {
 				return false;
 			}
 			//SoundManager.instance.playSfx( SoundManager.ACTION2 );
