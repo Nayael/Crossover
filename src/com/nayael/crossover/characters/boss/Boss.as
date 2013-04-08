@@ -9,6 +9,7 @@ package com.nayael.crossover.characters.boss
 	import com.nayael.crossover.characters.hero.Hero;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	/**
 	 * Abstract class for boss enemies in the game
@@ -16,15 +17,17 @@ package com.nayael.crossover.characters.boss
 	 */
 	public class Boss extends Character
 	{
-		protected var _invulnerabilityTime:int = 1000;
-		
 	////////////////////////
 	// PROPERTIES
 	//
+		protected var _stunDelay:int;
+		protected var _invulnerabilityDelay:int = 1000;
 		protected var _name:String;
-		protected var weakness:Class; 	// The class of the weapon which the boss is the most vulnerable to
-		protected var drop:Class;		// The class of the weapon to drop when the boss dies
-		protected var AIactivated:Boolean = true;
+		protected var _stunTimer:Timer = new Timer(1, 1);
+		protected var _weakness:Class; 	// The class of the weapon which the boss is the most vulnerable to
+		protected var _drop:Class;		// The class of the weapon to drop when the boss dies
+		protected var _AIactivated:Boolean = true;
+		protected var _action:int;
 		protected var controls:Object = {
 			left: false,
 			right: false,
@@ -53,7 +56,7 @@ package com.nayael.crossover.characters.boss
 		}
 		
 		protected function _activateAI(e:TimerEvent = null):void {
-			AIactivated = true;
+			_AIactivated = true;
 		}
 		
 		/**
@@ -76,7 +79,7 @@ package com.nayael.crossover.characters.boss
 		override public function onHurt():void {
 			super.onHurt();
 			view.blink(150, 4);
-			health.setInvulnerable(_invulnerabilityTime, function():void {
+			health.setInvulnerable(_invulnerabilityDelay, function():void {
 				view.stopBlink();
 			});
 		}
@@ -86,13 +89,30 @@ package com.nayael.crossover.characters.boss
 		 */
 		protected function dropWeapon():void {
 			var hero:Hero = targets[0] as Hero;
-			hero.takeWeapon(drop);
+			hero.takeWeapon(_drop);
 		}
 		
 		protected function releaseControls():void {
 			for (var name:String in controls) {
 				controls[name] = false;
 			}
+		}
+		
+		protected function _stun(delay:int = 0, callback:Function = null):void {
+			releaseControls();
+			if (_stunTimer.running) {
+				_stunTimer.delay = delay ? delay : _stunDelay;
+				_stunTimer.reset();
+				_stunTimer.start();
+				return;
+			}
+			_AIactivated = false;
+			_stunTimer = new Timer(delay ? delay : _stunDelay, 1);
+			_stunTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _activateAI);
+			if (callback != null) {
+				_stunTimer.addEventListener(TimerEvent.TIMER_COMPLETE, callback);
+			}
+			_stunTimer.start();
 		}
 	
 	////////////////////////

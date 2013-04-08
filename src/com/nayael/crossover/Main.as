@@ -80,7 +80,7 @@ package com.nayael.crossover
 			fsm.addState( GAME_OVER, new StateGameOver(this), [MAIN_MENU]);
 			
 			SoundManager.instance.addRessource( new VICTORY_CLASS() as Sound, SoundManager.SPECIAL1 );
-			SoundManager.instance.setSFXVolume( .5 );
+			SoundManager.instance.setSFXVolume( .3 );
 			
 			fsm.state = INTRO;
 		}

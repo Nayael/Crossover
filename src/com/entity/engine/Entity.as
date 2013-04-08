@@ -69,7 +69,7 @@
 		 * @param	damage
 		 * @param	weapon
 		 */
-		public function onHit(damage:int, weapon:Class = null):void {
+		public function onHit(damage:int, weapon:Class = null, vX:Number = 0, vY:Number = 0):void {
 			_health.damage(damage);
 		}
 		

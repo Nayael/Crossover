@@ -11,6 +11,7 @@ package com.nayael.crossover.characters.boss
 	import com.nayael.crossover.characters.boss.states.sonic.*;
 	import com.nayael.crossover.characters.hero.Hero;
 	import com.nayael.crossover.weapons.BarrelGun;
+	import com.nayael.crossover.weapons.BusterGun;
 	import com.nayael.crossover.weapons.Dasher;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
@@ -34,7 +35,7 @@ package com.nayael.crossover.characters.boss
 		
 		private var _chargeTimer:Timer;
 		private var _dashTimer:Timer;
-		private var _runTimer:Timer;
+		private var _runTimer:Timer = new Timer(1, 1);
 		private var _strength:int = 10;
 	
 	////////////////////////
@@ -42,9 +43,10 @@ package com.nayael.crossover.characters.boss
 	//
 		public function Sonic() {
 			_name = 'Sonic';
-			weakness = BarrelGun;
-			drop = Dasher;
-			_runTimer = new Timer(1, 1);
+			_weakness = BusterGun;
+			_drop = Dasher;
+			_stunDelay = 500;
+			_invulnerabilityDelay = 500;
 			
 			_hSpeed = 13;
 			_vHeight = 30;
@@ -80,7 +82,7 @@ package com.nayael.crossover.characters.boss
 			controls.charge = false;
 			controls.dash = false;
 			
-			AIactivated = false;
+			_AIactivated = false;
 			view.sprite.addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 		}
 	
@@ -110,16 +112,18 @@ package com.nayael.crossover.characters.boss
 		override public function update():void {
 			// Turns around when he hits a wall
 			if (body.onWall) {
+				controls.left = controls.right = controls.jump = false;
 				if (physics.vX <= 0) {
-					moveRight();
+					controls.right = true;
+					//moveRight();
 				} else {
-					moveLeft();
+					controls.left = true;
+					//moveLeft();
 				}
 				if (state == DASH) {
 					var reboundVY:int = (-10 + Math.random() * 15) | 0;
 					physics.vY = body.y < reboundVY ? physics.vY : reboundVY;
 				}
-				controls.left = controls.right = controls.jump = false;
 			}
 			
 			// STAND state
@@ -188,29 +192,29 @@ package com.nayael.crossover.characters.boss
 		 * Sonic's AI
 		 */
 		override public function handleAI():void {
-			if (!AIactivated || state == JUMP || state == CHARGE || state == DASH || _runTimer.running) {
+			if (!_AIactivated || state == JUMP || state == CHARGE || state == DASH || _runTimer.running) {
 				return;
 			}
-			var action:int = (Math.random() * 30) | 0;
-			trace(action);
-			switch (action) {
+			_action = _action ? _action : ( (1 + Math.random() * 29) | 0 );
+			switch (_action) {
 				// Charge the dash
-				case 0:
+				case 1:
 					_chargeDash();
 					break;
 				// Run
-				case 1:
+				case 2:
 					_startRun();
 					break;
 				default:
 			}
+			_action = 0;
 		}
 		
 		/**
 		 * Sonic runs
 		 */
-		private function _startRun():void {
-			_runTimer = new Timer(1000 + Math.random() * 4000, 1);
+		private function _startRun(delay:int = 0):void {
+			_runTimer = new Timer(delay ? delay : (1000 + Math.random() * 4000, 1) );
 			_runTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
 			controls.left = Math.random() >= 0.5 ? true : false;
 			controls.right = !controls.left;
@@ -268,18 +272,39 @@ package com.nayael.crossover.characters.boss
 			releaseControls();
 		}
 		
-		override public function onHit(damage:int, weapon:Class = null):void {
+		override public function onHit(damage:int, weapon:Class = null, vX:Number = 0, vY:Number = 0):void {
 			if (!weapon) {
 				return;
 			}
 			// If the weapon hitting is not the weakness, damage is poor
-			if (weapon != weakness) {
+			if (weapon != _weakness) {
 				var hitProbability:Number = 0.2;	// The probability for the weak weapon to make damage to the boss in CHARGE or DASH state
 				if (state != CHARGE && state != DASH || Math.random() <= hitProbability) {
+					// The boss was hit by a weak weapon
 					health.damage(1);
+					physics.vX = 5 * (vX > 0 ? 1 : -1);
+					_stun(300, function ():void {
+						if (body.onFloor) {
+							if (Math.random() <= 0.6) {
+								_startRun(2000 + Math.random() * 2000);
+							} else {
+								_chargeDash();
+							}
+						}
+					});
 				}
 			} else {
 				health.damage(damage);
+				physics.vX = 5 * damage * (vX > 0 ? 1 : -1);
+				_stun(900, function ():void {
+					if (body.onFloor) {
+						if (Math.random() <= 0.6) {
+							_startRun(2000 + Math.random() * 2000);
+						} else {
+							_chargeDash();
+						}
+					}
+				});
 			}
 		}
 		

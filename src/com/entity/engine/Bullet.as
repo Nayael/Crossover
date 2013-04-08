@@ -36,7 +36,7 @@ package com.entity.engine
 			ttl--;
 			for each (var target:Entity in targets) {
 				if (body.collide(target) && (target != this.myParent)) {
-					target.onHit(strength, Object(myParent.weapon).constructor);
+					target.onHit(strength, Object(myParent.weapon).constructor, physics.vX, physics.vY);
 					destroy();
 					return;
 				}
