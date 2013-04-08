@@ -89,7 +89,9 @@ package com.nayael.crossover.characters.boss
 		 */
 		protected function dropWeapon():void {
 			var hero:Hero = targets[0] as Hero;
-			hero.takeWeapon(_drop);
+			if (Hero.save.weapons.indexOf(_drop) == -1) {
+				hero.takeWeapon(_drop);
+			}
 		}
 		
 		protected function releaseControls():void {

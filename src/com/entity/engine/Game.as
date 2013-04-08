@@ -18,7 +18,7 @@ package com.entity.engine
 		
 		// constructeur et init
 		public function Game():void {
-			trace( "engine/game/construct" );
+			//trace( "engine/game/construct" );
 			if (stage)
 				init();
 			else
@@ -26,7 +26,7 @@ package com.entity.engine
 		}
 		
 		private function init(e:Event = null):void {
-			trace( "engine/game/init" );
+			//trace( "engine/game/init" );
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			E.stage = this.stage;
@@ -71,7 +71,7 @@ package com.entity.engine
 		
 		// -- gestion de toutes les entites
 		protected function addEntity(entity:Entity):Entity {
-			trace( "engine/game/addEntity", entity );
+			//trace( "engine/game/addEntity", entity );
 			entities.push(entity);
 			if (entity.view) {
 				addChild(entity.view.sprite);
@@ -81,12 +81,12 @@ package com.entity.engine
 		}
 		
 		protected function onEntityCreated(e:EntityEvent): void {
-			trace( "engine/game/onEntityCreated", e.entity );
+			//trace( "engine/game/onEntityCreated", e.entity );
 			addEntity( e.entity );
 		}
 		
 		protected function onEntityDestroyed(e:EntityEvent):void {
-			trace( "engine/game/onEntityDestroyed", e.entity );
+			//trace( "engine/game/onEntityDestroyed", e.entity );
 			
 			if (e.entity && e.entity.view) {
 				if (e.entity.view.sprite.stage) {

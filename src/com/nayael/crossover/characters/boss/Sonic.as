@@ -11,7 +11,6 @@ package com.nayael.crossover.characters.boss
 	import com.nayael.crossover.characters.boss.states.sonic.*;
 	import com.nayael.crossover.characters.hero.Hero;
 	import com.nayael.crossover.weapons.BarrelGun;
-	import com.nayael.crossover.weapons.BusterGun;
 	import com.nayael.crossover.weapons.Dasher;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
@@ -43,7 +42,7 @@ package com.nayael.crossover.characters.boss
 	//
 		public function Sonic() {
 			_name = 'Sonic';
-			_weakness = BusterGun;
+			_weakness = BarrelGun;
 			_drop = Dasher;
 			_stunDelay = 500;
 			_invulnerabilityDelay = 500;
@@ -196,6 +195,7 @@ package com.nayael.crossover.characters.boss
 				return;
 			}
 			_action = _action ? _action : ( (1 + Math.random() * 29) | 0 );
+			trace(_action);
 			switch (_action) {
 				// Charge the dash
 				case 1:
@@ -214,7 +214,7 @@ package com.nayael.crossover.characters.boss
 		 * Sonic runs
 		 */
 		private function _startRun(delay:int = 0):void {
-			_runTimer = new Timer(delay ? delay : (1000 + Math.random() * 4000, 1) );
+			_runTimer = new Timer(delay ? delay : ( (1000 + Math.random() * 4000) | 0 ), 1 );
 			_runTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
 			controls.left = Math.random() >= 0.5 ? true : false;
 			controls.right = !controls.left;

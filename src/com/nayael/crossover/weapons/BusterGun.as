@@ -16,6 +16,7 @@ package com.nayael.crossover.weapons
 		private var bulletPool:Array;
 
 		public function BusterGun(entity:Entity) {
+			usesAmmo = false;
 			bulletPool = Pool.instance.pool("busterBullets");
 			super( entity );
 		}
@@ -38,9 +39,7 @@ package com.nayael.crossover.weapons
 			
 			//SoundManager.instance.playSfx( SoundManager.ACTION2 );
 			
-			super.fire();
-			ammo++;	// Ammo is unlimited
-			return true;
+			return super.fire();
 		}
 	}
 }

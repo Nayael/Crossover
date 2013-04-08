@@ -78,6 +78,9 @@
 		 */
 		public function onHurt():void {
 			// --
+			if (weapon) {
+				weapon.endCooldown();
+			}
 		}
 		
 		/**

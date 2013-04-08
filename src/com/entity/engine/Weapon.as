@@ -1,6 +1,7 @@
 package com.entity.engine
 {
 	import com.entity.engine.utils.errors.AbstractClassError;
+	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
 	public class Weapon
@@ -9,6 +10,7 @@ package com.entity.engine
 		public var x:Number;	// The weapon can have a defined coordinate to throw bullet from that point
 		public var y:Number;	// The weapon can have a defined coordinate to throw bullet from that point
         public var ammo:int = 99;
+		public var usesAmmo:Boolean = true;
 		public var cooldownTime:int = 300;
 		public var cooldown:uint = 0;
 		
@@ -25,13 +27,16 @@ package com.entity.engine
 			}
 			
 			// Only shoot if the cooldown is finished
-			if (ammo >= 0) {
+			if (usesAmmo && ammo >= 0) {
 				ammo--;
 			}
-			cooldown = setTimeout(function():void {
-				cooldown = 0;
-			}, cooldownTime);
+			cooldown = setTimeout(endCooldown, cooldownTime);
 			return true;
+		}
+		
+		public function endCooldown():void {
+			clearTimeout(cooldown);
+			cooldown = 0;
 		}
 	}
 }

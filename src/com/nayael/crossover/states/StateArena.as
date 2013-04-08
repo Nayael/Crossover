@@ -33,7 +33,8 @@ package com.nayael.crossover.states
 		
 		private function _onKeyDown(e:KeyboardEvent):void {
 			if (e.keyCode != Keyboard.ESCAPE
-			 && e.keyCode != Keyboard.G) {
+			 && e.keyCode != Keyboard.G
+			 && e.keyCode != Keyboard.M) {
 				return;
 			}
 			
@@ -50,6 +51,11 @@ package com.nayael.crossover.states
 						_game.hero.health.damage(2);
 					}, 100);
 					
+					return;
+					break;
+				
+				case Keyboard.M:
+					_game.boss.onDie();
 					return;
 					break;
 				

@@ -92,10 +92,7 @@ package com.nayael.crossover
 		 * Starts a new game
 		 */
 		public function startNewGame():void {
-			hero = new Hero();
-			hero.group = players;
-			players.push(hero);
-			EventBroker.subscribe( HeroEvent.HERO_DEAD, _onHeroDead );
+			
 		}
 		
 		/**
@@ -180,7 +177,6 @@ package com.nayael.crossover
 			text.hCenter(this);
 			text.y = E.HEIGHT >> 2;
 			addChild(text);
-			trace(text.text);
 			
 			textTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function(e:TimerEvent = null):void {
 				removeChild(text);
@@ -192,6 +188,7 @@ package com.nayael.crossover
 		}
 		
 		private function _onFinishLevel(e:LevelEvent = null):void {
+			Hero.save.saveData('hp', hero.health.hp);	// We save the hero's HP
 			map.destroy(this);
 			if (hud.parent == this) {
 				removeChild(hud);
