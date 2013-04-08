@@ -6,6 +6,7 @@ package com.nayael.crossover.characters.hero
 	import com.nayael.crossover.characters.Character;
 	import com.nayael.crossover.characters.hero.states.*;
 	import com.nayael.crossover.weapons.BusterGun;
+	import com.nayael.crossover.weapons.Dasher;
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.ui.*;
@@ -23,6 +24,7 @@ package com.nayael.crossover.characters.hero
 		static public const RUN:String       = "hero_run";
 		static public const JUMP:String      = "hero_jump";
 		static public const FIRE:String      = "hero_fire";
+		static public const DASH:String      = "hero_dash";
 		static public const WALL:String      = "hero_wall";
 		static public const WALL_FIRE:String = "hero_wall_fire";
 		static public const JUMP_FIRE:String = "hero_jump_fire";
@@ -30,8 +32,13 @@ package com.nayael.crossover.characters.hero
 		static public const SHIELD:String    = "hero_shield";
 		static public const WIN:String       = "hero_win";
 		
+		static public var save:Save = new Save({
+			weapons: [Dasher, BusterGun]
+		});
+		
 		private var _keypad:Keypad;
 		private var _weapons:Vector.<Weapon>;
+		private var _changingWeapon:Boolean;
 		
 	////////////////////////
 	// CONSTRUCTOR
@@ -55,20 +62,20 @@ package com.nayael.crossover.characters.hero
 			health = new Health(this);
 			health.hp = 100;
 			
-			_weapons = Vector.<Weapon>([new BusterGun(this)]);
-			weapon = _weapons[0];
+			_loadSave();
 			
 			_fsm = new StateMachine();			
-			_fsm.addState( STAND     , new Stand(this)   , [HURT, RUN, JUMP, FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN] );
-			_fsm.addState( HURT      , new Hurt(this)    , [STAND, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN] );
-			_fsm.addState( RUN       , new Running(this) , [STAND, HURT, JUMP, FIRE, RUN_FIRE, WIN] );
-			_fsm.addState( JUMP      , new Jumping(this) , [STAND, HURT, RUN, RUN_FIRE, JUMP_FIRE, WALL, WALL_FIRE, WIN] );
-			_fsm.addState( FIRE      , new Fire(this)    , [STAND, HURT, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN] );
-			_fsm.addState( JUMP_FIRE , new JumpFire(this), [STAND, HURT, RUN, RUN_FIRE, JUMP, WALL, WALL_FIRE, WIN] );
-			_fsm.addState( RUN_FIRE  , new RunFire(this) , [STAND, HURT, RUN, FIRE, JUMP, JUMP_FIRE, WIN] );
-			_fsm.addState( WALL      , new Wall(this)    , [STAND, JUMP, RUN, JUMP_FIRE, WALL_FIRE, WIN] );
-			_fsm.addState( WALL_FIRE , new WallFire(this), [STAND, JUMP, RUN, JUMP_FIRE, WALL, WIN] );
-			_fsm.addState( WIN       , new Win(this)     , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE] );
+			_fsm.addState( STAND     , new Stand(this)   , [HURT, RUN, JUMP, FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( HURT      , new Hurt(this)    , [STAND, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
+			_fsm.addState( RUN       , new Running(this) , [STAND, HURT, JUMP, FIRE, RUN_FIRE, WIN, DASH] );
+			_fsm.addState( JUMP      , new Jumping(this) , [STAND, HURT, RUN, RUN_FIRE, JUMP_FIRE, WALL, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( FIRE      , new Fire(this)    , [STAND, HURT, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
+			_fsm.addState( JUMP_FIRE , new JumpFire(this), [STAND, HURT, RUN, RUN_FIRE, JUMP, WALL, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( RUN_FIRE  , new RunFire(this) , [STAND, HURT, RUN, FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
+			_fsm.addState( WALL      , new Wall(this)    , [STAND, JUMP, RUN, JUMP_FIRE, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( WALL_FIRE , new WallFire(this), [STAND, JUMP, RUN, FIRE, JUMP_FIRE, WALL, WIN, DASH] );
+			_fsm.addState( WIN       , new Win(this)     , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, DASH] );
+			_fsm.addState( DASH      , new Dash(this)    , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN] );
 			
 			state = STAND;
 			
@@ -78,7 +85,23 @@ package com.nayael.crossover.characters.hero
 			EventBroker.subscribe(EntityEventType.DESTROYED, onEntityDestroyed);
 		}
 		
+		private function _loadSave():void {
+			_weapons = new Vector.<Weapon>();	// We load all the weapons he gained
+			for each (var item:* in save.weapons) {
+				item = item as Class;
+				_weapons.push(new item(this));
+			}
+			weapon = _weapons.shift();
+		}
+		
 		override public function update():void {
+			if (!_changingWeapon && _keypad && _keypad.isDown(Keyboard.L)) {
+				changeWeapon();
+			} else if (_keypad && _keypad.isUp(Keyboard.L)) {
+				_changingWeapon = false
+			}
+			
+			// HURT state
 			if (state == HURT) {
 				var sprite:MovieClip = (view.sprite.getChildAt(0) as MovieClip);
 				if (sprite.currentFrame == sprite.totalFrames - 1) {
@@ -88,6 +111,7 @@ package com.nayael.crossover.characters.hero
 					return;
 				}
 			}
+			
 			physics.vX = 0;
 			
 			// RUNNING state
@@ -123,23 +147,38 @@ package com.nayael.crossover.characters.hero
 				jump();
 			}
 			
+			// DASH state
+			if (state != HURT && weapon is Dasher && weapon.cooldown != 0) {
+				state = DASH;
+				physics.vX += (weapon as Dasher).speed * (body.left ? -1 : 1);
+			}
+			
 			super.update();
 			
 			// FIRE state
 			if (_keypad && _keypad.isDown(Keyboard.K)) {
-				if (state == JUMP) {
-					state = JUMP_FIRE;
-				} else if (state == RUN) {
-					state = RUN_FIRE;
-				} else if (state == WALL) {
-					state = WALL_FIRE;
-				} else {
-					state = FIRE;
+				if (!(weapon is Dasher)) {
+					switch (state) {
+						case JUMP:
+							state = JUMP_FIRE;
+							break;
+						case RUN:
+							state = RUN_FIRE;
+							break;
+						case WALL:
+							state = WALL_FIRE;
+							break;
+						default:
+							state = FIRE;
+							break;
+					}
 				}
 				weapon.fire();
-			} else if (_keypad && _keypad.isUp(Keyboard.ENTER) && weapon.cooldown != 0) {
-				clearTimeout(weapon.cooldown);
-				weapon.cooldown = 0;
+			} else if (_keypad && _keypad.isUp(Keyboard.K) && weapon.cooldown != 0) {
+				weapon.endCooldown();
+				if (weapon is Dasher) {
+					(weapon as Dasher).stopDash();
+				}
 			}
 		}
 		
@@ -186,11 +225,26 @@ package com.nayael.crossover.characters.hero
 		}
 		
 		/**
+		 * Changes the equiped weapon
+		 */
+		private function changeWeapon():void {
+			_weapons.push(weapon);
+			weapon = _weapons.shift();
+			_changingWeapon = true;
+			trace(weapon);
+		}
+		
+		/**
 		 * The hero gains a new weapon
 		 * @param	weapon The class of the weapon to add
 		 */
 		public function takeWeapon(weapon:Class):void {
+			trace('take weapon');
 			_weapons.push(new weapon(this));
+			// We save the new weapon
+			if (save.weapons.indexOf(weapon) == -1) {
+				save.weapons.push(weapon);
+			}
 		}
 		
 		/**
