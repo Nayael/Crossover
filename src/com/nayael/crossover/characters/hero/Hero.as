@@ -126,7 +126,7 @@ package com.nayael.crossover.characters.hero
 			super.update();
 			
 			// FIRE state
-			if (_keypad && _keypad.isDown(Keyboard.ENTER)) {
+			if (_keypad && _keypad.isDown(Keyboard.K)) {
 				if (state == JUMP) {
 					state = JUMP_FIRE;
 				} else if (state == RUN) {

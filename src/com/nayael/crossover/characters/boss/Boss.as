@@ -72,7 +72,7 @@ package com.nayael.crossover.characters.boss
 			hero.disableControls();
 			dropWeapon();
 			destroy();
-			EventBroker.broadcast(new Event(BossEvent.BOSS_DEAD));
+			EventBroker.broadcast(new BossEvent(BossEvent.BOSS_DEAD, _drop));
 			hero.state = Hero.WIN;
 		}
 		

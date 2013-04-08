@@ -15,8 +15,11 @@ package com.nayael.crossover
 	import com.nayael.crossover.characters.hero.HeroEvent;
 	import com.nayael.crossover.events.LevelEvent;
 	import com.nayael.crossover.states.*;
+	import com.nayael.crossover.utils.Text;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.media.Sound;
+	import flash.utils.Timer;
 	import net.hires.debug.Stats;
 	
 	/**
@@ -169,7 +172,21 @@ package com.nayael.crossover
 			fsm.state = GAME_OVER;
 		}
 		
-		private function _onBossDead(e:Event):void {
+		private function _onBossDead(e:BossEvent):void {
+			var weaponName:String = String(e.drop).replace('[class ', '').replace(']', ''),
+				text:Text = new Text('New weapon : ' + weaponName + ' !', 'PressStart2P');
+			var textTimer:Timer = new Timer(8000, 1);
+			
+			text.hCenter(this);
+			text.y = E.HEIGHT >> 2;
+			addChild(text);
+			trace(text.text);
+			
+			textTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function(e:TimerEvent = null):void {
+				removeChild(text);
+			});
+			textTimer.start();
+			
 			SoundManager.instance.playSfx( SoundManager.SPECIAL1 );
 			EventBroker.unsubscribe(BossEvent.BOSS_DEAD, _onBossDead);
 		}

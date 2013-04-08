@@ -11,19 +11,22 @@ package com.nayael.crossover.characters.boss
 	// PROPERTIES
 	//
 		static public const BOSS_DEAD:String = 'boss_dead';
+		
+		public var drop:Class;
 	
 	////////////////////////
 	// CONSTRUCTOR
 	//
-		public function BossEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false ) {
+		public function BossEvent( type:String, drop:Class = null, bubbles:Boolean = false, cancelable:Boolean = false ) {
 			super( type, bubbles, cancelable );
+			this.drop = drop;
 		}
 		
 	////////////////////////
 	// METHODS
 	//
 		public override function clone ():Event {
-			return new BossEvent ( type, bubbles, cancelable );
+			return new BossEvent ( type, drop, bubbles, cancelable );
 		}
 		
 		public override function toString ():String {
