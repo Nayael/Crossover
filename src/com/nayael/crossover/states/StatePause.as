@@ -7,12 +7,15 @@ package com.nayael.crossover.states
 	import com.nayael.crossover.events.LevelEvent;
 	import com.nayael.crossover.Main;
 	import com.nayael.crossover.utils.Text;
+	import flash.display.DisplayObject;
+	import flash.display.Shape;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
 	public class StatePause implements IState
 	{
 		private var _texts:Vector.<Text>    = new Vector.<Text>();
+		private var _children:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 		private var _options:Vector.<Array> = new Vector.<Array>();
 		private var _cursor:Text            = new Text('> ', 'PressStart2P');
 		private var _selected:int           = 0;
@@ -39,10 +42,21 @@ package com.nayael.crossover.states
 			text.y = (E.HEIGHT >> 1) + 180;
 			_texts.push(text);
 			
+			_texts.fixed = true;
+			
+			var background:Shape = new Shape();
+			background.graphics.beginFill(0x000000);
+			background.graphics.drawRect(0, 0, E.WIDTH, E.HEIGHT);
+			background.graphics.endFill();
+			_children.push(background);
+			
 			_options.push([Main.GRID, text]);
 		}
 		
 		public function enter():void {
+			for each (var child:DisplayObject in _children) {
+				_game.addChild(child);
+			}
 			for each (var text:Text in _texts) {
 				_game.addChild(text);
 			}
@@ -51,6 +65,9 @@ package com.nayael.crossover.states
 		}
 		
 		public function exit():void {
+			for each (var child:DisplayObject in _children) {
+				_game.removeChild(child);
+			}
 			for each (var text:Text in _texts) {
 				text.remove();
 			}
