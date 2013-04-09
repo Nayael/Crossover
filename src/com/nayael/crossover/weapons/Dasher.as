@@ -17,9 +17,10 @@ package com.nayael.crossover.weapons
 		public var dashTimer:Timer = new Timer(1500, 1);
 		
 		public function Dasher(entity:Hero) {
+			maxAmmo = 25;
 			super( entity );
 			cooldownTime = 500;
-			ammo = 25;
+			color = 'Blue';
 		}
 		
 		override public function fire():Boolean {

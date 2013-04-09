@@ -6,10 +6,13 @@ package com.entity.engine
 	
 	public class Weapon
 	{
+        private var _ammo:int;
+		
         public var entity:Entity;
 		public var x:Number;	// The weapon can have a defined coordinate to throw bullet from that point
 		public var y:Number;	// The weapon can have a defined coordinate to throw bullet from that point
-        public var ammo:int = 99;
+		public var color:String;	// The color to display ammo in the HUD
+        public var maxAmmo:int;
 		public var usesAmmo:Boolean = true;
 		public var cooldownTime:int = 300;
 		public var cooldown:uint = 0;
@@ -19,6 +22,7 @@ package com.entity.engine
 				throw new AbstractClassError(this);
 			}
 			this.entity = entity;
+			_ammo = maxAmmo;
 		}
 		
 		public function fire():Boolean {
@@ -27,8 +31,8 @@ package com.entity.engine
 			}
 			
 			// Only shoot if the cooldown is finished
-			if (usesAmmo && ammo >= 0) {
-				ammo--;
+			if (usesAmmo && _ammo >= 0) {
+				_ammo--;
 			}
 			cooldown = setTimeout(endCooldown, cooldownTime);
 			return true;
@@ -37,6 +41,17 @@ package com.entity.engine
 		public function endCooldown():void {
 			clearTimeout(cooldown);
 			cooldown = 0;
+		}
+		
+		public function get ammo():int {
+			return _ammo;
+		}
+		
+		public function set ammo(value:int):void {
+			if (value > maxAmmo) {
+				value = maxAmmo
+			}
+			_ammo = value;
 		}
 	}
 }

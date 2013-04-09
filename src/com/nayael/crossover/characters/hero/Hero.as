@@ -5,13 +5,13 @@ package com.nayael.crossover.characters.hero
 	import com.entity.engine.fsm.*;
 	import com.nayael.crossover.characters.Character;
 	import com.nayael.crossover.characters.hero.states.*;
-	import com.nayael.crossover.weapons.BusterGun;
-	import com.nayael.crossover.weapons.Dasher;
+	import com.nayael.crossover.Main;
+	import com.nayael.crossover.weapons.*;
 	import flash.display.*;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.ui.*;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
+	import flash.utils.Timer;
 	
 	/**
 	 * The hero class
@@ -33,7 +33,7 @@ package com.nayael.crossover.characters.hero
 		static public const WIN:String       = "hero_win";
 		
 		static public var save:Save = new Save({
-			weapons: [Dasher, BusterGun]
+			weapons: [BusterGun, Dasher]
 		});
 		
 		private var _keypad:Keypad;
@@ -219,9 +219,16 @@ package com.nayael.crossover.characters.hero
 			if ((physics as HeroPhysics).wallJumping) {
 				physics.vX *= -3;
 				body.left = !body.left;
-				setTimeout(function ():void {
+				var wallJumpTimer:Timer = new Timer(300, 1);
+				wallJumpTimer.addEventListener(TimerEvent.TIMER_COMPLETE, endWallJump);
+				wallJumpTimer.start();
+			}
+			
+			function endWallJump(e:TimerEvent):void {
+				wallJumpTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, endWallJump);
+				if (physics) {
 					(physics as HeroPhysics).wallJumping = false;
-				}, 300);
+				}
 			}
 		}
 		
@@ -241,6 +248,10 @@ package com.nayael.crossover.characters.hero
 			_weapons.push(weapon);
 			weapon = _weapons.shift();
 			_changingWeapon = true;
+			(_game as Main).hud.hideHeroAmmo();
+			if (weapon.usesAmmo) {
+				(_game as Main).hud.showHeroAmmo(weapon.maxAmmo, weapon.color);
+			}
 		}
 		
 		/**

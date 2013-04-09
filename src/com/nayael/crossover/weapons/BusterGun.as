@@ -16,9 +16,9 @@ package com.nayael.crossover.weapons
 		private var bulletPool:Array;
 
 		public function BusterGun(entity:Entity) {
-			usesAmmo = false;
-			bulletPool = Pool.instance.pool("busterBullets");
 			super( entity );
+			bulletPool = Pool.instance.pool("busterBullets");
+			usesAmmo = false;
 		}
 		
 		override public function fire():Boolean {
