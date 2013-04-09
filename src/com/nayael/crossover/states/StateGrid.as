@@ -21,7 +21,7 @@ package com.nayael.crossover.states
 		}
 		
 		public function enter():void {
-			_text = new Text('Choose your enemy', 'PressStart2P');
+			_text = new Text('Choose your opponent', 'PressStart2P');
 			_text.hCenter(E.stage);
 			_text.y = 50;
 			_game.addChild(_text);
@@ -40,14 +40,6 @@ package com.nayael.crossover.states
 		}
 		
 		private function _onKeyDown(e:KeyboardEvent):void {
-			if (e.keyCode != Keyboard.SPACE
-			 && e.keyCode != Keyboard.UP
-			 && e.keyCode != Keyboard.DOWN
-			 && e.keyCode != Keyboard.RIGHT
-			 && e.keyCode != Keyboard.LEFT) {
-				return;
-			}
-			
 			switch (e.keyCode) {
 				case Keyboard.SPACE:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);

@@ -36,13 +36,14 @@ package com.nayael.crossover
 		public var boss:Boss;
 		
 		// Game States
-		public static const INTRO:String     = "game_intro_state";
-		public static const MAIN_MENU:String = "game_main_menu_state";
-		public static const GRID:String 	 = "game_grid_state";
-		public static const ARENA:String     = "game_arena_state";
-		public static const RUNNING:String   = "game_running_state";
-		public static const PAUSE:String 	 = "game_pause_state";
-		public static const GAME_OVER:String = "game_over_state";
+		public static const INTRO:String        = "game_intro_state";
+		public static const INSTRUCTIONS:String = "game_instructions_state";
+		public static const MAIN_MENU:String    = "game_main_menu_state";
+		public static const GRID:String 	    = "game_grid_state";
+		public static const ARENA:String        = "game_arena_state";
+		public static const RUNNING:String      = "game_running_state";
+		public static const PAUSE:String 	    = "game_pause_state";
+		public static const GAME_OVER:String    = "game_over_state";
 		public var fsm:StateMachine;
 		
 		// HUD
@@ -75,12 +76,13 @@ package com.nayael.crossover
 			EventBroker.subscribe( EntityEventType.CREATED, onEntityCreated );
 			
 			fsm = new StateMachine();
-			fsm.addState( INTRO    , new StateIntro(this)   , [MAIN_MENU]);
-			fsm.addState( MAIN_MENU, new StateMainMenu(this), [GRID]);
-			fsm.addState( GRID     , new StateGrid(this)    , [MAIN_MENU, ARENA]);
-			fsm.addState( ARENA    , new StateArena(this)   , [GAME_OVER, PAUSE, GRID]);
-			fsm.addState( PAUSE    , new StatePause(this)   , [ARENA, GRID]);
-			fsm.addState( GAME_OVER, new StateGameOver(this), [MAIN_MENU]);
+			fsm.addState( INTRO       , new StateIntro(this)       , [MAIN_MENU]);
+			fsm.addState( MAIN_MENU   , new StateMainMenu(this)    , [GRID, INSTRUCTIONS]);
+			fsm.addState( INSTRUCTIONS, new StateInstructions(this), [MAIN_MENU]);
+			fsm.addState( GRID        , new StateGrid(this)        , [MAIN_MENU, ARENA]);
+			fsm.addState( ARENA       , new StateArena(this)       , [GAME_OVER, PAUSE, GRID]);
+			fsm.addState( PAUSE       , new StatePause(this)       , [ARENA, GRID]);
+			fsm.addState( GAME_OVER   , new StateGameOver(this)    , [MAIN_MENU]);
 			
 			SoundManager.instance.addRessource( new VICTORY_CLASS() as Sound, SoundManager.SPECIAL1 );
 			SoundManager.instance.setSFXVolume( .3 );
@@ -140,9 +142,13 @@ package com.nayael.crossover
 			// Updating hero's side HUD
 			if (hero.health) {
 				hud.heroHP = hero.health.hp;
-				//hud.heroAmmo = hero.weapon.ammo;
 			} else {
 				hud.heroHP = 0;
+			}
+			if (hero.weapon.usesAmmo) {
+				hud.heroAmmo = hero.weapon.ammo;
+			} else {
+				hud.hideHeroAmmo();
 			}
 			
 			// If we are inside an arena with a boss
@@ -188,7 +194,9 @@ package com.nayael.crossover
 		}
 		
 		private function _onFinishLevel(e:LevelEvent = null):void {
-			Hero.save.saveData('hp', hero.health.hp);	// We save the hero's HP
+			if (hero.health) {
+				Hero.save.saveData('hp', hero.health.hp);	// We save the hero's HP
+			}
 			map.destroy(this);
 			if (hud.parent == this) {
 				removeChild(hud);

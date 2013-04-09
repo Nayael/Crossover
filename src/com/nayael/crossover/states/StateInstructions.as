@@ -9,28 +9,43 @@ package com.nayael.crossover.states
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
-	public class StateIntro implements IState
+	public class StateInstructions implements IState
 	{
 		private var _texts:Vector.<Text> = new Vector.<Text>();
 		private var _game:Main;
 		
-		public function StateIntro(game:Main) {
+		public function StateInstructions(game:Main) {
 			var text:Text;
 			_game = game;
 			
-			text = new Text('Megaboy', 'PressStart2P', 42, 0xEE1100);
+			text = new Text('Instructions', 'PressStart2P', 28, 0xEE1100);
 			text.hCenter(E.stage);
-			text.y = (E.HEIGHT >> 1 >> 1) - 25;
+			text.y = (E.HEIGHT >> 3);
 			_texts.push(text);
 			
-			text = new Text('Against the World', 'PressStart2P', 28, 0xEE1100);
+			text = new Text('Move with Q/D or Left/Right', 'PressStart2P');
 			text.hCenter(E.stage);
-			text.y = (E.HEIGHT >> 1 >> 1) + 40;
+			text.y = (E.HEIGHT >> 2) + 10;
 			_texts.push(text);
 			
-			text = new Text('Press Start (Space)', 'PressStart2P');
+			text = new Text('Jump with SPACE', 'PressStart2P');
+			text.hCenter(E.stage);
+			text.y = (E.HEIGHT >> 2) + 90;
+			_texts.push(text);
+			
+			text = new Text('Shoot with K', 'PressStart2P');
+			text.hCenter(E.stage);
+			text.y = (E.HEIGHT >> 1) + 20;
+			_texts.push(text);
+			
+			text = new Text('Change weapon with L', 'PressStart2P');
 			text.hCenter(E.stage);
 			text.y = (E.HEIGHT >> 1) + 100;
+			_texts.push(text);
+			
+			text = new Text('Pause game with ESCAPE', 'PressStart2P');
+			text.hCenter(E.stage);
+			text.y = (E.HEIGHT >> 1) + 180;
 			_texts.push(text);
 		}
 		
@@ -38,7 +53,6 @@ package com.nayael.crossover.states
 			for each (var text:Text in _texts) {
 				_game.addChild(text);
 			}
-			//SoundManager.instance.playBGM( SoundManager.BGM1, 0 );
 			
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 		}
@@ -47,7 +61,6 @@ package com.nayael.crossover.states
 			for each (var text:Text in _texts) {
 				text.remove();
 			}
-			//SoundManager.instance.stopAllSound();
 		}
 		
 		/**

@@ -75,23 +75,27 @@ package com.nayael.crossover.ui
 			if (e.keyCode != Keyboard.UP
 			 && e.keyCode != Keyboard.DOWN
 			 && e.keyCode != Keyboard.LEFT
-			 && e.keyCode != Keyboard.RIGHT) {
+			 && e.keyCode != Keyboard.RIGHT
+			 && e.keyCode != Keyboard.Z
+			 && e.keyCode != Keyboard.Q
+			 && e.keyCode != Keyboard.S
+			 && e.keyCode != Keyboard.D) {
 				return;
 			}
 			
 			var nextSlot:int;
 			
 			switch (e.keyCode) {
-				case Keyboard.UP:
+				case Keyboard.UP: case Keyboard.Z:
 					nextSlot = _selected - 3 >= 0 ? _selected - 3 : _selected + 6;
 					break;
-				case Keyboard.DOWN:
+				case Keyboard.DOWN: case Keyboard.S:
 					nextSlot = _selected + 3 <= 9 ? _selected + 3 : _selected - 6;
 					break;
-				case Keyboard.LEFT:
+				case Keyboard.LEFT: case Keyboard.Q:
 					nextSlot = _selected - 1 >= 0 ? _selected - 1 : _selected + 2;
 					break;
-				case Keyboard.RIGHT:
+				case Keyboard.RIGHT: case Keyboard.D:
 					nextSlot = _selected + 1 <= 2 ? _selected + 1 : _selected - 2;
 					break;
 			}

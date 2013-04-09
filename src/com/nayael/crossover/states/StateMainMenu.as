@@ -43,7 +43,7 @@ package com.nayael.crossover.states
 			text.y = (E.HEIGHT >> 1) + 180;
 			_texts.push(text);
 			
-			_options.push([Main.INTRO, text]);
+			_options.push([Main.INSTRUCTIONS, text]);
 		}
 		
 		public function enter():void {
@@ -70,13 +70,13 @@ package com.nayael.crossover.states
 		 */
 		private function _onKeydown(e:KeyboardEvent):void {
 			switch (e.keyCode) {
-				case Keyboard.UP:
+				case Keyboard.UP: case Keyboard.Z:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 					_selectOption(_selected - 1);
 					E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 					break;
 					
-				case Keyboard.DOWN:
+				case Keyboard.DOWN: case Keyboard.S:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 					_selectOption(_selected + 1);
 					E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
