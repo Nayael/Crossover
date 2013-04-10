@@ -114,10 +114,8 @@ package com.nayael.crossover.characters.boss
 				controls.left = controls.right = controls.jump = false;
 				if (physics.vX <= 0) {
 					controls.right = true;
-					//moveRight();
 				} else {
 					controls.left = true;
-					//moveLeft();
 				}
 				if (state == DASH) {
 					var reboundVY:int = (-10 + Math.random() * 15) | 0;

@@ -19,7 +19,7 @@ package com.nayael.crossover.weapons
 		public function Dasher(entity:Hero) {
 			maxAmmo = 25;
 			super( entity );
-			cooldownTime = 500;
+			cooldownTime = 3000;
 			color = 'Blue';
 		}
 		

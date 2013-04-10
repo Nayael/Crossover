@@ -30,7 +30,7 @@ package com.nayael.crossover.arenas
 	// METHODS
 	//
 		override public function draw(game:Game):void {
-			var maps:Array = [SonicMap],
+			var maps:Array = [SonicMap, LinkMap, DonkeyKongMap],
 				className:String = boss.name + 'Map',
 				bmpDataClass:Class = getDefinitionByName(className) as Class,
 				bmp:Bitmap = new Bitmap(new bmpDataClass());

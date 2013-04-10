@@ -18,8 +18,10 @@ package com.nayael.crossover.weapons
 	// CONSTRUCTOR
 	//
 		public function BarrelGun(entity:Entity) {
-			super(entity);
-			
+			maxAmmo = 25;
+			super( entity );
+			cooldownTime = 500;
+			color = 'Red';
 		}
 	
 	////////////////////////
