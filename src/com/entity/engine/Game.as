@@ -46,7 +46,8 @@ package com.entity.engine
 		}
 		
 		protected function end():void {
-			for each (var entity:Entity in entities) {
+			var entitiesCollection:Vector.<Entity> = entities.concat();	// Making a copy of the entities vector, so that we can delete them in the loop without trouble
+			for each (var entity:Entity in entitiesCollection) {
 				if (entity.view)
 					removeChild(entity.view.sprite);
 				entity.destroy();
