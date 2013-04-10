@@ -33,7 +33,7 @@ package com.nayael.crossover.characters.hero
 		static public const WIN:String       = "hero_win";
 		
 		static public var save:Save = new Save({
-			weapons: [BusterGun]
+			weapons: [BusterGun, Dasher]
 		});
 		
 		private var _keypad:Keypad;

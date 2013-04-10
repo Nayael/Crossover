@@ -17,8 +17,8 @@ package classes
 		private var ammoColor:String;
 		private var maxAmmo:int;
 		
-		private var stepsColors:Array = [HUDStep, BlueHUDStep];
-		private var heroAmmoColors:Array = [BlueHeroAmmo, YellowHeroAmmo];
+		private var stepsColors:Array = [HUDStep, BlueHUDStep, YellowHUDStep, RedHUDStep];
+		private var heroAmmoColors:Array = [BlueHeroAmmo, YellowHeroAmmo, RedHeroAmmo];
 	
 	////////////////////////
 	// CONSTRUCTOR
