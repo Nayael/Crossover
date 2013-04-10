@@ -174,7 +174,8 @@ package com.nayael.crossover.characters.boss
 				}
 			}
 			
-			if ((state == DASH || state == CHARGE) && body.collide(targets[0])) {
+			// Sonic hits the hero on state Charge, Dash, or Run (50% chance)
+			if ((state == DASH || state == CHARGE || (state == RUN && Math.random() > 0.5) ) && body.collide(targets[0])) {
 				var hero:Hero = targets[0] as Hero,
 					heroHp:int = hero.health.hp;
 				hero.onHit(_strength, Dasher);

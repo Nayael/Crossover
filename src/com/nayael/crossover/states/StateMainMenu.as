@@ -86,9 +86,6 @@ package com.nayael.crossover.states
 				case Keyboard.SPACE:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 					_game.fsm.state = _options[_selected][0];
-					if (_options[_selected][0] == Main.GRID) {	// Start a new game
-						_game.startNewGame();
-					}
 					break;
 			}
 		}

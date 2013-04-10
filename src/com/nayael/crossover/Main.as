@@ -91,13 +91,6 @@ package com.nayael.crossover
 		}
 		
 		/**
-		 * Starts a new game
-		 */
-		public function startNewGame():void {
-			
-		}
-		
-		/**
 		 * When the player enters the level
 		 * @param	arena
 		 */
@@ -201,9 +194,9 @@ package com.nayael.crossover
 			if (hud.parent == this) {
 				removeChild(hud);
 			}
+			end();
 			players.length = 0;
 			enemies.length = 0;
-			end();
 			if (e.win) {
 				fsm.state = GRID;
 			}
