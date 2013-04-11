@@ -7,8 +7,10 @@ package com.nayael.crossover.characters.boss
 	import com.entity.engine.Physics;
 	import com.entity.engine.View;
 	import com.nayael.crossover.characters.boss.states.link.*;
+	import com.nayael.crossover.characters.hero.Hero;
 	import com.nayael.crossover.weapons.Dasher;
 	import com.nayael.crossover.weapons.Shield;
+	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
@@ -29,6 +31,8 @@ package com.nayael.crossover.characters.boss
 		static public const SHIELD:String = "link_shield";
 		static public const ATTACK:String = "link_attack";
 		
+		private var _attackCooldown:Timer = new Timer(1000, 1);
+		private var _shieldTimer:Timer = new Timer(150000, 1);
 		private var _runTimer:Timer = new Timer(1, 1);
 		private var _strength:int = 10;
 	
@@ -42,8 +46,8 @@ package com.nayael.crossover.characters.boss
 			_stunDelay = 500;
 			_invulnerabilityDelay = 500;
 			
-			_hSpeed = 13;
-			_vHeight = 30;
+			_hSpeed = 10;
+			_vHeight = 25;
 			
 			body = new Body(this);
 			body.x = E.WIDTH - (E.WIDTH >> 2);
@@ -63,11 +67,11 @@ package com.nayael.crossover.characters.boss
 			health.hp = health.maxHp;
 			
 			_fsm = new StateMachine();
-			_fsm.addState( STAND , new Stand(this)  , [RUN, JUMP, SHIELD, ATTACK]);
-			_fsm.addState( RUN   , new Running(this), [STAND, JUMP, SHIELD, ATTACK]);
-			_fsm.addState( JUMP  , new Jumping(this), [STAND, RUN, ATTACK]);
-			_fsm.addState( SHIELD, new ShieldState(this) , [STAND, RUN, ATTACK]);
-			_fsm.addState( ATTACK, new Attack(this) , [STAND, RUN, SHIELD]);
+			_fsm.addState( STAND , new Stand(this)      , [RUN, JUMP, SHIELD, ATTACK]);
+			_fsm.addState( RUN   , new Running(this)    , [STAND, JUMP, SHIELD, ATTACK]);
+			_fsm.addState( JUMP  , new Jumping(this)    , [STAND, RUN, ATTACK, SHIELD]);
+			_fsm.addState( SHIELD, new ShieldState(this), [STAND, RUN, JUMP]);
+			_fsm.addState( ATTACK, new Attack(this)     , [STAND, RUN, SHIELD, JUMP]);
 			
 			state = STAND;
 			body.left = true;
@@ -106,66 +110,69 @@ package com.nayael.crossover.characters.boss
 		override public function update():void {
 			// Turns around when he hits a wall
 			if (body.onWall) {
-				controls.left = controls.right = controls.jump = false;
-				if (physics.vX <= 0) {
-					controls.right = true;
-				} else {
-					controls.left = true;
-				}
-			}
-			
-			// STAND state
-			if (body.onFloor && physics.vX == 0) {
-				if (state == JUMP) {
-					releaseControls();
-				}
-				state = STAND;
-			}
-			
-			// RUNNING state
-			physics.vX = 0;
-			if (controls.left) {
-				moveLeft();
-				if (body.onFloor) {
-					state = RUN;
-				}
-			} else if (controls.right) {
-				moveRight();
-				if (body.onFloor) {
-					state = RUN;
-				}
-			}
-			
-			// JUMP state
-			if (!body.onFloor) {
-				state = JUMP;
-			}
-			if (controls.jump) {
-				startJump();
-			}
-			if (state == JUMP) {
-				jump();
+				releaseControls();
+				_startRun();
 			}
 			
 			// SHIELD state
 			if (controls.shield) {
 				state = SHIELD;
-			}
-			
-			// ATTACK state
-			if (controls.attack) {
-				state = ATTACK;
+			} else {
+				// STAND state
+				if (body.onFloor && physics.vX == 0) {
+					if (state == JUMP) {
+						releaseControls();
+					}
+					state = STAND;
+				}
+				
+				// RUNNING state
+				physics.vX = 0;
+				if (controls.left) {
+					moveLeft();
+					if (body.onFloor) {
+						state = RUN;
+					}
+				} else if (controls.right) {
+					moveRight();
+					if (body.onFloor) {
+						state = RUN;
+					}
+				}
+				
+				// JUMP state
+				if (!body.onFloor) {
+					state = JUMP;
+				}
+				if (controls.jump) {
+					startJump();
+					controls.jump = false;
+				}
+				if (state == JUMP) {
+					jump();
+				}
+				
+				// ATTACK state
+				if (controls.attack) {
+					state = ATTACK;
+					// If the attack animation is over
+					var mc:MovieClip = (view.sprite.getChildAt(0) as MovieClip);
+					if (mc.currentFrame == mc.totalFrames) {
+						controls.attack = false;
+						state = STAND;
+					}
+				}
 			}
 			
 			// Link hits the hero on state Attack
 			if (state == ATTACK && body.collide(targets[0])) {
-				//var hero:Hero = targets[0] as Hero,
-					//heroHp:int = hero.health.hp;
-				//hero.onHit(_strength, Dasher);
-				//if (hero.physics && hero.health.hp != heroHp) {
-					//hero.physics.vX += _strength * (body.right ? 1 : -1);
-					//hero.physics.vY = - (5 + Math.random() * 10);
-				//}
+				var hero:Hero = targets[0] as Hero,
+					heroHp:int = hero.health.hp;
+				hero.onHit(_strength, Shield);
+				if (hero.physics && hero.health.hp != heroHp) {
+					hero.physics.vX += _strength * (body.right ? 1 : -1);
+					hero.physics.vY = - (5 + Math.random() * 10);
+				}
 			}
 			
 			super.update();
@@ -175,32 +182,47 @@ package com.nayael.crossover.characters.boss
 		 * Sonic's AI
 		 */
 		override public function handleAI():void {
-			if (!_AIactivated || state == ATTACK || _runTimer.running) {
+			if (!_AIactivated || state == ATTACK || state == SHIELD) {
 				return;
 			}
+			
+			if ((body.distance(targets[0]) < targets[0].view.sprite.width * targets[0].view.scale)) {
+				_attack();
+			} else if (_runTimer.running) {
+				return;
+			}
+			
 			_action = _action ? _action : ( (1 + Math.random() * 30) | 0 );
 			switch (_action) {
 				// Attack
 				case 1:
 					_attack();
 					break;
-				// Run
+				// Protect
 				case 2:
+					_shieldProtect();
+					break;
+				// Jump
+				case 3:
+					if (state != JUMP && body.onFloor) {
+						controls.jump = true;
+					}
+					break;
+				// Run
+				case 4:
 					_startRun();
 					break;
 				default:
 			}
 			_action = 0;
 		}
-		
-		private function _attack():void {
-			
-		}
-		
 		/**
 		 * Link runs
 		 */
 		private function _startRun(delay:int = 0):void {
+			if (state == SHIELD) {
+				return;
+			}
 			_runTimer = new Timer(delay ? delay : ( (1000 + Math.random() * 4000) | 0 ), 1 );
 			_runTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
 			controls.left = Math.random() >= 0.5 ? true : false;
@@ -217,6 +239,92 @@ package com.nayael.crossover.characters.boss
 			_runTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
 			_runTimer.reset();
 			controls.left = controls.right = false;
+		}
+		
+		/**
+		 * Sword attack
+		 */
+		private function _attack():void {
+			if (_attackCooldown.running || state == SHIELD) {
+				return;
+			}
+			controls.attack = true;
+			_attackCooldown.reset();
+			_attackCooldown.start();
+		}
+		
+		/**
+		 * Shields protection
+		 */
+		private function _shieldProtect():void {
+			trace('shield');
+			releaseControls();
+			controls.shield = true;
+			_shieldTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopShield);
+			_shieldTimer.reset();
+			_shieldTimer.start();
+		}
+		
+		/**
+		 * Stops the dash
+		 * @param	e
+		 */
+		private function _stopShield(e:TimerEvent = null):void {
+			trace('stop shield');
+			if (_shieldTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) {
+				_shieldTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopShield);
+			}
+			_shieldTimer.reset();
+			controls.shield = false;
+		}
+		
+		override public function onHit(damage:int, weapon:Class = null, vX:Number = 0, vY:Number = 0):void {
+			if (!weapon) {
+				return;
+			}
+			// If the weapon hitting is not the weakness, damage is poor
+			if (weapon != _weakness) {
+				var hitProbability:Number = 0.2;	// The probability for the weak weapon to make damage to the boss in CHARGE or DASH state
+				if (state != SHIELD || Math.random() <= hitProbability) {
+					// The boss was hit by a weak weapon
+					health.damage(2);
+					physics.vX = 5 * (vX > 0 ? 1 : -1);
+					_stun(300, function ():void {
+						if (body.onFloor) {
+							if (Math.random() <= 0.6) {
+								_startRun(2000 + Math.random() * 2000);
+							} else {
+								_attack();
+							}
+						}
+					});
+				}
+			} else {
+				health.damage(damage);
+				physics.vX = 5 * damage * (vX > 0 ? 1 : -1);
+				_stun(900, function ():void {
+					if (body.onFloor) {
+						if (Math.random() <= 0.6) {
+							_startRun(2000 + Math.random() * 2000);
+						} else {
+							_attack();
+						}
+					}
+				});
+			}
+		}
+		
+		override protected function _stun(delay:int = 0, callback:Function = null):void {
+			if (_stunTimer.running) {
+				_shieldProtect();
+				return;
+			}
+			super._stun(delay, callback);
+		}
+		
+		override protected function releaseControls():void {
+			super.releaseControls();
+			_stopRun();
 		}
 	
 	////////////////////////

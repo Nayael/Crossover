@@ -192,6 +192,13 @@ package com.nayael.crossover.characters.hero
 			}
 		}
 		
+		override public function onHit(damage:int, weapon:Class = null, vX:Number = 0, vY:Number = 0):void {
+			if (weapon == BarrelGun && this.weapon is Shield && state == SHIELD) {
+				return;
+			}
+			super.onHit(damage, weapon, vX, vY);
+		}
+		
 		override public function onHurt():void {
 			if (this.state != HURT) {
 				this.state = HURT;

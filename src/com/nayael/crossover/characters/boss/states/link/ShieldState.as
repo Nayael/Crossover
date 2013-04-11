@@ -12,7 +12,7 @@ package com.nayael.crossover.characters.boss.states.link
 		
 		public function ShieldState(entity:Entity) {
 			this.entity = entity;
-			animation = new LinkStand();
+			animation = new LinkShield();
 		}
 		
 		public function enter():void {

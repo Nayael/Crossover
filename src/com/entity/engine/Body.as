@@ -40,9 +40,16 @@ package com.entity.engine
 				rightTarget:Number  = targetHitboxPos.x + target.body.hitbox.width,
 				topTarget:Number    = targetHitboxPos.y,
 				bottomTarget:Number = targetHitboxPos.y + target.body.hitbox.height;
-			//trace(leftThis, rightThis, topThis, bottomThis);
-			//trace(leftTarget, rightTarget, topTarget, bottomTarget);
 			return !(leftThis > rightTarget || leftTarget > rightThis || topThis > bottomTarget || topTarget > bottomThis);
+		}
+		
+		/**
+		 * Returns the distance between two entites
+		 * @param	target
+		 */
+		public function distance(target:Entity):Number {
+			var targetBody:Body = target.body;
+			return Math.sqrt( (targetBody.x - this.x) * (targetBody.x - this.x) + (targetBody.y - this.y) * (targetBody.y - this.y) );
 		}
 		
 		public function get left():Boolean {

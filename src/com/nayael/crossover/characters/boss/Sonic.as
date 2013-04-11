@@ -306,8 +306,9 @@ package com.nayael.crossover.characters.boss
 			}
 		}
 		
-		override public function onDie():void {
-			super.onDie();
+		override protected function releaseControls():void {
+			super.releaseControls();
+			_stopRun();
 		}
 	
 	////////////////////////

@@ -12,7 +12,7 @@ package com.nayael.crossover.characters.boss.states.link
 		
 		public function Attack(entity:Entity) {
 			this.entity = entity;
-			animation = new LinkStand();
+			animation = new LinkAttack();
 		}
 		
 		public function enter():void {
