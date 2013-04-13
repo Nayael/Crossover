@@ -12,9 +12,9 @@ package com.nayael.crossover.weapons
 	 */
 	public class Dasher extends Weapon
 	{
-		public var speed:int = 13;
+		public var speed:int = 40;
 		public var strength:int = 10;
-		public var dashTimer:Timer = new Timer(1500, 1);
+		public var dashTimer:Timer = new Timer(500, 1);	// The time during which the hero is dashing
 		
 		public function Dasher(entity:Hero) {
 			maxAmmo = 25;
@@ -29,18 +29,23 @@ package com.nayael.crossover.weapons
 			}
 			//SoundManager.instance.playSfx( SoundManager.ACTION2 );
 			(entity as Hero).state = Hero.DASH;
-			entity.physics.vX = speed * (entity.body.left ? -1 : 1);
+			dashTimer.addEventListener(TimerEvent.TIMER_COMPLETE, stopDash);
+			dashTimer.start();
 			
 			return super.fire();
 		}
 		
 		override public function endCooldown():void {
 			clearTimeout(cooldown);
+			dashTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, stopDash);
+			dashTimer.reset();
+			cooldown = 0;
 			(entity as Hero).state = Hero.STAND;
 		}
 		
-		public function stopDash():void {
-			cooldown = 0;
+		public function stopDash(e:TimerEvent = null):void {
+			dashTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, stopDash);
+			dashTimer.reset();
 		}
 	}
 }

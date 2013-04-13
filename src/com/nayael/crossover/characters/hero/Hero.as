@@ -33,7 +33,7 @@ package com.nayael.crossover.characters.hero
 		static public const WIN:String       = "hero_win";
 		
 		static public var save:Save = new Save({
-			weapons: [BusterGun]
+			weapons: [BusterGun, Dasher]
 		});
 		
 		private var _keypad:Keypad;
@@ -112,7 +112,9 @@ package com.nayael.crossover.characters.hero
 				}
 			}
 			
-			physics.vX = 0;
+			if (state != DASH) {
+				physics.vX = 0;
+			}
 			
 			// RUNNING state
 			if (_keypad && (_keypad.isDown(Keyboard.LEFT) || _keypad.isDown(Keyboard.Q))) {
@@ -148,9 +150,9 @@ package com.nayael.crossover.characters.hero
 			}
 			
 			// DASH state
-			if (state != HURT && weapon is Dasher && weapon.cooldown != 0) {
+			if (state != HURT && weapon is Dasher && weapon.cooldown != 0 && (weapon as Dasher).dashTimer.running) {
 				state = DASH;
-				physics.vX += (weapon as Dasher).speed * (body.left ? -1 : 1);
+				physics.vX = (weapon as Dasher).speed * (body.left ? -1 : 1);
 				_handleDash();
 			}
 			

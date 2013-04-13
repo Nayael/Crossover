@@ -182,6 +182,8 @@ package com.nayael.crossover
 			});
 			textTimer.start();
 			
+			hero.state = Hero.STAND;
+			
 			SoundManager.instance.playSfx( SoundManager.SPECIAL1 );
 			EventBroker.unsubscribe(BossEvent.BOSS_DEAD, _onBossDead);
 		}

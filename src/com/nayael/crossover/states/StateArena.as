@@ -33,27 +33,11 @@ package com.nayael.crossover.states
 		
 		private function _onKeyDown(e:KeyboardEvent):void {
 			if (e.keyCode != Keyboard.ESCAPE
-			 && e.keyCode != Keyboard.G
 			 && e.keyCode != Keyboard.M) {
 				return;
 			}
 			
 			switch (e.keyCode) {
-				// DEATH DEBUG
-				case Keyboard.G:
-					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-					
-					var debugDeath:uint = setInterval(function():void {
-						if (!_game.hero.health) {
-							clearInterval(debugDeath);
-							return;
-						}
-						_game.hero.health.damage(2);
-					}, 100);
-					
-					return;
-					break;
-				
 				case Keyboard.M:
 					_game.boss.onDie();
 					return;
