@@ -34,10 +34,10 @@ package com.nayael.crossover.characters.boss
 		static public const SHOOT:String  = "link_shoot";
 		
 		private var _attackCooldown:Timer = new Timer(1000, 1);
-		private var _shieldDelay:int = 3500;
-		private var _shieldTimer:Timer = new Timer(_shieldDelay, 1);
-		private var _runTimer:Timer = new Timer(1, 1);
-		private var _strength:int = 10;
+		private var _shieldDelay:int      = 3500;
+		private var _shieldTimer:Timer    = new Timer(_shieldDelay, 1);
+		private var _runTimer:Timer       = new Timer(1, 1);
+		private var _strength:int         = 10;
 	
 	////////////////////////
 	// CONSTRUCTOR

@@ -178,7 +178,7 @@ package com.nayael.crossover.characters.boss
 			if ((state == DASH || state == CHARGE || (state == RUN && Math.random() > 0.5) ) && body.collide(targets[0])) {
 				var hero:Hero = targets[0] as Hero,
 					heroHp:int = hero.health.hp;
-				hero.onHit(_strength, Dasher);
+				hero.onHit(_strength, state == DASH ? Dasher : null);
 				if (hero.physics && hero.health.hp != heroHp) {
 					hero.physics.vX += _strength * (body.right ? 1 : -1);
 					hero.physics.vY = - (5 + Math.random() * 10);

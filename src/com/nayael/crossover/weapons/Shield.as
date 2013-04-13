@@ -2,6 +2,8 @@ package com.nayael.crossover.weapons
 {
 	import com.entity.engine.Entity;
 	import com.entity.engine.Weapon;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
 	
 	/**
 	 * ...
@@ -27,7 +29,14 @@ package com.nayael.crossover.weapons
 	////////////////////////
 	// METHODS
 	//
+		override public function fire():Boolean {
+			return true;
+		}
 		
+		// When the shield is hit (by a strong weapon), it cannot be used for a moment
+		public function onHit():void {
+			cooldown = setTimeout(endCooldown, cooldownTime);
+		}
 	
 	////////////////////////
 	// GETTERS & SETTERS

@@ -33,10 +33,11 @@ package com.nayael.crossover.characters.hero
 		static public const WIN:String       = "hero_win";
 		
 		static public var save:Save = new Save({
-			weapons: [BusterGun]
+			weapons: [BusterGun, Shield]
 		});
 		
 		private var _keypad:Keypad;
+		private var _controllable:Boolean = true;
 		private var _weapons:Vector.<Weapon>;
 		private var _changingWeapon:Boolean;
 		
@@ -65,17 +66,18 @@ package com.nayael.crossover.characters.hero
 			_loadSave();
 			
 			_fsm = new StateMachine();			
-			_fsm.addState( STAND     , new Stand(this)   , [HURT, RUN, JUMP, FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN, DASH] );
-			_fsm.addState( HURT      , new Hurt(this)    , [STAND, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
-			_fsm.addState( RUN       , new Running(this) , [STAND, HURT, JUMP, FIRE, RUN_FIRE, WIN, DASH] );
-			_fsm.addState( JUMP      , new Jumping(this) , [STAND, HURT, RUN, RUN_FIRE, JUMP_FIRE, WALL, WALL_FIRE, WIN, DASH] );
-			_fsm.addState( FIRE      , new Fire(this)    , [STAND, HURT, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
-			_fsm.addState( JUMP_FIRE , new JumpFire(this), [STAND, HURT, RUN, RUN_FIRE, JUMP, FIRE, WALL, WALL_FIRE, WIN, DASH] );
-			_fsm.addState( RUN_FIRE  , new RunFire(this) , [STAND, HURT, RUN, FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
-			_fsm.addState( WALL      , new Wall(this)    , [STAND, JUMP, RUN, JUMP_FIRE, WALL_FIRE, WIN, DASH] );
-			_fsm.addState( WALL_FIRE , new WallFire(this), [STAND, JUMP, RUN, FIRE, JUMP_FIRE, WALL, WIN, DASH] );
-			_fsm.addState( WIN       , new Win(this)     , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, DASH] );
-			_fsm.addState( DASH      , new Dash(this)    , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN] );
+			_fsm.addState( STAND     , new Stand(this)      , [HURT, RUN, JUMP, FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN, DASH, SHIELD] );
+			_fsm.addState( HURT      , new Hurt(this)       , [STAND, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
+			_fsm.addState( RUN       , new Running(this)    , [STAND, HURT, JUMP, FIRE, RUN_FIRE, WIN, DASH, SHIELD] );
+			_fsm.addState( JUMP      , new Jumping(this)    , [STAND, HURT, RUN, RUN_FIRE, JUMP_FIRE, WALL, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( FIRE      , new Fire(this)       , [STAND, HURT, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH, SHIELD] );
+			_fsm.addState( JUMP_FIRE , new JumpFire(this)   , [STAND, HURT, RUN, RUN_FIRE, JUMP, FIRE, WALL, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( RUN_FIRE  , new RunFire(this)    , [STAND, HURT, RUN, FIRE, JUMP, JUMP_FIRE, WIN, DASH, SHIELD] );
+			_fsm.addState( WALL      , new Wall(this)       , [STAND, JUMP, RUN, JUMP_FIRE, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( WALL_FIRE , new WallFire(this)   , [STAND, JUMP, RUN, FIRE, JUMP_FIRE, WALL, WIN, DASH] );
+			_fsm.addState( WIN       , new Win(this)        , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, DASH] );
+			_fsm.addState( DASH      , new Dash(this)       , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN, SHIELD] );
+			_fsm.addState( SHIELD    , new ShieldState(this), [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN] );
 			
 			state = STAND;
 			
@@ -95,7 +97,7 @@ package com.nayael.crossover.characters.hero
 		}
 		
 		override public function update():void {
-			if (!_changingWeapon && _keypad && _keypad.isDown(Keyboard.L)) {
+			if (!_changingWeapon && _controllable && _keypad.isDown(Keyboard.L)) {
 				changeWeapon();
 			} else if (_keypad && _keypad.isUp(Keyboard.L)) {
 				_changingWeapon = false
@@ -117,13 +119,13 @@ package com.nayael.crossover.characters.hero
 			}
 			
 			// RUNNING state
-			if (_keypad && (_keypad.isDown(Keyboard.LEFT) || _keypad.isDown(Keyboard.Q))) {
+			if (_controllable && (_keypad.isDown(Keyboard.LEFT) || _keypad.isDown(Keyboard.Q))) {
 				moveLeft();
 				if (body.onFloor && !body.onWall ) {
 					state = RUN;
 				}
 			}
-			if (_keypad && (_keypad.isDown(Keyboard.RIGHT) || _keypad.isDown(Keyboard.D))) {
+			if (_controllable && (_keypad.isDown(Keyboard.RIGHT) || _keypad.isDown(Keyboard.D))) {
 				moveRight();
 				if (body.onFloor && !body.onWall ) {
 					state = RUN;
@@ -139,7 +141,7 @@ package com.nayael.crossover.characters.hero
 			if (!body.onFloor && !body.onWall && physics.vY <= 0) {
 				state = JUMP;
 			}
-			if (_keypad && _keypad.isDown(Keyboard.SPACE) && (body.onFloor || state == WALL || state == WALL_FIRE)) {
+			if (_controllable && _keypad.isDown(Keyboard.SPACE) && (body.onFloor || state == WALL || state == WALL_FIRE)) {
 				if (state == WALL || state == WALL_FIRE) {
 					(physics as HeroPhysics).wallJumping = true;
 				}
@@ -159,25 +161,31 @@ package com.nayael.crossover.characters.hero
 			super.update();
 			
 			// FIRE state
-			if (_keypad && _keypad.isDown(Keyboard.K)) {
-				if (!(weapon is Dasher)) {
-					switch (state) {
-						case JUMP:
-							state = JUMP_FIRE;
-							break;
-						case RUN:
-							state = RUN_FIRE;
-							break;
-						case WALL:
-							state = WALL_FIRE;
-							break;
-						default:
-							state = FIRE;
-							break;
+			if ((_controllable || weapon is Shield) && _keypad.isDown(Keyboard.K)) {
+				if (weapon is Shield && weapon.ammo > 0 && weapon.cooldown == 0) {
+					state = SHIELD;
+					_controllable = false;
+				} else {
+					if (!(weapon is Dasher)) {
+						switch (state) {
+							case JUMP:
+								state = JUMP_FIRE;
+								break;
+							case RUN:
+								state = RUN_FIRE;
+								break;
+							case WALL:
+								state = WALL_FIRE;
+								break;
+							default:
+								state = FIRE;
+								break;
+						}
 					}
+					weapon.fire();
 				}
-				weapon.fire();
-			} else if (_keypad && _keypad.isUp(Keyboard.K) && weapon.cooldown != 0) {
+			} else if ((_controllable || weapon is Shield) && _keypad.isUp(Keyboard.K)) {
+				_controllable = true;
 				weapon.endCooldown();
 				if (weapon is Dasher) {
 					(weapon as Dasher).stopDash();
@@ -195,8 +203,15 @@ package com.nayael.crossover.characters.hero
 		}
 		
 		override public function onHit(damage:int, weapon:Class = null, vX:Number = 0, vY:Number = 0):void {
-			if (weapon == BarrelGun && this.weapon is Shield && state == SHIELD) {
-				return;
+			// If the hero is protecting with the shield, he can be hit only with the Dasher
+			if (state == SHIELD) {
+				if (weapon === Dasher) {
+					this.weapon.ammo -= 2;
+					(this.weapon as Shield).onHit();
+				} else {
+					this.weapon.ammo -= 0.5;
+					return;
+				}
 			}
 			super.onHit(damage, weapon, vX, vY);
 		}
@@ -281,6 +296,7 @@ package com.nayael.crossover.characters.hero
 		public function disableControls():void {
 			if (_keypad) {
 				_keypad.destroy();
+				_controllable = false;
 				_keypad = null;
 			}
 		}
