@@ -25,8 +25,9 @@ package com.nayael.crossover.weapons
 			if (cooldown != 0) {
 				return false;
 			}
-			this.x = (entity.view.sprite.getChildAt(0) as MovieClip).gun.x || null;
-			this.y = (entity.view.sprite.getChildAt(0) as MovieClip).gun.y * entity.view.scale || null;
+			var entityMC:MovieClip = (entity.view.sprite.getChildAt(0) as MovieClip);
+			this.x = entityMC.gun ? entityMC.gun.x : null;
+			this.y = entityMC.gun ? entityMC.gun.y * entity.view.scale : null;
 			
 			var bullet:BusterBullet = bulletPool.length ? bulletPool.pop() : new BusterBullet();
 			bullet.targets = entity.targets;

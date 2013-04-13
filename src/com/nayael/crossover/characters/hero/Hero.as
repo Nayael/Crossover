@@ -33,7 +33,7 @@ package com.nayael.crossover.characters.hero
 		static public const WIN:String       = "hero_win";
 		
 		static public var save:Save = new Save({
-			weapons: [BusterGun, Dasher]
+			weapons: [BusterGun]
 		});
 		
 		private var _keypad:Keypad;
@@ -70,7 +70,7 @@ package com.nayael.crossover.characters.hero
 			_fsm.addState( RUN       , new Running(this) , [STAND, HURT, JUMP, FIRE, RUN_FIRE, WIN, DASH] );
 			_fsm.addState( JUMP      , new Jumping(this) , [STAND, HURT, RUN, RUN_FIRE, JUMP_FIRE, WALL, WALL_FIRE, WIN, DASH] );
 			_fsm.addState( FIRE      , new Fire(this)    , [STAND, HURT, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
-			_fsm.addState( JUMP_FIRE , new JumpFire(this), [STAND, HURT, RUN, RUN_FIRE, JUMP, WALL, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( JUMP_FIRE , new JumpFire(this), [STAND, HURT, RUN, RUN_FIRE, JUMP, FIRE, WALL, WALL_FIRE, WIN, DASH] );
 			_fsm.addState( RUN_FIRE  , new RunFire(this) , [STAND, HURT, RUN, FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
 			_fsm.addState( WALL      , new Wall(this)    , [STAND, JUMP, RUN, JUMP_FIRE, WALL_FIRE, WIN, DASH] );
 			_fsm.addState( WALL_FIRE , new WallFire(this), [STAND, JUMP, RUN, FIRE, JUMP_FIRE, WALL, WIN, DASH] );

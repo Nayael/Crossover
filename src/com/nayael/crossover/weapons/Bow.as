@@ -25,10 +25,11 @@ package com.nayael.crossover.weapons
 			if (cooldown != 0) {
 				return false;
 			}
-			this.x = (entity.view.sprite.getChildAt(0) as MovieClip).gun.x || null;
-			this.y = (entity.view.sprite.getChildAt(0) as MovieClip).gun.y * entity.view.scale || null;
+			var entityMC:MovieClip = (entity.view.sprite.getChildAt(0) as MovieClip);
+			this.x = entityMC.gun ? entityMC.gun.x : null;
+			this.y = entityMC.gun ? entityMC.gun.y * entity.view.scale : null;
 			
-			var bullet:BusterBullet = bulletPool.length ? bulletPool.pop() : new BusterBullet();
+			var bullet:Arrow = bulletPool.length ? bulletPool.pop() : new Arrow();
 			bullet.targets = entity.targets;
 			bullet.group   = entity.group;
 			bullet.body.x  = entity.body.x + ( this.x || ( entity.view.sprite.width * 0.5 ) ) * (entity.body.left ? -1 : 1);

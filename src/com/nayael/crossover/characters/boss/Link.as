@@ -72,11 +72,12 @@ package com.nayael.crossover.characters.boss
 			weapon = new Bow(this);
 			
 			_fsm = new StateMachine();
-			_fsm.addState( STAND , new Stand(this)      , [RUN, JUMP, SHIELD, ATTACK]);
-			_fsm.addState( RUN   , new Running(this)    , [STAND, JUMP, SHIELD, ATTACK]);
-			_fsm.addState( JUMP  , new Jumping(this)    , [STAND, RUN, ATTACK, SHIELD]);
-			_fsm.addState( SHIELD, new ShieldState(this), [STAND, RUN, JUMP]);
-			_fsm.addState( ATTACK, new Attack(this)     , [STAND, RUN, SHIELD, JUMP]);
+			_fsm.addState( STAND , new Stand(this)      , [RUN, JUMP, SHIELD, ATTACK, SHOOT]);
+			_fsm.addState( RUN   , new Running(this)    , [STAND, JUMP, SHIELD, ATTACK, SHOOT]);
+			_fsm.addState( JUMP  , new Jumping(this)    , [STAND, RUN, SHIELD, ATTACK, SHOOT]);
+			_fsm.addState( SHIELD, new ShieldState(this), [STAND, RUN]);
+			_fsm.addState( ATTACK, new Attack(this)     , [STAND, RUN, SHIELD, JUMP, SHOOT]);
+			_fsm.addState( SHOOT , new Shoot(this)      , [STAND, RUN, SHIELD, JUMP, ATTACK]);
 			
 			state = STAND;
 			body.left = true;
@@ -115,6 +116,7 @@ package com.nayael.crossover.characters.boss
 		}
 		
 		override public function update():void {
+			var mc:MovieClip;
 			// SHIELD state
 			if (controls.shield) {
 				state = SHIELD;
@@ -160,7 +162,7 @@ package com.nayael.crossover.characters.boss
 				if (controls.attack && !controls.shoot) {
 					state = ATTACK;
 					// If the attack animation is over
-					var mc:MovieClip = (view.sprite.getChildAt(0) as MovieClip);
+					mc = (view.sprite.getChildAt(0) as MovieClip);
 					if (mc.currentFrame == mc.totalFrames) {
 						controls.attack = false;
 						state = STAND;
@@ -171,11 +173,12 @@ package com.nayael.crossover.characters.boss
 				if (controls.shoot) {
 					state = SHOOT;
 					// If the attack animation is over
-					var sprite:MovieClip = (view.sprite.getChildAt(0) as MovieClip);
-					if (sprite.currentLabel == 'shoot') {
+					mc = (view.sprite.getChildAt(0) as MovieClip);
+					if (mc.currentFrameLabel == 'shoot' && weapon.cooldown == 0) {
 						weapon.fire();
+					}
+					if (mc.currentFrame == mc.totalFrames) {
 						controls.shoot = false;
-						state = STAND;
 					}
 				}
 			}
@@ -202,7 +205,7 @@ package com.nayael.crossover.characters.boss
 		 * Sonic's AI
 		 */
 		override public function handleAI():void {
-			if (!_AIactivated || state == ATTACK) {
+			if (!_AIactivated || state == ATTACK || state == SHOOT) {
 				return;
 			}
 			
@@ -216,22 +219,26 @@ package com.nayael.crossover.characters.boss
 			_action = _action ? _action : ( (1 + Math.random() * 30) | 0 );
 			switch (_action) {
 				// Attack
-				case 1: case 5:
+				case 1: case 2:
 					_attack();
 					break;
 				// Protect
-				case 2:
+				case 3:
 					_shieldProtect();
 					break;
 				// Jump
-				case 3:
+				case 4:
 					if (state != JUMP && state != SHIELD && body.onFloor) {
 						controls.jump = true;
 					}
 					break;
 				// Run
-				case 4:
+				case 5:
 					_startRun();
+					break;
+				// Shoot
+				case 6: case 7:
+					_shoot();
 					break;
 				default:
 			}
@@ -249,7 +256,6 @@ package com.nayael.crossover.characters.boss
 			_runTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
 			controls.left = Math.random() >= 0.5 ? true : false;
 			controls.right = !controls.left;
-			_strength = 5;
 			_runTimer.start();
 		}
 		
@@ -267,7 +273,7 @@ package com.nayael.crossover.characters.boss
 		 * Sword attack
 		 */
 		private function _attack():void {
-			if (_attackCooldown.running || _shieldTimer.running && _shieldTimer.delay > 3000) {
+			if (_attackCooldown.running || _shieldTimer.running) {
 				return;
 			}
 			controls.attack = true;
@@ -279,12 +285,11 @@ package com.nayael.crossover.characters.boss
 		 * Bow attack
 		 */
 		private function _shoot():void {
-			if (_attackCooldown.running || _shieldTimer.running && _shieldTimer.delay > 3000) {
+			if (_shieldTimer.running) {
 				return;
 			}
-			controls.attack = true;
-			_attackCooldown.reset();
-			_attackCooldown.start();
+			releaseControls();
+			controls.shoot = true;
 		}
 		
 		/**
@@ -323,7 +328,7 @@ package com.nayael.crossover.characters.boss
 			releaseControls();
 			if (_stunTimer.running) {
 				if (Math.random() <= 0.6) {
-					controls.jump = true;
+					_shoot();
 				} else {
 					_attack();
 				}
