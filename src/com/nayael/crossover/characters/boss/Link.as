@@ -8,6 +8,7 @@ package com.nayael.crossover.characters.boss
 	import com.entity.engine.View;
 	import com.nayael.crossover.characters.boss.states.link.*;
 	import com.nayael.crossover.characters.hero.Hero;
+	import com.nayael.crossover.weapons.Bow;
 	import com.nayael.crossover.weapons.Dasher;
 	import com.nayael.crossover.weapons.Shield;
 	import flash.display.MovieClip;
@@ -30,9 +31,11 @@ package com.nayael.crossover.characters.boss
 		static public const JUMP:String   = "link_jump";
 		static public const SHIELD:String = "link_shield";
 		static public const ATTACK:String = "link_attack";
+		static public const SHOOT:String  = "link_shoot";
 		
 		private var _attackCooldown:Timer = new Timer(1000, 1);
-		private var _shieldTimer:Timer = new Timer(150000, 1);
+		private var _shieldDelay:int = 3500;
+		private var _shieldTimer:Timer = new Timer(_shieldDelay, 1);
 		private var _runTimer:Timer = new Timer(1, 1);
 		private var _strength:int = 10;
 	
@@ -43,10 +46,10 @@ package com.nayael.crossover.characters.boss
 			_name = 'Link';
 			_weakness = Dasher;
 			_drop = Shield;
-			_stunDelay = 500;
-			_invulnerabilityDelay = 500;
+			_stunDelay = 1500;
+			_invulnerabilityDelay = 1000;
 			
-			_hSpeed = 10;
+			_hSpeed = 8;
 			_vHeight = 25;
 			
 			body = new Body(this);
@@ -66,6 +69,8 @@ package com.nayael.crossover.characters.boss
 			health.maxHp = 100;
 			health.hp = health.maxHp;
 			
+			weapon = new Bow(this);
+			
 			_fsm = new StateMachine();
 			_fsm.addState( STAND , new Stand(this)      , [RUN, JUMP, SHIELD, ATTACK]);
 			_fsm.addState( RUN   , new Running(this)    , [STAND, JUMP, SHIELD, ATTACK]);
@@ -79,6 +84,7 @@ package com.nayael.crossover.characters.boss
 			// Controls
 			controls.shield = false;
 			controls.attack = false;
+			controls.shoot = false;
 			
 			_AIactivated = false;
 			view.sprite.addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
@@ -95,9 +101,10 @@ package com.nayael.crossover.characters.boss
 			view.sprite.removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 			
 			// Starting a timer to activate the AI after 2 seconds
-			var activateTimer:Timer = new Timer(1000, 1);
+			var activateTimer:Timer = new Timer(2000, 1);
 			activateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, activateAI);
 			activateTimer.start();
+			health.setInvulnerable(3000);
 			
 			function activateAI(e:TimerEvent = null):void {
 				activateTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, activateAI);
@@ -108,16 +115,16 @@ package com.nayael.crossover.characters.boss
 		}
 		
 		override public function update():void {
-			// Turns around when he hits a wall
-			if (body.onWall) {
-				releaseControls();
-				_startRun();
-			}
-			
 			// SHIELD state
 			if (controls.shield) {
 				state = SHIELD;
+				_turnTowardsHero();
 			} else {
+				// Turns around when he hits a wall
+				if (body.onWall) {
+					releaseControls();
+					_startRun();
+				}
 				// STAND state
 				if (body.onFloor && physics.vX == 0) {
 					if (state == JUMP) {
@@ -144,16 +151,13 @@ package com.nayael.crossover.characters.boss
 				if (!body.onFloor) {
 					state = JUMP;
 				}
-				if (controls.jump) {
+				if (controls.jump && state != SHIELD) {
 					startJump();
 					controls.jump = false;
 				}
-				if (state == JUMP) {
-					jump();
-				}
 				
 				// ATTACK state
-				if (controls.attack) {
+				if (controls.attack && !controls.shoot) {
 					state = ATTACK;
 					// If the attack animation is over
 					var mc:MovieClip = (view.sprite.getChildAt(0) as MovieClip);
@@ -162,6 +166,22 @@ package com.nayael.crossover.characters.boss
 						state = STAND;
 					}
 				}
+				
+				// SHOOT state
+				if (controls.shoot) {
+					state = SHOOT;
+					// If the attack animation is over
+					var sprite:MovieClip = (view.sprite.getChildAt(0) as MovieClip);
+					if (sprite.currentLabel == 'shoot') {
+						weapon.fire();
+						controls.shoot = false;
+						state = STAND;
+					}
+				}
+			}
+			
+			if (!body.onFloor) {
+				jump();
 			}
 			
 			// Link hits the hero on state Attack
@@ -182,20 +202,21 @@ package com.nayael.crossover.characters.boss
 		 * Sonic's AI
 		 */
 		override public function handleAI():void {
-			if (!_AIactivated || state == ATTACK || state == SHIELD) {
+			if (!_AIactivated || state == ATTACK) {
 				return;
 			}
 			
 			if ((body.distance(targets[0]) < targets[0].view.sprite.width * targets[0].view.scale)) {
 				_attack();
-			} else if (_runTimer.running) {
+				return;
+			} else if (_runTimer.running || _shieldTimer.running) {
 				return;
 			}
 			
 			_action = _action ? _action : ( (1 + Math.random() * 30) | 0 );
 			switch (_action) {
 				// Attack
-				case 1:
+				case 1: case 5:
 					_attack();
 					break;
 				// Protect
@@ -204,7 +225,7 @@ package com.nayael.crossover.characters.boss
 					break;
 				// Jump
 				case 3:
-					if (state != JUMP && body.onFloor) {
+					if (state != JUMP && state != SHIELD && body.onFloor) {
 						controls.jump = true;
 					}
 					break;
@@ -216,6 +237,7 @@ package com.nayael.crossover.characters.boss
 			}
 			_action = 0;
 		}
+		
 		/**
 		 * Link runs
 		 */
@@ -245,7 +267,7 @@ package com.nayael.crossover.characters.boss
 		 * Sword attack
 		 */
 		private function _attack():void {
-			if (_attackCooldown.running || state == SHIELD) {
+			if (_attackCooldown.running || _shieldTimer.running && _shieldTimer.delay > 3000) {
 				return;
 			}
 			controls.attack = true;
@@ -254,12 +276,35 @@ package com.nayael.crossover.characters.boss
 		}
 		
 		/**
-		 * Shields protection
+		 * Bow attack
+		 */
+		private function _shoot():void {
+			if (_attackCooldown.running || _shieldTimer.running && _shieldTimer.delay > 3000) {
+				return;
+			}
+			controls.attack = true;
+			_attackCooldown.reset();
+			_attackCooldown.start();
+		}
+		
+		/**
+		 * Shield protection
 		 */
 		private function _shieldProtect():void {
-			trace('shield');
+			if (_shieldTimer.running) {	// If he was already shielding, we restart the timer
+				_shieldTimer.reset();
+				_shieldTimer.start();
+				return;
+			}
 			releaseControls();
+			physics.vX = 0;
 			controls.shield = true;
+			//if (_shieldTimer.running) {	// If he was already shielding, we restart the hield timer, but a little shorter
+				//if (_shieldTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) {
+					//_shieldTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopShield);
+				//}
+				//_shieldTimer = new Timer(_shieldTimer.delay - 300, 1);
+			//}
 			_shieldTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopShield);
 			_shieldTimer.reset();
 			_shieldTimer.start();
@@ -270,29 +315,37 @@ package com.nayael.crossover.characters.boss
 		 * @param	e
 		 */
 		private function _stopShield(e:TimerEvent = null):void {
-			trace('stop shield');
 			if (_shieldTimer.hasEventListener(TimerEvent.TIMER_COMPLETE)) {
 				_shieldTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopShield);
 			}
 			_shieldTimer.reset();
-			controls.shield = false;
+			_shieldTimer = new Timer(_shieldDelay, 1);
+			releaseControls();
+			if (_stunTimer.running) {
+				if (Math.random() <= 0.6) {
+					controls.jump = true;
+				} else {
+					_attack();
+				}
+			}
 		}
 		
-		override public function onHit(damage:int, weapon:Class = null, vX:Number = 0, vY:Number = 0):void {
-			if (!weapon) {
+		override public function onHit(damage:int, hitWeapon:Class = null, vX:Number = 0, vY:Number = 0):void {
+			if (!hitWeapon || !health.vulnerable) {
 				return;
 			}
 			// If the weapon hitting is not the weakness, damage is poor
-			if (weapon != _weakness) {
-				var hitProbability:Number = 0.2;	// The probability for the weak weapon to make damage to the boss in CHARGE or DASH state
-				if (state != SHIELD || Math.random() <= hitProbability) {
+			if (hitWeapon != _weakness) {
+				if (_stunTimer.running || _shieldTimer.running) {	// If hit while already stun, or protecting, protect with the shield
+					_shieldProtect();
+				} else {
 					// The boss was hit by a weak weapon
 					health.damage(2);
 					physics.vX = 5 * (vX > 0 ? 1 : -1);
-					_stun(300, function ():void {
-						if (body.onFloor) {
+					_stun(_stunDelay, function ():void {
+						if (body.onFloor && state != SHIELD) {
 							if (Math.random() <= 0.6) {
-								_startRun(2000 + Math.random() * 2000);
+								controls.jump = true;
 							} else {
 								_attack();
 							}
@@ -302,8 +355,9 @@ package com.nayael.crossover.characters.boss
 			} else {
 				health.damage(damage);
 				physics.vX = 5 * damage * (vX > 0 ? 1 : -1);
+				_stopShield();
 				_stun(900, function ():void {
-					if (body.onFloor) {
+					if (body.onFloor && state != SHIELD) {
 						if (Math.random() <= 0.6) {
 							_startRun(2000 + Math.random() * 2000);
 						} else {
@@ -312,14 +366,6 @@ package com.nayael.crossover.characters.boss
 					}
 				});
 			}
-		}
-		
-		override protected function _stun(delay:int = 0, callback:Function = null):void {
-			if (_stunTimer.running) {
-				_shieldProtect();
-				return;
-			}
-			super._stun(delay, callback);
 		}
 		
 		override protected function releaseControls():void {

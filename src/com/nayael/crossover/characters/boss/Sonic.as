@@ -99,11 +99,13 @@ package com.nayael.crossover.characters.boss
 			var activateTimer:Timer = new Timer(1000, 1);
 			activateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, activateAI);
 			activateTimer.start();
+			health.vulnerable = false;
 			
 			function activateAI(e:TimerEvent = null):void {
 				activateTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, activateAI);
 				controls.left = true;	// We make it run left at the start
 				controls.jump = true;
+				health.vulnerable = true;
 				_activateAI();
 			}
 		}
@@ -277,7 +279,7 @@ package com.nayael.crossover.characters.boss
 			// If the weapon hitting is not the weakness, damage is poor
 			if (weapon != _weakness) {
 				var hitProbability:Number = 0.2;	// The probability for the weak weapon to make damage to the boss in CHARGE or DASH state
-				if (state != CHARGE && state != DASH || Math.random() <= hitProbability) {
+				if (Math.random() <= hitProbability) {
 					// The boss was hit by a weak weapon
 					health.damage(2);
 					physics.vX = 5 * (vX > 0 ? 1 : -1);

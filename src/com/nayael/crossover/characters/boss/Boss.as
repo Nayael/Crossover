@@ -116,6 +116,14 @@ package com.nayael.crossover.characters.boss
 			}
 			_stunTimer.start();
 		}
+		
+		protected function _turnTowardsHero():void {
+			if (targets[0].body.x < this.body.x) {
+				body.left = true;
+			} else {
+				body.right = true;
+			}
+		}
 	
 	////////////////////////
 	// GETTERS & SETTERS
