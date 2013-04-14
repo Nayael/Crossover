@@ -8,6 +8,7 @@ package com.nayael.crossover.characters.boss
 	import com.entity.engine.View;
 	import com.nayael.crossover.characters.boss.states.donkeykong.*;
 	import com.nayael.crossover.weapons.BarrelThrower;
+	import com.nayael.crossover.weapons.Shield;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
@@ -31,7 +32,7 @@ package com.nayael.crossover.characters.boss
 	//
 		public function DonkeyKong() {
 			_name = 'DonkeyKong';
-			_weakness = BarrelThrower;
+			_weakness = Shield;
 			_drop = BarrelThrower;
 			_stunDelay = 1500;
 			_invulnerabilityDelay = 1000;
@@ -199,6 +200,24 @@ package com.nayael.crossover.characters.boss
 			releaseControls();
 			controls.attack = true;
 			_AIactivated = false;
+		}
+		
+		override public function onHit(damage:int, hitWeapon:Class = null, vX:Number = 0, vY:Number = 0):void {
+			if (!hitWeapon || !health.vulnerable) {
+				return;
+			}
+			var critical:Boolean = (hitWeapon == _weakness) ? true : false;
+			health.damage(critical ? 2 : damage);
+			physics.vX = 5 * (vX > 0 ? 1 : -1);
+			_stun(critical ? _stunDelay : 900, function ():void {
+				if (body.onFloor) {
+					if (Math.random() <= 0.6) {
+						controls.jump = true;
+					} else {
+						_attack();
+					}
+				}
+			});
 		}
 		
 	////////////////////////

@@ -3,6 +3,7 @@ package com.nayael.crossover.characters.hero
 	import com.entity.engine.*;
 	import com.entity.engine.events.*;
 	import com.entity.engine.fsm.*;
+	import com.entity.engine.pooling.Pool;
 	import com.nayael.crossover.characters.Character;
 	import com.nayael.crossover.characters.hero.states.*;
 	import com.nayael.crossover.Main;
@@ -67,14 +68,14 @@ package com.nayael.crossover.characters.hero
 			
 			_fsm = new StateMachine();			
 			_fsm.addState( STAND     , new Stand(this)      , [HURT, RUN, JUMP, FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN, DASH, SHIELD] );
-			_fsm.addState( HURT      , new Hurt(this)       , [STAND, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH] );
+			_fsm.addState( HURT      , new Hurt(this)       , [STAND, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WALL, WALL_FIRE, WIN, DASH] );
 			_fsm.addState( RUN       , new Running(this)    , [STAND, HURT, JUMP, FIRE, RUN_FIRE, WIN, DASH, SHIELD] );
 			_fsm.addState( JUMP      , new Jumping(this)    , [STAND, HURT, RUN, RUN_FIRE, JUMP_FIRE, WALL, WALL_FIRE, WIN, DASH] );
-			_fsm.addState( FIRE      , new Fire(this)       , [STAND, HURT, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WIN, DASH, SHIELD] );
+			_fsm.addState( FIRE      , new Fire(this)       , [STAND, HURT, RUN, RUN_FIRE, JUMP, JUMP_FIRE, WALL, WALL_FIRE, WIN, DASH, SHIELD] );
 			_fsm.addState( JUMP_FIRE , new JumpFire(this)   , [STAND, HURT, RUN, RUN_FIRE, JUMP, FIRE, WALL, WALL_FIRE, WIN, DASH] );
 			_fsm.addState( RUN_FIRE  , new RunFire(this)    , [STAND, HURT, RUN, FIRE, JUMP, JUMP_FIRE, WIN, DASH, SHIELD] );
-			_fsm.addState( WALL      , new Wall(this)       , [STAND, JUMP, RUN, JUMP_FIRE, WALL_FIRE, WIN, DASH] );
-			_fsm.addState( WALL_FIRE , new WallFire(this)   , [STAND, JUMP, RUN, FIRE, JUMP_FIRE, WALL, WIN, DASH] );
+			_fsm.addState( WALL      , new Wall(this)       , [STAND, HURT, JUMP, RUN, JUMP_FIRE, WALL_FIRE, WIN, DASH] );
+			_fsm.addState( WALL_FIRE , new WallFire(this)   , [STAND, HURT, JUMP, RUN, FIRE, JUMP_FIRE, WALL, WIN, DASH] );
 			_fsm.addState( WIN       , new Win(this)        , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, DASH] );
 			_fsm.addState( DASH      , new Dash(this)       , [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN, SHIELD] );
 			_fsm.addState( SHIELD    , new ShieldState(this), [STAND, HURT, RUN, JUMP, FIRE, JUMP_FIRE, RUN_FIRE, WALL, WALL_FIRE, WIN] );
@@ -161,7 +162,7 @@ package com.nayael.crossover.characters.hero
 			super.update();
 			
 			// FIRE state
-			if ((_controllable || weapon is Shield) && _keypad.isDown(Keyboard.K)) {
+			if ((_controllable || weapon is Shield) && _keypad && _keypad.isDown(Keyboard.K)) {
 				if (weapon is Shield && weapon.ammo > 0 && weapon.cooldown == 0) {
 					state = SHIELD;
 					_controllable = false;
@@ -205,10 +206,13 @@ package com.nayael.crossover.characters.hero
 		override public function onHit(damage:int, weapon:Class = null, vX:Number = 0, vY:Number = 0):void {
 			// If the hero is protecting with the shield, he can be hit only with the Dasher
 			if (state == SHIELD) {
-				if (weapon === Dasher) {
+				if (weapon === Dasher) {	// The dasher breaks the shield guard
 					this.weapon.ammo -= 2;
 					(this.weapon as Shield).onHit();
-				} else {
+				} else {	// Otherwise, the hero takes no damage
+					if (weapon === BarrelThrower) {	// If the shield is hit by a barrel, the barrel rebounds
+						(new BarrelThrower(this)).fire();
+					}
 					this.weapon.ammo -= 0.5;
 					return;
 				}
