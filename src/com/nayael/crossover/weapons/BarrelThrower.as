@@ -23,7 +23,7 @@ package com.nayael.crossover.weapons
 	// CONSTRUCTOR
 	//
 		public function BarrelThrower(entity:Entity) {
-			maxAmmo = 25;
+			maxAmmo = 15;
 			super( entity );
 			bulletPool = Pool.instance.pool("barrels");
 			cooldownTime = 500;

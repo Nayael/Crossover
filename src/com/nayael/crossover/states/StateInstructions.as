@@ -28,7 +28,7 @@ package com.nayael.crossover.states
 			text.y = (E.HEIGHT >> 2) + 10;
 			_texts.push(text);
 			
-			text = new Text('Jump with SPACE', 'PressStart2P');
+			text = new Text('Jump/Wall jump with SPACE', 'PressStart2P');
 			text.hCenter(E.stage);
 			text.y = (E.HEIGHT >> 2) + 90;
 			_texts.push(text);

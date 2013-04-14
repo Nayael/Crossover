@@ -20,7 +20,7 @@ package com.nayael.crossover.weapons
 	// CONSTRUCTOR
 	//
 		public function Shield(entity:Entity) {
-			maxAmmo = 25;
+			maxAmmo = 15;
 			super( entity );
 			cooldownTime = 0;
 			color = 'Yellow';

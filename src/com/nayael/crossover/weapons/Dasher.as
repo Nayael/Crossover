@@ -17,7 +17,7 @@ package com.nayael.crossover.weapons
 		public var dashTimer:Timer = new Timer(500, 1);	// The time during which the hero is dashing
 		
 		public function Dasher(entity:Hero) {
-			maxAmmo = 25;
+			maxAmmo = 15;
 			super( entity );
 			cooldownTime = 3000;
 			color = 'Blue';

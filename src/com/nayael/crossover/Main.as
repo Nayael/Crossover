@@ -20,7 +20,7 @@ package com.nayael.crossover
 	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.utils.Timer;
-	import net.hires.debug.Stats;
+	//import net.hires.debug.Stats;
 	
 	/**
 	 * Main game class for the Crossover game
@@ -82,7 +82,7 @@ package com.nayael.crossover
 		private function init(e:Event = null):void {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
-			stage.addChild(new Stats());
+			//stage.addChild(new Stats());
 			
 			E.stage = this.stage;
 			E.WIDTH = this.stage.stageWidth;

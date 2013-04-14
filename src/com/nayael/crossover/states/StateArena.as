@@ -29,23 +29,11 @@ package com.nayael.crossover.states
 		}
 		
 		private function _onKeyDown(e:KeyboardEvent):void {
-			if (e.keyCode != Keyboard.ESCAPE
-			 && e.keyCode != Keyboard.M
-			 && e.keyCode != Keyboard.G) {
+			if (e.keyCode != Keyboard.ESCAPE) {
 				return;
 			}
 			
 			switch (e.keyCode) {
-				case Keyboard.M:
-					_game.boss.onDie();
-					return;
-					break;
-					
-				case Keyboard.G:
-					_game.hero.onDie();
-					return;
-					break;
-				
 				// PAUSE GAME
 				case Keyboard.ESCAPE:
 					E.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
