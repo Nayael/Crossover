@@ -3,7 +3,6 @@ package com.nayael.crossover.characters.hero.states
 	import com.entity.engine.Entity;
 	import com.entity.engine.fsm.IState;
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	
 	public class Jumping implements IState
 	{

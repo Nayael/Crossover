@@ -40,7 +40,6 @@ package com.nayael.crossover.weapons
 			dashTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, stopDash);
 			dashTimer.reset();
 			cooldown = 0;
-			(entity as Hero).state = Hero.STAND;
 		}
 		
 		public function stopDash(e:TimerEvent = null):void {

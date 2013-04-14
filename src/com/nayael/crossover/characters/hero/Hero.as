@@ -34,7 +34,7 @@ package com.nayael.crossover.characters.hero
 		static public const WIN:String       = "hero_win";
 		
 		static public var save:Save = new Save({
-			weapons: [BusterGun, Shield]
+			weapons: [BusterGun]
 		});
 		
 		private var _keypad:Keypad;
@@ -122,13 +122,13 @@ package com.nayael.crossover.characters.hero
 			// RUNNING state
 			if (_controllable && (_keypad.isDown(Keyboard.LEFT) || _keypad.isDown(Keyboard.Q))) {
 				moveLeft();
-				if (body.onFloor && !body.onWall ) {
+				if (body.onFloor && !body.onWall) {
 					state = RUN;
 				}
 			}
 			if (_controllable && (_keypad.isDown(Keyboard.RIGHT) || _keypad.isDown(Keyboard.D))) {
 				moveRight();
-				if (body.onFloor && !body.onWall ) {
+				if (body.onFloor && !body.onWall) {
 					state = RUN;
 				}
 			}
@@ -139,7 +139,7 @@ package com.nayael.crossover.characters.hero
 			}
 			
 			// JUMP state
-			if (!body.onFloor && !body.onWall && physics.vY <= 0) {
+			if (!body.onFloor && !body.onWall && physics.vY != 0) {
 				state = JUMP;
 			}
 			if (_controllable && _keypad.isDown(Keyboard.SPACE) && (body.onFloor || state == WALL || state == WALL_FIRE)) {
@@ -169,13 +169,13 @@ package com.nayael.crossover.characters.hero
 				} else {
 					if (!(weapon is Dasher)) {
 						switch (state) {
-							case JUMP:
+							case JUMP: case JUMP_FIRE:
 								state = JUMP_FIRE;
 								break;
-							case RUN:
+							case RUN: case RUN_FIRE:
 								state = RUN_FIRE;
 								break;
-							case WALL:
+							case WALL: case WALL_FIRE:
 								state = WALL_FIRE;
 								break;
 							default:
@@ -188,7 +188,7 @@ package com.nayael.crossover.characters.hero
 			} else if ((_controllable || weapon is Shield) && _keypad.isUp(Keyboard.K)) {
 				_controllable = true;
 				weapon.endCooldown();
-				if (weapon is Dasher) {
+				if (weapon is Dasher && state == DASH) {
 					(weapon as Dasher).stopDash();
 				}
 			}

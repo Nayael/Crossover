@@ -2,7 +2,6 @@ package com.nayael.crossover.characters.hero.states
 {
 	import com.entity.engine.Entity;
 	import com.entity.engine.fsm.IState;
-	import com.nayael.crossover.weapons.Dasher;
 	import flash.display.MovieClip;
 	
 	public class Dash implements IState
