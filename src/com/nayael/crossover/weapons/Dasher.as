@@ -45,6 +45,7 @@ package com.nayael.crossover.weapons
 		public function stopDash(e:TimerEvent = null):void {
 			dashTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, stopDash);
 			dashTimer.reset();
+			entity.physics.vX = 0;
 		}
 	}
 }

@@ -52,6 +52,13 @@ package com.entity.engine
 		public function saveData(key:String, value:*):void {
 			this[key] = value;
 		}
+		
+		/**
+		 * Erases all the data in the save
+		 */
+		static public function erase(save:Save):void {
+			save = new Save();
+		}
 	
 	////////////////////////
 	// GETTERS & SETTERS

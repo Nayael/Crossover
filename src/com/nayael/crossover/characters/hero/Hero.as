@@ -98,7 +98,7 @@ package com.nayael.crossover.characters.hero
 		}
 		
 		override public function update():void {
-			if (!_changingWeapon && _controllable && _keypad.isDown(Keyboard.L)) {
+			if (!_changingWeapon && _controllable && _keypad && _keypad.isDown(Keyboard.L)) {
 				changeWeapon();
 			} else if (_keypad && _keypad.isUp(Keyboard.L)) {
 				_changingWeapon = false
@@ -107,8 +107,9 @@ package com.nayael.crossover.characters.hero
 			// HURT state
 			if (state == HURT) {
 				var sprite:MovieClip = (view.sprite.getChildAt(0) as MovieClip);
-				if (sprite.currentFrame == sprite.totalFrames - 1) {
+				if (sprite.currentFrame == sprite.totalFrames) {
 					state = STAND;
+					_controllable = true;
 				} else {
 					super.update();
 					return;
@@ -120,13 +121,13 @@ package com.nayael.crossover.characters.hero
 			}
 			
 			// RUNNING state
-			if (_controllable && (_keypad.isDown(Keyboard.LEFT) || _keypad.isDown(Keyboard.Q))) {
+			if (_controllable && _keypad && (_keypad.isDown(Keyboard.LEFT) || _keypad.isDown(Keyboard.Q))) {
 				moveLeft();
 				if (body.onFloor && !body.onWall) {
 					state = RUN;
 				}
 			}
-			if (_controllable && (_keypad.isDown(Keyboard.RIGHT) || _keypad.isDown(Keyboard.D))) {
+			if (_controllable && _keypad && (_keypad.isDown(Keyboard.RIGHT) || _keypad.isDown(Keyboard.D))) {
 				moveRight();
 				if (body.onFloor && !body.onWall) {
 					state = RUN;
@@ -142,7 +143,7 @@ package com.nayael.crossover.characters.hero
 			if (!body.onFloor && !body.onWall && physics.vY != 0) {
 				state = JUMP;
 			}
-			if (_controllable && _keypad.isDown(Keyboard.SPACE) && (body.onFloor || state == WALL || state == WALL_FIRE)) {
+			if (_controllable && _keypad && _keypad.isDown(Keyboard.SPACE) && (body.onFloor || state == WALL || state == WALL_FIRE)) {
 				if (state == WALL || state == WALL_FIRE) {
 					(physics as HeroPhysics).wallJumping = true;
 				}
@@ -185,9 +186,11 @@ package com.nayael.crossover.characters.hero
 					}
 					weapon.fire();
 				}
-			} else if ((_controllable || weapon is Shield) && _keypad.isUp(Keyboard.K)) {
+			} else if ((_controllable || weapon is Shield) && _keypad && _keypad.isUp(Keyboard.K)) {
 				_controllable = true;
-				weapon.endCooldown();
+				if (weapon && weapon.cooldown != 0) {
+					weapon.endCooldown();
+				}
 				if (weapon is Dasher && state == DASH) {
 					(weapon as Dasher).stopDash();
 				}
@@ -223,11 +226,15 @@ package com.nayael.crossover.characters.hero
 		override public function onHurt():void {
 			if (this.state != HURT) {
 				this.state = HURT;
+				_controllable = false;
 			}
 		}
 		
 		override public function onDie():void {
 			destroy();
+			save = new Save({
+				weapons: [BusterGun]
+			});
 			EventBroker.broadcast( new Event(HeroEvent.HERO_DEAD) );
 		}	
 		
