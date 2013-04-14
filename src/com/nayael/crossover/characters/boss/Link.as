@@ -26,7 +26,6 @@ package com.nayael.crossover.characters.boss
 	// PROPERTIES
 	//
 		static public const STAND:String  = "link_stand";
-		static public const HURT:String   = "link_hurt";
 		static public const RUN:String    = "link_run";
 		static public const JUMP:String   = "link_jump";
 		static public const SHIELD:String = "link_shield";
@@ -36,7 +35,6 @@ package com.nayael.crossover.characters.boss
 		private var _attackCooldown:Timer = new Timer(1000, 1);
 		private var _shieldDelay:int      = 3500;
 		private var _shieldTimer:Timer    = new Timer(_shieldDelay, 1);
-		private var _runTimer:Timer       = new Timer(1, 1);
 		private var _strength:int         = 10;
 	
 	////////////////////////
@@ -202,7 +200,7 @@ package com.nayael.crossover.characters.boss
 		}
 		
 		/**
-		 * Sonic's AI
+		 * Link's AI
 		 */
 		override public function handleAI():void {
 			if (!_AIactivated || state == ATTACK || state == SHOOT) {
@@ -248,25 +246,11 @@ package com.nayael.crossover.characters.boss
 		/**
 		 * Link runs
 		 */
-		private function _startRun(delay:int = 0):void {
+		override protected function _startRun(delay:int = 0):void {
 			if (state == SHIELD) {
 				return;
 			}
-			_runTimer = new Timer(delay ? delay : ( (1000 + Math.random() * 4000) | 0 ), 1 );
-			_runTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
-			controls.left = Math.random() >= 0.5 ? true : false;
-			controls.right = !controls.left;
-			_runTimer.start();
-		}
-		
-		/**
-		 * Stops the running
-		 * @param	e
-		 */
-		private function _stopRun(e:TimerEvent = null):void {
-			_runTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
-			_runTimer.reset();
-			controls.left = controls.right = false;
+			super._startRun(delay);
 		}
 		
 		/**

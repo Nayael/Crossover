@@ -14,7 +14,7 @@ package com.nayael.crossover.weapons
 	public class BusterGun extends Weapon
 	{
 		private var bulletPool:Array;
-
+		
 		public function BusterGun(entity:Entity) {
 			super( entity );
 			bulletPool = Pool.instance.pool("busterBullets");

@@ -10,7 +10,7 @@ package com.nayael.crossover.characters.boss
 	import com.entity.engine.Weapon;
 	import com.nayael.crossover.characters.boss.states.sonic.*;
 	import com.nayael.crossover.characters.hero.Hero;
-	import com.nayael.crossover.weapons.BarrelGun;
+	import com.nayael.crossover.weapons.BarrelThrower;
 	import com.nayael.crossover.weapons.Dasher;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
@@ -26,7 +26,6 @@ package com.nayael.crossover.characters.boss
 	// PROPERTIES
 	//
 		static public const STAND:String  = "sonic_stand";
-		static public const HURT:String   = "sonic_hurt";
 		static public const RUN:String    = "sonic_run";
 		static public const JUMP:String   = "sonic_jump";
 		static public const CHARGE:String = "sonic_charge";
@@ -34,7 +33,6 @@ package com.nayael.crossover.characters.boss
 		
 		private var _chargeTimer:Timer;
 		private var _dashTimer:Timer;
-		private var _runTimer:Timer = new Timer(1, 1);
 		private var _strength:int = 10;
 	
 	////////////////////////
@@ -42,7 +40,7 @@ package com.nayael.crossover.characters.boss
 	//
 		public function Sonic() {
 			_name = 'Sonic';
-			_weakness = BarrelGun;
+			_weakness = BarrelThrower;
 			_drop = Dasher;
 			_stunDelay = 500;
 			_invulnerabilityDelay = 500;
@@ -213,23 +211,9 @@ package com.nayael.crossover.characters.boss
 		/**
 		 * Sonic runs
 		 */
-		private function _startRun(delay:int = 0):void {
-			_runTimer = new Timer(delay ? delay : ( (1000 + Math.random() * 4000) | 0 ), 1 );
-			_runTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
-			controls.left = Math.random() >= 0.5 ? true : false;
-			controls.right = !controls.left;
+		override protected function _startRun(delay:int = 0):void {
 			_strength = 5;
-			_runTimer.start();
-		}
-		
-		/**
-		 * Stops the running
-		 * @param	e
-		 */
-		private function _stopRun(e:TimerEvent = null):void {
-			_runTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
-			_runTimer.reset();
-			controls.left = controls.right = false;
+			super._startRun(delay);
 		}
 		
 		/**

@@ -24,11 +24,13 @@ package com.nayael.crossover.characters.boss
 		protected var _invulnerabilityDelay:int = 1000;
 		protected var _name:String;
 		protected var _stunTimer:Timer = new Timer(1, 1);
+		protected var _runTimer:Timer = new Timer(1, 1);
 		protected var _weakness:Class; 	// The class of the weapon which the boss is the most vulnerable to
 		protected var _drop:Class;		// The class of the weapon to drop when the boss dies
 		protected var _AIactivated:Boolean = true;
 		protected var _action:int;
 		protected var controls:Object = {
+
 			left: false,
 			right: false,
 			jump: false
@@ -65,6 +67,27 @@ package com.nayael.crossover.characters.boss
 		 */
 		public function handleAI():void {
 			throw new AbstractMethodError(this, 'handleAI');
+		}
+		
+		/**
+		 * The boss runs
+		 */
+		protected function _startRun(delay:int = 0):void {
+			_runTimer = new Timer(delay ? delay : ( (1000 + Math.random() * 4000) | 0 ), 1 );
+			_runTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
+			controls.left = Math.random() >= 0.5 ? true : false;
+			controls.right = !controls.left;
+			_runTimer.start();
+		}
+		
+		/**
+		 * Stops the running
+		 * @param	e
+		 */
+		protected function _stopRun(e:TimerEvent = null):void {
+			_runTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _stopRun);
+			_runTimer.reset();
+			controls.left = controls.right = false;
 		}
 		
 		override public function onDie():void {
