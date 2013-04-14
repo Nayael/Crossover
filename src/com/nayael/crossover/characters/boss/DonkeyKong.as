@@ -210,6 +210,7 @@ package com.nayael.crossover.characters.boss
 			health.damage(critical ? 2 : damage);
 			physics.vX = 5 * (vX > 0 ? 1 : -1);
 			_stun(critical ? _stunDelay : 900, function ():void {
+				_turnTowardsHero();
 				if (body.onFloor) {
 					if (Math.random() <= 0.6) {
 						controls.jump = true;

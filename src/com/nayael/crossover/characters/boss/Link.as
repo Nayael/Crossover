@@ -44,8 +44,8 @@ package com.nayael.crossover.characters.boss
 			_name = 'Link';
 			_weakness = Dasher;
 			_drop = Shield;
-			_stunDelay = 1500;
-			_invulnerabilityDelay = 1000;
+			_stunDelay = 500;
+			_invulnerabilityDelay = 400;
 			
 			_hSpeed = 8;
 			_vHeight = 25;
@@ -324,30 +324,17 @@ package com.nayael.crossover.characters.boss
 				return;
 			}
 			// If the weapon hitting is not the weakness, damage is poor
-			if (hitWeapon != _weakness) {
-				if (_stunTimer.running || _shieldTimer.running) {	// If hit while already stun, or protecting, protect with the shield
-					_shieldProtect();
-				} else {
-					// The boss was hit by a weak weapon
-					health.damage(2);
-					physics.vX = 5 * (vX > 0 ? 1 : -1);
-					_stun(_stunDelay, function ():void {
-						if (body.onFloor && state != SHIELD) {
-							if (Math.random() <= 0.6) {
-								controls.jump = true;
-							} else {
-								_attack();
-							}
-						}
-					});
-				}
+			if (hitWeapon != _weakness && (_stunTimer.running || _shieldTimer.running)) {	// If hit while already stun, or protecting, protect with the shield
+				_shieldProtect();
 			} else {
-				health.damage(damage);
-				physics.vX = 5 * damage * (vX > 0 ? 1 : -1);
-				_stopShield();
-				_stun(900, function ():void {
+				// The boss was hit by a weak weapon
+				health.damage(hitWeapon == _weakness ? damage : 2);
+				physics.vX = 5 * (vX > 0 ? 1 : -1);
+				_stun(_stunDelay, function ():void {
+					_turnTowardsHero();
 					if (body.onFloor && state != SHIELD) {
 						if (Math.random() <= 0.6) {
+							controls.jump = true;
 							_startRun(2000 + Math.random() * 2000);
 						} else {
 							_attack();

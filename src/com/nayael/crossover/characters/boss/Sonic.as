@@ -42,7 +42,7 @@ package com.nayael.crossover.characters.boss
 			_name = 'Sonic';
 			_weakness = BarrelThrower;
 			_drop = Dasher;
-			_stunDelay = 500;
+			_stunDelay = 400;
 			_invulnerabilityDelay = 500;
 			
 			_hSpeed = 13;
@@ -260,27 +260,13 @@ package com.nayael.crossover.characters.boss
 			if (!weapon) {
 				return;
 			}
-			// If the weapon hitting is not the weakness, damage is poor
-			if (weapon != _weakness) {
-				var hitProbability:Number = 0.2;	// The probability for the weak weapon to make damage to the boss in CHARGE or DASH state
-				if (Math.random() <= hitProbability) {
-					// The boss was hit by a weak weapon
-					health.damage(2);
-					physics.vX = 5 * (vX > 0 ? 1 : -1);
-					_stun(300, function ():void {
-						if (body.onFloor) {
-							if (Math.random() <= 0.6) {
-								_startRun(2000 + Math.random() * 2000);
-							} else {
-								_chargeDash();
-							}
-						}
-					});
-				}
-			} else {
-				health.damage(damage);
-				physics.vX = 5 * damage * (vX > 0 ? 1 : -1);
-				_stun(900, function ():void {
+			var hitProbability:Number = 0.2;	// The probability for the weak weapon to make damage to the boss
+			if ((weapon != _weakness && Math.random() <= hitProbability) || weapon == _weakness) {
+				// The boss was hit by a weak weapon
+				health.damage(weapon == _weakness ? damage : 2);
+				physics.vX = 5 * (vX > 0 ? 1 : -1);
+				_stun(_stunDelay, function ():void {
+					_turnTowardsHero();
 					if (body.onFloor) {
 						if (Math.random() <= 0.6) {
 							_startRun(2000 + Math.random() * 2000);
