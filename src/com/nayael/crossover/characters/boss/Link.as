@@ -99,8 +99,8 @@ package com.nayael.crossover.characters.boss
 		private function _onAddedToStage(e:Event):void {
 			view.sprite.removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 			
-			// Starting a timer to activate the AI after 2 seconds
-			var activateTimer:Timer = new Timer(2000, 1);
+			// Starting a timer to activate the AI after 1 second
+			var activateTimer:Timer = new Timer(1000, 1);
 			activateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, activateAI);
 			activateTimer.start();
 			health.setInvulnerable(3000);
