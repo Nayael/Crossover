@@ -47,12 +47,29 @@ package com.nayael.crossover
 		public var fsm:StateMachine;
 		
 		// HUD
-		//public static const UPDATE_HUD:String = "update_hud";		
 		public var hud:HUD;
 		
-		
+		// SOUNDS
 		[Embed(source = "../../../../lib/audio/victory.mp3")]
 		private const VICTORY_CLASS:Class;
+		
+		[Embed(source = "../../../../lib/audio/main_title.mp3")]
+		private const MAIN_TITLE_CLASS:Class;
+		
+		[Embed(source = "../../../../lib/audio/game_over.mp3")]
+		private const GAME_OVER_CLASS:Class;
+		
+		[Embed(source = "../../../../lib/audio/stage_select.mp3")]
+		private const STAGE_SELECT_CLASS:Class;
+		
+		[Embed(source = "../../../../lib/audio/sonic.mp3")]
+		private const SONIC_BGM_CLASS:Class;
+		
+		[Embed(source = "../../../../lib/audio/link.mp3")]
+		private const LINK_BGM_CLASS:Class;
+		
+		[Embed(source = "../../../../lib/audio/dk.mp3")]
+		private const DK_BGM_CLASS:Class;
 		
 	////////////////////////
 	// CONSTRUCTOR
@@ -84,8 +101,15 @@ package com.nayael.crossover
 			fsm.addState( PAUSE       , new StatePause(this)       , [ARENA, GRID]);
 			fsm.addState( GAME_OVER   , new StateGameOver(this)    , [MAIN_MENU]);
 			
+			SoundManager.instance.addRessource( new MAIN_TITLE_CLASS() as Sound, SoundManager.BGM1 );
+			SoundManager.instance.addRessource( new STAGE_SELECT_CLASS() as Sound, SoundManager.BGM2 );
+			SoundManager.instance.addRessource( new SONIC_BGM_CLASS() as Sound, SoundManager.ACTION1 );
+			SoundManager.instance.addRessource( new LINK_BGM_CLASS() as Sound, SoundManager.ACTION2 );
+			SoundManager.instance.addRessource( new DK_BGM_CLASS() as Sound, SoundManager.ACTION3 );
 			SoundManager.instance.addRessource( new VICTORY_CLASS() as Sound, SoundManager.SPECIAL1 );
+			SoundManager.instance.addRessource( new GAME_OVER_CLASS() as Sound, SoundManager.SPECIAL2 );
 			SoundManager.instance.setSFXVolume( .3 );
+			SoundManager.instance.setBGMVolume( .3 );
 			
 			fsm.state = INTRO;
 		}
@@ -116,6 +140,8 @@ package com.nayael.crossover
 			addEntity(hero);
 			addEntity(boss);
 			begin();
+			
+			SoundManager.instance.playBGM(arena.bgm);
 		}
 		
 		override protected function update():void {
@@ -170,7 +196,7 @@ package com.nayael.crossover
 		
 		private function _onBossDead(e:BossEvent):void {
 			var weaponName:String = String(e.drop).replace('[class ', '').replace(']', ''),
-				text:Text = new Text('New weapon : ' + weaponName + ' !', 'PressStart2P');
+				text:Text = new Text('New weapon : ' + weaponName + ' !', 'PressStart2P', 24, 0xEE1100);
 			var textTimer:Timer = new Timer(8000, 1);
 			
 			text.hCenter(this);
@@ -184,6 +210,7 @@ package com.nayael.crossover
 			
 			hero.state = Hero.STAND;
 			
+			SoundManager.instance.stopAllSound();
 			SoundManager.instance.playSfx( SoundManager.SPECIAL1 );
 			EventBroker.unsubscribe(BossEvent.BOSS_DEAD, _onBossDead);
 		}
@@ -192,6 +219,8 @@ package com.nayael.crossover
 			if (hero.health) {
 				Hero.save.saveData('hp', hero.health.hp);	// We save the hero's HP
 			}
+			SoundManager.instance.stopAllSound();
+			SoundManager.instance.setBGMVolume( .3 );
 			map.destroy(this);
 			if (hud.parent == this) {
 				removeChild(hud);

@@ -35,7 +35,7 @@ package com.nayael.crossover.states
 			for each (var text:Text in _texts) {
 				_game.addChild(text);
 			}
-			//SoundManager.instance.playBGM( SoundManager.BGM2, 0 );
+			SoundManager.instance.playSfx(SoundManager.SPECIAL2);
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 		}
 		
@@ -43,7 +43,8 @@ package com.nayael.crossover.states
 			for each (var text:Text in _texts) {
 				text.remove();
 			}
-			//SoundManager.instance.stopAllSound();
+			SoundManager.instance.stopAllSound();
+			SoundManager.instance.playBGM( SoundManager.BGM1);
 		}
 		
 		/**

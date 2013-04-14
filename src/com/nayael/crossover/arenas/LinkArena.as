@@ -1,6 +1,7 @@
 package com.nayael.crossover.arenas 
 {
 	import com.entity.engine.Map;
+	import com.entity.engine.SoundManager;
 	import com.nayael.crossover.characters.boss.Link;
 	/**
 	 * ...
@@ -16,6 +17,7 @@ package com.nayael.crossover.arenas
 	// CONSTRUCTOR
 	//
 		public function LinkArena() {
+			bgm = SoundManager.ACTION2;
 			_boss = new Link();
 			this.sourceMC = new LinkArenaTiles();
 			super([

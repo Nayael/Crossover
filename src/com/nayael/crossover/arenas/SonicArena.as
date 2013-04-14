@@ -1,6 +1,7 @@
 package com.nayael.crossover.arenas 
 {
 	import com.entity.engine.Map;
+	import com.entity.engine.SoundManager;
 	import com.nayael.crossover.characters.boss.Sonic;
 	
 	/**
@@ -17,6 +18,7 @@ package com.nayael.crossover.arenas
 	// CONSTRUCTOR
 	//
 		public function SonicArena() {
+			bgm = SoundManager.ACTION1;
 			_boss = new Sonic();
 			this.sourceMC = new SonicArenaTiles();
 			super([

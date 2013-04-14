@@ -25,7 +25,8 @@ package com.nayael.crossover.states
 			_text.hCenter(E.stage);
 			_text.y = 50;
 			_game.addChild(_text);
-			//SoundManager.instance.playBGM( SoundManager.BGM3 );
+			SoundManager.instance.fadeOut();
+			SoundManager.instance.playBGM( SoundManager.BGM2 );
 			
 			_grid = new BossGrid();
 			_game.addChild(_grid);
@@ -36,7 +37,7 @@ package com.nayael.crossover.states
 		public function exit():void {
 			_game.removeChild(_grid);
 			_text.remove();
-			//SoundManager.instance.stopAllSound();
+			SoundManager.instance.fadeOut();
 		}
 		
 		private function _onKeyDown(e:KeyboardEvent):void {

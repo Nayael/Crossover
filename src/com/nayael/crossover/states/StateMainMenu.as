@@ -51,7 +51,6 @@ package com.nayael.crossover.states
 				_game.addChild(text);
 			}
 			_selectOption(0);
-			//SoundManager.instance.playBGM( SoundManager.BGM1, 0 );
 			
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 		}
@@ -61,7 +60,6 @@ package com.nayael.crossover.states
 				text.remove();
 			}
 			_cursor.remove();
-			//SoundManager.instance.stopAllSound();
 		}
 		
 		/**

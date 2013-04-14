@@ -1,7 +1,9 @@
 package com.nayael.crossover.arenas 
 {
 	import com.entity.engine.Map;
+	import com.entity.engine.SoundManager;
 	import com.nayael.crossover.characters.boss.DonkeyKong;
+	
 	/**
 	 * ...
 	 * @author Nayael
@@ -16,6 +18,8 @@ package com.nayael.crossover.arenas
 	// CONSTRUCTOR
 	//
 		public function DonkeyKongArena() {
+			bgm = SoundManager.ACTION3;
+			SoundManager.instance.setBGMVolume( .5 );
 			_boss = new DonkeyKong();
 			this.sourceMC = new DonkeyKongArenaTiles();
 			super([

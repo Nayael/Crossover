@@ -17,6 +17,8 @@ package com.nayael.crossover.arenas
 	//
 		private static const TILE_SIZE:int = 40;
 		protected var _boss:Boss;
+		
+		public var bgm:int;	// The index of the arena's bgm (index in the SoundManager)
 
 	////////////////////////
 	// CONSTRUCTOR

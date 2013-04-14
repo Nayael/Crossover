@@ -38,7 +38,7 @@ package com.nayael.crossover.states
 			for each (var text:Text in _texts) {
 				_game.addChild(text);
 			}
-			//SoundManager.instance.playBGM( SoundManager.BGM1, 0 );
+			SoundManager.instance.playBGM( SoundManager.BGM1);
 			
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeydown);
 		}

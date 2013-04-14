@@ -6,8 +6,6 @@ package com.nayael.crossover.states
 	import com.nayael.crossover.Main;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
-	import flash.utils.clearInterval;
-	import flash.utils.setInterval;
 	
 	public class StateArena implements IState
 	{
@@ -23,23 +21,28 @@ package com.nayael.crossover.states
 					_game.getChildAt(i).visible = true;
 				}
 			}
-			//SoundManager.instance.playBGM( SoundManager.BGM3 );
 			E.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 		}
 		
 		public function exit():void {
-			//SoundManager.instance.stopAllSound();
+			
 		}
 		
 		private function _onKeyDown(e:KeyboardEvent):void {
 			if (e.keyCode != Keyboard.ESCAPE
-			 && e.keyCode != Keyboard.M) {
+			 && e.keyCode != Keyboard.M
+			 && e.keyCode != Keyboard.G) {
 				return;
 			}
 			
 			switch (e.keyCode) {
 				case Keyboard.M:
 					_game.boss.onDie();
+					return;
+					break;
+					
+				case Keyboard.G:
+					_game.hero.onDie();
 					return;
 					break;
 				
