@@ -1,0 +1,14 @@
+Megaboy is a little robot, an old prototype for Megaman. Always in the shadow of the famous Megaman, he wants to prove that he is the best video game character, by beating all the other famous video game heroes !
+
+(All graphics and musical contents belong to their original owners. This game was made for learning purposes only)
+
+
+Move with Q/D or Left/Right,
+
+Jump/Wall jump with SPACE,
+
+Shoot with K,
+
+Change weapon with L,
+
+Pause game with ESCAPE
